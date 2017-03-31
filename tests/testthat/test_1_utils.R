@@ -114,3 +114,16 @@ test_that("merge.gct works properly", {
   expect_identical(mrg@cdesc$id, mrg@cid)
   
 })
+
+test_that("annotate.gct works properly", {
+  newds <- ds
+  col_meta <- ds@cdesc
+  newds@cdesc <- data.frame(id=ds@cid)
+  newds <- annotate.gct(newds, col_meta, dim="column", keyfield="id")
+  # rearrange column order to match
+  newds@cdesc <- newds@cdesc[, names(ds@cdesc)]
+  # ignore row names
+  rownames(ds@cdesc) <- NULL
+  rownames(newds@cdesc) <- NULL
+  expect_identical(newds, ds)
+})

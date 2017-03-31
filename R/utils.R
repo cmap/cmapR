@@ -237,9 +237,10 @@ setGeneric("merge.gct", function(g1, g2, dimension="row", matrix_only=F) {
   standardGeneric("merge.gct")
 })
 setMethod("merge.gct", signature("GCT", "GCT"),
-          function(g1, g2, dimension="row", matrix_only=F) {
+          function(g1, g2, dimension, matrix_only) {
           # given two gcts objects g1 and g2, merge them
           # on the specified dimension
+          if (dimension == "column") dimension <- "col"
           if (dimension == "row") {
             message("appending rows...")
             newg <- g1
@@ -285,4 +286,120 @@ setMethod("merge.gct", signature("GCT", "GCT"),
             stop("dimension must be either row or col")
           }
           return(newg)
+})
+
+
+#' Merge two \code{\link{data.frame}}s, but where there are common fields
+#' those in \code{x} are retained and those in \code{y} are dropped.
+#' 
+#' @param x the \code{\link{data.frame}} whose columns take precedence
+#' @param y another \code{\link{data.frame}}
+#' @param by a vector of column names to merge on
+#' @param allow.cartesian boolean indicating whether it's ok
+#'   for repeated values in either table to merge with each other
+#'   over and over again.
+#' @param as_data_frame boolean indicating whether to ensure
+#'   the returned object is a \code{\link{data.frame}} instead of a \code{\link{data.table}}.
+#'   This ensures compatibility with GCT object conventions,
+#'   that is, the \code{\link{rdesc}} and \code{\link{cdesc}} slots must be strictly
+#'   \code{\link{data.frame}} objects.
+#'   
+#' @return a \code{\link{data.frame}} or \code{\link{data.table}} object
+#' 
+#' @examples 
+#' (x <- data.table(foo=letters[1:10], bar=1:10))
+#' (y <- data.table(foo=letters[1:10], bar=11:20, baz=LETTERS[1:10]))
+#' # the 'bar' column from y will be dropped on merge
+#' merge_with_precedence(x, y, by="foo")
+#'
+#' @keywords internal
+#' @seealso data.table::merge
+merge_with_precedence <- function(x, y, by, allow.cartesian=T,
+                                  as_data_frame = T) {
+  trash <- check_colnames(by, x)
+  trash <- check_colnames(by, y)
+  # cast as data.tables
+  x <- data.table(x)
+  y <- data.table(y)
+  # get rid of row names
+  setattr(x, "rownames", NULL)
+  setattr(y, "rownames", NULL)
+  common_cols <- intersect(names(x), names(y))
+  y_keepcols <- unique(c(by, setdiff(names(y), common_cols)))
+  y <- y[, y_keepcols, with=F]
+  # if not all ids match, issue a warning
+  if (!all(x[[by]] %in% y[[by]])) {
+    warning("not all rows of x had a match in y. some columns may contain NA")
+  }
+  # merge keeping all the values in x, making sure that the
+  # resulting data.table is sorted in the same order as the 
+  # original object x
+  merged <- merge(x, y, by=by, allow.cartesian=allow.cartesian, all.x=T)
+  if (as_data_frame) {
+    # cast back to a data.frame if requested
+    merged <- data.frame(merged)
+  }
+  return(merged)
+}
+
+
+#' Add annotations to a GCT object
+#' 
+#' @description Given a GCT object and either a \code{\link{data.frame}} or
+#' a path to an annotation table, apply the annotations to the
+#' gct using the given \code{keyfield}.
+#' 
+#' @param g a GCT object
+#' @param annot a \code{\link{data.frame}} or path to text table of annotations
+#' @param dimension either 'row' or 'column' indicating which dimension
+#'   of \code{g} to annotate
+#' @param keyfield the character name of the column in \code{annot} that 
+#'   matches the row or column identifiers in \code{g}
+#'   
+#' @return a GCT object with annotations applied to the specified
+#'   dimension
+#'   
+#' @examples 
+#' \dontrun{
+#'  g <- parse.gctx('/path/to/gct/file')
+#'  g <- annotate.gct(g, '/path/to/annot')
+#' }
+setGeneric("annotate.gct", function(g, annot, dimension="row", keyfield="id") {
+  standardGeneric("annotate.gct")
+})
+setMethod("annotate.gct", signature("GCT"),
+          function(g, annot, dimension, keyfield) {
+          if (!(any(class(annot) == "data.frame"))) {
+            # given a file path, try to read it in
+            annot <- fread(annot)
+          } else {
+            # convert to data.table
+            annot <- data.table(annot)
+          }
+          # convert the keyfield column to id for merging
+          # assumes the gct object has an id field in its existing annotations
+          if (!(keyfield %in% names(annot))) {
+            stop(paste("column", keyfield, "not found in annotations"))
+          } 
+          # rename the column to id so we can do the merge
+          annot$id <- annot[[keyfield]]
+          if (dimension == "column") dimension <- "col"
+          if (dimension == "row") {
+            orig_id <- g@rdesc$id
+            merged <- merge_with_precedence(g@rdesc, annot, by="id", allow.cartesian=T,
+                                            as_data_frame=T)
+            idx <- match(orig_id, merged$id)
+            merged <- merged[idx, ]
+            g@rdesc <- merged
+          } else if (dimension == "col") {
+            orig_id <- g@cdesc$id
+            merged <- merge_with_precedence(g@cdesc, annot, by="id", allow.cartesian=T,
+                                            as_data_frame=T)
+            idx <- match(orig_id, merged$id)
+            merged <- merged[idx, ]
+            g@cdesc <- merged
+          } else {
+            stop("dimension must be either row or column")
+          }
+          return(g)
 })
