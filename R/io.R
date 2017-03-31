@@ -51,6 +51,13 @@ setValidity("GCT",
   }
 )
 
+# set method for displaying a GCT object
+# just use the 'str' function to show its structure
+setMethod("show", signature("GCT"), function(object) {
+  str(object)
+})
+
+
 #### define some helper methods for parsing gctx files ###
 
 #' Adjust the data types for columns of a meta data frame
@@ -458,16 +465,13 @@ setMethod("initialize",
 #' 
 #' @examples 
 #' gct_file <- system.file("extdata", "modzs_n272x978.gctx", package="roller")
-#' ds <- parse.gctx(gct_file)
-#' str(ds)
+#' (ds <- parse.gctx(gct_file))
 #' 
 #' # matrix only
-#' ds <- parse.gctx(gct_file, matrix_only=T)
-#' str(ds)
+#' (ds <- parse.gctx(gct_file, matrix_only=T))
 #' 
 #' # only the first 10 rows and columns
-#' ds <- parse.gctx(gct_file, rid=1:10, cid=1:10)
-#' str(ds)
+#' (ds <- parse.gctx(gct_file, rid=1:10, cid=1:10))
 #' 
 #' @family GCTX parsing functions
 #' @export

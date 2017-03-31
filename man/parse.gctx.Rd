@@ -32,16 +32,13 @@ Parse a GCTX file into the workspace as a GCT object
 }
 \examples{
 gct_file <- system.file("extdata", "modzs_n272x978.gctx", package="roller")
-ds <- parse.gctx(gct_file)
-str(ds)
+(ds <- parse.gctx(gct_file))
 
 # matrix only
-ds <- parse.gctx(gct_file, matrix_only=T)
-str(ds)
+(ds <- parse.gctx(gct_file, matrix_only=T))
 
 # only the first 10 rows and columns
-ds <- parse.gctx(gct_file, rid=1:10, cid=1:10)
-str(ds)
+(ds <- parse.gctx(gct_file, rid=1:10, cid=1:10))
 
 }
 \seealso{
