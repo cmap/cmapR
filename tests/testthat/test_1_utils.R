@@ -12,7 +12,13 @@ test_that("merge.gct works properly", {
   
   # scramble the rows and columns of ds2
   ridx <- sample(1:nrow(ds2@mat), nrow(ds2@mat))
+  while(identical(ridx, 1:nrow(ds2@mat))) {
+    ridx <- sample(1:nrow(ds2@mat), nrow(ds2@mat))
+  }
   cidx <- sample(1:ncol(ds2@mat), ncol(ds2@mat))
+  while(identical(cidx, 1:ncol(ds2@mat))) {
+    cidx <- sample(1:ncol(ds2@mat), ncol(ds2@mat))
+  }
   ds2@rid <- ds2@rid[ridx]
   ds2@rdesc <- ds2@rdesc[ridx, ]
   ds2@cid <- ds2@cid[cidx]
@@ -113,6 +119,12 @@ test_that("merge.gct works properly", {
   expect_identical(colnames(mrg@mat), mrg@cid)
   expect_identical(mrg@cdesc$id, mrg@cid)
   
+})
+
+test_that("subset.gct works properly", {
+  a <- subset.gct(ds, rid=1:10, cid=1:10)
+  b <- subset.gct(ds, rid=ds@rid[1:10], cid=ds@cid[1:10])
+  expect_identical(a, b)
 })
 
 test_that("annotate.gct works properly", {
