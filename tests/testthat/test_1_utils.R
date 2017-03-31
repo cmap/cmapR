@@ -127,3 +127,12 @@ test_that("annotate.gct works properly", {
   rownames(newds@cdesc) <- NULL
   expect_identical(newds, ds)
 })
+
+test_that("transpose.gct works properly", {
+  dst <- transpose.gct(ds)
+  expect_identical(ds@mat, t(dst@mat))
+  expect_identical(ds@cdesc, dst@rdesc)
+  expect_identical(ds@rdesc, dst@cdesc)
+  expect_identical(ds@cid, dst@rid)
+  expect_identical(ds@rid, dst@cid)
+})

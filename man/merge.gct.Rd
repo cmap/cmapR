@@ -29,7 +29,7 @@ Merge two GCT objects together
 
 }
 \seealso{
-Other GCT utilities: \code{\link{melt.gct}},
-  \code{\link{subset.gct}}
+Other GCT utilities: \code{\link{annotate.gct}},
+  \code{\link{melt.gct}}, \code{\link{subset.gct}}
 }
 

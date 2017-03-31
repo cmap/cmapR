@@ -364,6 +364,9 @@ merge_with_precedence <- function(x, y, by, allow.cartesian=T,
 #'  g <- parse.gctx('/path/to/gct/file')
 #'  g <- annotate.gct(g, '/path/to/annot')
 #' }
+#' 
+#' @family GCT utilities
+#' @export
 setGeneric("annotate.gct", function(g, annot, dimension="row", keyfield="id") {
   standardGeneric("annotate.gct")
 })
@@ -402,4 +405,37 @@ setMethod("annotate.gct", signature("GCT"),
             stop("dimension must be either row or column")
           }
           return(g)
+})
+
+
+#' Transpose a GCT object
+#' 
+#' @param g the \code{GCT} object
+#' 
+#' @return a modified verion of the input \code{GCT} object
+#'   where the matrix has been transposed and the row and column
+#'   ids and annotations have been swapped.
+#'   
+#' @examples 
+#' transpose.gct(ds)
+#' 
+#' @family GCT utilties
+#' @export
+setGeneric("transpose.gct", function(g) {
+  standardGeneric("transpose.gct")
+})
+setMethod("transpose.gct", signature("GCT"), function(g) {
+  # transpose matrix
+  g@mat <- t(g@mat)
+  # create new data
+  rid.new <- g@cid
+  cid.new <- g@rid
+  rdesc.new <- g@cdesc
+  cdesc.new <- g@rdesc
+  # overwrite g
+  g@rid <- rid.new
+  g@cid <- cid.new
+  g@rdesc <- rdesc.new
+  g@cdesc <- cdesc.new
+  return(g)
 })

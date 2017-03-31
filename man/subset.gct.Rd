@@ -27,7 +27,7 @@ identical(a, b) # TRUE
 
 }
 \seealso{
-Other GCT utilities: \code{\link{melt.gct}},
-  \code{\link{merge.gct}}
+Other GCT utilities: \code{\link{annotate.gct}},
+  \code{\link{melt.gct}}, \code{\link{merge.gct}}
 }
 

@@ -31,5 +31,10 @@ gct using the given \code{keyfield}.
  g <- parse.gctx('/path/to/gct/file')
  g <- annotate.gct(g, '/path/to/annot')
 }
+
+}
+\seealso{
+Other GCT utilities: \code{\link{melt.gct}},
+  \code{\link{merge.gct}}, \code{\link{subset.gct}}
 }
 
