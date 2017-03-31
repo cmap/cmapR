@@ -57,6 +57,18 @@ setMethod("show", signature("GCT"), function(object) {
   str(object)
 })
 
+# dim, nrow and ncol to display the # of rows and columns
+# for a GCT object's matrix
+setMethod("ncol", signature("GCT"), function(object) {
+  ncol(object@mat)
+})
+setMethod("nrow", signature("GCT"), function(object) {
+  nrow(object@mat)
+})
+setMethod("dim", signature("GCT"), function(object) {
+  dim(object@mat)
+})
+
 
 #### define some helper methods for parsing gctx files ###
 
