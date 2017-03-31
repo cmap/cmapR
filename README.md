@@ -1,6 +1,6 @@
 # cmapR (CMap R code)
 
-Parsing and utility functions for analyzing CMap data.
+Parsing and utility functions for analyzing CMap data. To learn more about the CMap project at the Broad Institute, please visit [clue.io](https://clue.io).
 
 ### Install instructions
 
