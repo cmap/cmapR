@@ -439,3 +439,41 @@ setMethod("transpose.gct", signature("GCT"), function(g) {
   g@cdesc <- cdesc.new
   return(g)
 })
+
+
+#' Convert a GCT object's matrix to ranks
+#' 
+#' @param g the \code{GCT} object to rank
+#' @param dim the dimension along which to rank
+#'   (row or column)
+#' 
+#' @return a modified version of \code{g}, with the
+#'   values in the matrix converted to ranks
+#'   
+#' @examples 
+#' (ranked <- rank.gct(ds, dim="column"))
+#' # scatter rank vs. score for a few columns
+#' plot(ds@mat[, 1:3], ranked@mat[, 1:3],
+#'   xlab="score", ylab="rank")
+#' 
+#' @family GCT utilities
+#' @export
+setGeneric("rank.gct", function(g, dim="row") {
+  standardGeneric("rank.gct")
+})
+setMethod("rank.gct", signature("GCT"), function(g, dim) {
+  # check to make sure dim is allowed
+  if (dim=="column") dim <- "col"
+  if (!(dim %in% c("row","col"))){
+    stop('Dim must be one of row, col')
+  }
+  # rank along the specified axis. transpose if ranking rows so that the data 
+  # comes back in the correct format
+  if (dim == 'row'){
+    g@mat <- t(apply(g@mat, 1, function(x) rank(-1*x)))
+  } else {
+    g@mat <- (apply(g@mat, 2, function(x) rank(-1*x)))
+  }
+  # done
+  return(g)
+})

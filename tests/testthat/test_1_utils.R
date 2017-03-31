@@ -136,3 +136,14 @@ test_that("transpose.gct works properly", {
   expect_identical(ds@cid, dst@rid)
   expect_identical(ds@rid, dst@cid)
 })
+
+test_that("rank.gct works properly", {
+  ranked_row <- rank.gct(ds, dim="row")
+  expect_identical(range(ranked_row@mat), c(1, ncol(ds@mat)))
+  ranked_col <- rank.gct(ds, dim="column")
+  expect_identical(range(ranked_col@mat), c(1, nrow(ds@mat)))
+  # ranked data should be completely anti-correlated with
+  # scores if we use spearman. all correlations should be -1
+  expect_equal(unname(diag(cor(ds@mat, ranked_col@mat, method="spearman"))),
+               rep(-1, ncol(ds@mat)))
+})

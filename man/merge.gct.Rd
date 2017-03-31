@@ -30,6 +30,7 @@ Merge two GCT objects together
 }
 \seealso{
 Other GCT utilities: \code{\link{annotate.gct}},
-  \code{\link{melt.gct}}, \code{\link{subset.gct}}
+  \code{\link{melt.gct}}, \code{\link{rank.gct}},
+  \code{\link{subset.gct}}
 }
 
