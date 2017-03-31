@@ -3,6 +3,7 @@
 export(check_colnames)
 export(is.wholenumber)
 export(melt.gct)
+export(merge.gct)
 export(parse.gctx)
 export(parse.gmt)
 export(parse.gmx)

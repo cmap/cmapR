@@ -163,55 +163,126 @@ setGeneric("subset.gct", function(g, rid=NULL, cid=NULL) {
 })
 setMethod("subset.gct", signature("GCT"),
           function(g, rid, cid) {
-    # ids can either be a vector of character strings corresponding
-    # to row / column ids in the gct object, or integer vectors
-    # corresponding to row / column indices
-    if (is.null(rid)) rid <- g@rid
-    if (is.null(cid)) cid <- g@cid
-    # see whether we were given characters or integers
-    # and handle accordingly
-    process_ids <- function(ids, ref_ids, param) {
-      # simple helper function to handle id/idx conversion
-      # for character or integer ids
-      if (is.character(ids)) {
-        idx <- which(ref_ids %in% ids)
-      } else if (all(is.wholenumber(ids))) {
-        idx <- ids
-        ids <- ref_ids[idx]
-      } else {
-        stop(paste(param, "must be character or ingeter"))
-      }
-      return(list(ids=ids, idx=idx))
-    }
-    processed_rid <- process_ids(rid, g@rid, "rid")
-    processed_cid <- process_ids(cid, g@cid, "cid")
-    rid <- processed_rid$ids
-    ridx <- processed_rid$idx
-    cid <- processed_cid$ids
-    cidx <- processed_cid$idx
-    sdrow <- setdiff(rid, g@rid)
-    sdcol <- setdiff(cid, g@cid)
-    if (length(sdrow) > 0) warning("the following rids were not found:\n", paste(sdrow, collapse="\n"))
-    if (length(sdcol) > 0) warning("the following cids were not found:\n", paste(sdcol, collapse="\n"))
-    newg <- g
-    # make sure ordering is right
-    rid <- g@rid[ridx]
-    cid <- g@cid[cidx]
-    newg@mat <- matrix(g@mat[ridx, cidx], nrow=length(rid), ncol=length(cid))
-    colnames(newg@mat) <- cid
-    rownames(newg@mat) <- rid
-    # cdesc <- data.frame(g@cdesc)
-    # rdesc <- data.frame(g@rdesc)
-    # make sure annotations row ordering matches
-    # matrix, rid, and cid
-    newg@cdesc <- subset_to_ids(g@cdesc, cid)
-    newg@rdesc <- subset_to_ids(g@rdesc, rid)
-    newg@rid <- rid
-    newg@cid <- cid
-    if (any(dim(newg@mat) == 0)) {
-      warning("one or more returned dimension is length 0
-              check that at least some of the provided rid and/or
-              cid values have matches in the GCT object supplied")
-    }
-    return(newg)
+          # ids can either be a vector of character strings corresponding
+          # to row / column ids in the gct object, or integer vectors
+          # corresponding to row / column indices
+          if (is.null(rid)) rid <- g@rid
+          if (is.null(cid)) cid <- g@cid
+          # see whether we were given characters or integers
+          # and handle accordingly
+          process_ids <- function(ids, ref_ids, param) {
+            # simple helper function to handle id/idx conversion
+            # for character or integer ids
+            if (is.character(ids)) {
+              idx <- which(ref_ids %in% ids)
+            } else if (all(is.wholenumber(ids))) {
+              idx <- ids
+              ids <- ref_ids[idx]
+            } else {
+              stop(paste(param, "must be character or ingeter"))
+            }
+            return(list(ids=ids, idx=idx))
+          }
+          processed_rid <- process_ids(rid, g@rid, "rid")
+          processed_cid <- process_ids(cid, g@cid, "cid")
+          rid <- processed_rid$ids
+          ridx <- processed_rid$idx
+          cid <- processed_cid$ids
+          cidx <- processed_cid$idx
+          sdrow <- setdiff(rid, g@rid)
+          sdcol <- setdiff(cid, g@cid)
+          if (length(sdrow) > 0) warning("the following rids were not found:\n", paste(sdrow, collapse="\n"))
+          if (length(sdcol) > 0) warning("the following cids were not found:\n", paste(sdcol, collapse="\n"))
+          newg <- g
+          # make sure ordering is right
+          rid <- g@rid[ridx]
+          cid <- g@cid[cidx]
+          newg@mat <- matrix(g@mat[ridx, cidx], nrow=length(rid), ncol=length(cid))
+          colnames(newg@mat) <- cid
+          rownames(newg@mat) <- rid
+          # cdesc <- data.frame(g@cdesc)
+          # rdesc <- data.frame(g@rdesc)
+          # make sure annotations row ordering matches
+          # matrix, rid, and cid
+          newg@cdesc <- subset_to_ids(g@cdesc, cid)
+          newg@rdesc <- subset_to_ids(g@rdesc, rid)
+          newg@rid <- rid
+          newg@cid <- cid
+          if (any(dim(newg@mat) == 0)) {
+            warning("one or more returned dimension is length 0
+                    check that at least some of the provided rid and/or
+                    cid values have matches in the GCT object supplied")
+          }
+          return(newg)
+})
+
+#' Merge two GCT objects together
+#'
+#' @param g1 the first GCT object
+#' @param g2 the second GCT object
+#' @param dimension the dimension on which to merge (row or column)
+#' @param matrix_only boolean idicating whether to keep only the
+#'   data matrices from \code{g1} and \code{g2} and ignore their
+#'   row and column meta data
+#' @examples
+#' # take the first 10 and last 10 rows of an object
+#' # and merge them back together
+#' (a <- subset.gct(ds, rid=1:10))
+#' (b <- subset.gct(ds, rid=969:978))
+#' (merged <- merge.gct(a, b, dimension="row"))
+#' 
+#' @family GCT utilities
+#' @export
+setGeneric("merge.gct", function(g1, g2, dimension="row", matrix_only=F) {
+  standardGeneric("merge.gct")
+})
+setMethod("merge.gct", signature("GCT", "GCT"),
+          function(g1, g2, dimension="row", matrix_only=F) {
+          # given two gcts objects g1 and g2, merge them
+          # on the specified dimension
+          if (dimension == "row") {
+            message("appending rows...")
+            newg <- g1
+            # we're just appending rows so don't need to do anything
+            # special with the rid or rdesc. just cat them
+            newg@rid <- c(g1@rid, g2@rid)
+            newg@rdesc <- data.frame(rbind(data.table(g1@rdesc), data.table(g2@rdesc), fill=T))
+            # need figure out the index for how to sort the columns of
+            # g2@mat so that they are in sync with g1@mat
+            idx <- match(g1@cid, g2@cid)
+            newg@mat <- rbind(g1@mat, g2@mat[, idx])
+            if (!matrix_only) {
+              # apply the same sort order to the rows of g2@cdesc so that
+              # it's in sync with the final merged matrix
+              # figure out which fields are common and keep from the first gct
+              cmn_names <- intersect(names(g1@cdesc), names(g2@cdesc))
+              newg@cdesc <- cbind(g1@cdesc, g2@cdesc[idx, !(names(g2@cdesc) %in% cmn_names)])
+            } else {
+              newg@cdesc <- data.frame()
+            }
+          }
+          else if (dimension == "col") {
+            message("appending columns...")
+            newg <- g1
+            # we're just appending columns so don't need to do anything
+            # special with cid or cdesc. just cat them
+            newg@cid <- c(g1@cid, g2@cid)
+            newg@cdesc <- data.frame(rbind(data.table(g1@cdesc), data.table(g2@cdesc), fill=T))
+            # need figure out the index for how to sort the rows of
+            # g2@mat so that they are in sync with g1@mat
+            idx <- match(g1@rid, g2@rid)
+            newg@mat <- cbind(g1@mat, g2@mat[idx, ])
+            if (!matrix_only) {
+              # apply the same sort order to the rows of g2@rdesc so that
+              # it's in sync with the final merged matrix
+              # figure out which fields are common and keep from the first gct
+              cmn_names <- intersect(names(g1@rdesc), names(g2@rdesc))
+              newg@rdesc <- cbind(g1@rdesc, g2@rdesc[idx, !(names(g2@rdesc) %in% cmn_names)])
+            } else {
+              newg@rdesc <- data.frame()
+            }
+          } else {
+            stop("dimension must be either row or col")
+          }
+          return(newg)
 })
