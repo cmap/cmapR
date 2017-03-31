@@ -1,6 +1,6 @@
 Package: cmapR
 Type: Package
-Title: CMAP tools in R
+Title: CMap tools in R
 Version: 1.0
 Date: 2017-03-29
 Author: CMap Group at The Broad Institute
@@ -11,4 +11,5 @@ LazyData: true
 Depends:
     rhdf5,
     data.table
+Imports: methods
 RoxygenNote: 5.0.1

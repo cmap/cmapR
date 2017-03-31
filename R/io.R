@@ -139,6 +139,7 @@ fix.datatypes <- function(meta) {
 #' str(col_meta_first10)
 #' 
 #' @family GCTX parsing functions
+#' @export
 read.gctx.meta <- function(gctx_path, dimension="row", ids=NULL, set_annot_rownames=T) {
   if (!file.exists(gctx_path)) {
     stop(paste(gctx_path, "does not exist"))
@@ -198,6 +199,7 @@ read.gctx.meta <- function(gctx_path, dimension="row", ids=NULL, set_annot_rowna
 #' head(cid)
 #' 
 #' @family GCTX parsing functions
+#' @export
 read.gctx.ids <- function(gctx_path, dimension="row") {
   if (!file.exists(gctx_path)) {
     stop(paste(gctx_path, "does not exist"))
@@ -468,6 +470,7 @@ setMethod("initialize",
 #' str(ds)
 #' 
 #' @family GCTX parsing functions
+#' @export
 parse.gctx <- function(fname, rid=NULL, cid=NULL, set_annot_rownames=F, matrix_only=F) {
     ds <- new("GCT",
               src = fname,
@@ -531,6 +534,7 @@ append.dim <- function(ofile, mat, extension="gct") {
 #' write.gct(ds, "dataset", precision=2)
 #' }
 #' @family GCTX parsing functions
+#' @export
 write.gct <- function(ds, ofile, precision=4, appenddim=T, ver=3) {
   if (!class(ds)=="GCT") {
     stop("ds must be a GCT object")
@@ -626,6 +630,7 @@ write.gct <- function(ds, ofile, precision=4, appenddim=T, ver=3) {
 #' write.gctx(ds, "my/desired/outpath/and/filename")
 #' }
 #' @family GCTX parsing functions
+#' @export
 write.gctx <- function(ds, ofile, appenddim=T, compression_level=0, matrix_only=F) {
   if (appenddim) ofile <- append.dim(ofile, ds@mat, extension="gctx")
   # check if the file already exists
@@ -726,6 +731,7 @@ write.meta <- function(ofile, df, dimension="row") {
 #' str(values)
 #' @family CMap parsing functions
 #' @seealso \link{http://clue.io/help} for details on the GRP file format
+#' @export
 parse.grp <- function(fname) {
   grp <- scan(fname, what = "", quote = NULL, quiet = TRUE)
   return(grp)
@@ -772,6 +778,7 @@ write.grp <- function(vals, fname) {
 #' 
 #' @family CMap parsing functions
 #' @seealso \link{http://clue.io/help} for details on the GMX file format
+#' @export
 parse.gmx <- function(fname) {
     tmp <- read.table(fname, sep = "\t", 
                      header = TRUE, stringsAsFactors = FALSE)
@@ -813,6 +820,7 @@ parse.gmx <- function(fname) {
 #' 
 #' @family CMap parsing functions
 #' @seealso \link{http://clue.io/help} for details on the GMT file format
+#' @export
 parse.gmt <- function(fname) {
     gmt.lines <- scan(fname, what = "", sep = "\n",
                      quote = NULL, quiet = TRUE)
@@ -852,6 +860,7 @@ parse.gmt <- function(fname) {
 #' 
 #' @family CMap parsing functions
 #' @seealso \link{http://clue.io/help} for details on the GMT file format
+#' @export
 write.gmt <- function(lst, fname) {
   # assumes that each element of the list will have the fields
   # head, desc, entry
@@ -888,10 +897,8 @@ write.gmt <- function(lst, fname) {
 #' }
 #' 
 #' @seealso \code{\link{write.table}}
+#' @export
 write.tbl <- function(tbl, ofile, ...) {
     write.table(tbl, file = ofile, sep="\t", quote=F,
       col.names=T, row.names=F, ...)
 }
-
-# for backwards compatibility
-mktbl <- write.tbl
