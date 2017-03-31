@@ -36,7 +36,7 @@ write.gctx(ds, "my/desired/outpath/and/filename")
 Other GCTX parsing functions: \code{\link{append.dim}},
   \code{\link{fix.datatypes}}, \code{\link{parse.gctx}},
   \code{\link{process_ids}}, \code{\link{read.gctx.ids}},
-  \code{\link{read.gctx.meta}}, \code{\link{write.gct}},
-  \code{\link{write.meta}}
+  \code{\link{read.gctx.meta}},
+  \code{\link{write.gctx.meta}}, \code{\link{write.gct}}
 }
 

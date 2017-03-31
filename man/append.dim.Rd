@@ -32,8 +32,9 @@ This is a helper function that most users
 Other GCTX parsing functions: \code{\link{fix.datatypes}},
   \code{\link{parse.gctx}}, \code{\link{process_ids}},
   \code{\link{read.gctx.ids}},
-  \code{\link{read.gctx.meta}}, \code{\link{write.gctx}},
-  \code{\link{write.gct}}, \code{\link{write.meta}}
+  \code{\link{read.gctx.meta}},
+  \code{\link{write.gctx.meta}}, \code{\link{write.gctx}},
+  \code{\link{write.gct}}
 }
 \keyword{internal}
 

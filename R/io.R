@@ -685,8 +685,8 @@ write.gctx <- function(ds, ofile, appenddim=T, compression_level=0, matrix_only=
   h5write(ds@cid, ofile, "0/META/COL/id")
   
   if (!matrix_only) {
-    write.meta(ofile, ds@cdesc, dimension="column")
-    write.meta(ofile, ds@rdesc, dimension="row")
+    write.gctx.meta(ofile, ds@cdesc, dimension="column")
+    write.gctx.meta(ofile, ds@rdesc, dimension="row")
   }
 
   # close any open handles
@@ -709,11 +709,11 @@ write.gctx <- function(ds, ofile, appenddim=T, compression_level=0, matrix_only=
 #' @examples 
 #' \dontrun{
 #' # assume ds is a GCT object
-#' write.meta("/my/file/path", cdesc_char, dimension="col")
+#' write.gctx.meta("/my/file/path", cdesc_char, dimension="col")
 #' }
 #' @family GCTX parsing functions
 #' @keywords internal
-write.meta <- function(ofile, df, dimension="row") {
+write.gctx.meta <- function(ofile, df, dimension="row") {
   path <- if ((dimension=="row")) "0/META/ROW/" else "0/META/COL/"
   # loop through all columns
   fields <- names(df)
