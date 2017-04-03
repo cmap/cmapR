@@ -51,22 +51,24 @@ setValidity("GCT",
   }
 )
 
-# set method for displaying a GCT object
-# just use the 'str' function to show its structure
-setMethod("show", signature("GCT"), function(object) {
-  str(object)
-})
+suppressMessages({
+  # set method for displaying a GCT object
+  # just use the 'str' function to show its structure
+  setMethod("show", signature("GCT"), function(object) {
+    str(object)
+  })
 
-# dim, nrow and ncol to display the # of rows and columns
-# for a GCT object's matrix
-setMethod("ncol", signature("GCT"), function(object) {
-  ncol(object@mat)
-})
-setMethod("nrow", signature("GCT"), function(object) {
-  nrow(object@mat)
-})
-setMethod("dim", signature("GCT"), function(object) {
-  dim(object@mat)
+  # dim, nrow and ncol to display the # of rows and columns
+  # for a GCT object's matrix
+  setMethod("ncol", signature("GCT"), function(x) {
+    ncol(x@mat)
+  })
+  setMethod("nrow", signature("GCT"), function(x) {
+    nrow(x@mat)
+  })
+  setMethod("dim", signature("GCT"), function(x) {
+    dim(x@mat)
+  })
 })
 
 
