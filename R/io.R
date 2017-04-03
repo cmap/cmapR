@@ -476,6 +476,9 @@ setMethod("initialize",
 #'   false if the GCTX file has duplicate row/column ids.
 #' @param matrix_only boolean indicating whether to parse only
 #'   the matrix (ignoring row and column annotations)
+#'
+#' @details \code{parse.gctx} also supports parsing of plain text
+#'   GCT files, so this function can be used as a general GCT parser.
 #' 
 #' @examples 
 #' gct_file <- system.file("extdata", "modzs_n272x978.gctx", package="roller")
