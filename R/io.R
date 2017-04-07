@@ -659,7 +659,7 @@ write.gctx <- function(ds, ofile, appenddim=T, compression_level=0, matrix_only=
     message(paste(ofile, "exists, removing"))
     file.remove(ofile)
   }
-  message("writing", ofile)
+  message(paste("writing", ofile))
   
   # start the file object
   h5createFile(ofile)
