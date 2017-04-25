@@ -1,0 +1,371 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>utils (utils.R) &mdash; cmapR 1.0.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="cmapR 1.0.0 documentation" href="index.html"/>
+        <link rel="next" title="Contribution guidelines" href="contributing.html"/>
+        <link rel="prev" title="IO (io.R)" href="io.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> cmapR
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="build.html">Installation</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="data.html">Data (data.R)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="io.html">IO (io.R)</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">utils (utils.R)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#melting-gct-objects">Melting GCT objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#concatenating">Concatenating</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#slicing">Slicing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#annotating">Annotating</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#transpose">Transpose</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#math">Math</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contribution guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="licenses.html">BSD 3-Clause License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="citing.html">Citation Information</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">cmapR</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>utils (utils.R)</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/utils.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="utils-utils-r">
+<h1>utils (utils.R)<a class="headerlink" href="#utils-utils-r" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="melting-gct-objects">
+<h2>Melting GCT objects<a class="headerlink" href="#melting-gct-objects" title="Permalink to this headline">¶</a></h2>
+<p>Transform a GCT object to long form (aka &#8216;melt&#8217;).</p>
+<div class="highlight-r"><div class="highlight"><pre><span></span>melt.gct<span class="p">(</span>g<span class="p">,</span> suffixes<span class="o">=</span><span class="kc">NULL</span><span class="p">,</span> remove_symmetries<span class="o">=</span><span class="bp">F</span><span class="p">,</span> keep_rdesc<span class="o">=</span><span class="bp">T</span><span class="p">,</span> keep_cdesc<span class="o">=</span><span class="bp">T</span><span class="p">)</span>
+
+<span class="o">@</span>description Utilizes the \code<span class="p">{</span>\link<span class="p">{</span>data.table<span class="o">::</span>melt<span class="p">}}</span> <span class="kr">function</span> to transform the
+  <span class="kt">matrix</span> into long form. Optionally can include the row and column
+  annotations <span class="kr">in</span> the transformed \code<span class="p">{</span>\link<span class="p">{</span>data.table<span class="p">}}</span><span class="m">.</span>
+
+<span class="o">@</span>param g the GCT object
+<span class="o">@</span>param keep_rdesc boolean indicating whether to keep the <span class="kp">row</span>
+  descriptors <span class="kr">in</span> the final result
+<span class="o">@</span>param keep_cdesc boolean indicating whether to keep the column
+  descriptors <span class="kr">in</span> the final result
+<span class="o">@</span>param remove_symmetries boolean indicating whether to <span class="kp">remove</span>
+  the lower triangle of the <span class="kt">matrix</span> <span class="p">(</span>only applies <span class="kr">if</span> \code<span class="p">{</span>g<span class="o">@</span>mat<span class="p">}</span> is symmetric<span class="p">)</span>
+<span class="o">@</span>param suffixes the <span class="kt">character</span> suffixes to be applied <span class="kr">if</span> there are
+  collisions between the names of the row and column descriptors
+
+<span class="o">@</span><span class="kr">return</span> a \code<span class="p">{</span>\link<span class="p">{</span>data.table<span class="p">}}</span> object with the row and column ids and the <span class="kt">matrix</span>
+  values and <span class="p">(</span>optinally<span class="p">)</span> the row and column descriptors
+
+<span class="o">@</span>examples
+<span class="c1"># simple melt, keeping both row and column meta</span>
+<span class="kp">head</span><span class="p">(</span>melt.gct<span class="p">(</span>ds<span class="p">))</span>
+
+<span class="c1"># update row/colum suffixes to indicate rows are genes, columns experiments</span>
+<span class="kp">head</span><span class="p">(</span>melt.gct<span class="p">(</span>ds<span class="p">,</span> suffixes <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;_gene&quot;</span><span class="p">,</span> <span class="s">&quot;_experiment&quot;</span><span class="p">)))</span>
+
+<span class="c1"># ignore row/column meta</span>
+<span class="kp">head</span><span class="p">(</span>melt.gct<span class="p">(</span>ds<span class="p">,</span> keep_rdesc <span class="o">=</span> <span class="bp">F</span><span class="p">,</span> keep_cdesc <span class="o">=</span> <span class="bp">F</span><span class="p">))</span>
+
+<span class="o">@</span>family GCT utilities
+</pre></div>
+</div>
+</div>
+<div class="section" id="concatenating">
+<h2>Concatenating<a class="headerlink" href="#concatenating" title="Permalink to this headline">¶</a></h2>
+<p><strong>Merge two GCT objects</strong></p>
+<div class="highlight-r"><div class="highlight"><pre><span></span>merge.gct<span class="p">(</span>g1<span class="p">,</span> g2<span class="p">,</span> dimension<span class="o">=</span><span class="s">&quot;row&quot;</span><span class="p">,</span> matrix_only<span class="o">=</span><span class="bp">F</span><span class="p">)</span>
+
+<span class="o">@</span>param g1 the first GCT object
+<span class="o">@</span>param g2 the second GCT object
+<span class="o">@</span>param dimension the dimension on which to merge <span class="p">(</span>row or column<span class="p">)</span>
+<span class="o">@</span>param matrix_only boolean idicating whether to keep only the
+  data matrices from \code<span class="p">{</span>g1<span class="p">}</span> and \code<span class="p">{</span>g2<span class="p">}</span> and ignore their
+  row and column meta data
+
+<span class="o">@</span>examples
+<span class="c1"># take the first 10 and last 10 rows of an object</span>
+<span class="c1"># and merge them back together</span>
+<span class="p">(</span>a <span class="o">&lt;-</span> subset.gct<span class="p">(</span>ds<span class="p">,</span> rid<span class="o">=</span><span class="m">1</span><span class="o">:</span><span class="m">10</span><span class="p">))</span>
+<span class="p">(</span>b <span class="o">&lt;-</span> subset.gct<span class="p">(</span>ds<span class="p">,</span> rid<span class="o">=</span><span class="m">969</span><span class="o">:</span><span class="m">978</span><span class="p">))</span>
+<span class="p">(</span>merged <span class="o">&lt;-</span> merge.gct<span class="p">(</span>a<span class="p">,</span> b<span class="p">,</span> dimension<span class="o">=</span><span class="s">&quot;row&quot;</span><span class="p">))</span>
+
+<span class="o">@</span>family GCT utilities
+<span class="o">@</span>export
+</pre></div>
+</div>
+</div>
+<div class="section" id="slicing">
+<h2>Slicing<a class="headerlink" href="#slicing" title="Permalink to this headline">¶</a></h2>
+<p><strong>Slice a GCT object using the provided row and/or column ids</strong></p>
+<div class="highlight-r"><div class="highlight"><pre><span></span>subset.gct<span class="p">(</span>g<span class="p">,</span> rid<span class="o">=</span><span class="kc">NULL</span><span class="p">,</span> cid<span class="o">=</span><span class="kc">NULL</span><span class="p">)</span>
+
+<span class="o">@</span>param g a gct object
+<span class="o">@</span>param rid a <span class="kt">vector</span> of <span class="kt">character</span> ids or <span class="kt">integer</span> indices <span class="kr">for</span> ROWS
+<span class="o">@</span>param cid a <span class="kt">vector</span> of <span class="kt">character</span> ids or <span class="kt">integer</span> indices <span class="kr">for</span> COLUMNS
+
+<span class="o">@</span>examples
+<span class="c1"># first 10 rows and columns by index</span>
+<span class="p">(</span>a <span class="o">&lt;-</span> subset.gct<span class="p">(</span>ds<span class="p">,</span> rid<span class="o">=</span><span class="m">1</span><span class="o">:</span><span class="m">10</span><span class="p">,</span> cid<span class="o">=</span><span class="m">1</span><span class="o">:</span><span class="m">10</span><span class="p">))</span>
+
+<span class="c1"># first 10 rows and columns using character ids</span>
+<span class="p">(</span>b <span class="o">&lt;-</span> subset.gct<span class="p">(</span>ds<span class="p">,</span> rid<span class="o">=</span>ds<span class="o">@</span>rid<span class="p">[</span><span class="m">1</span><span class="o">:</span><span class="m">10</span><span class="p">],</span> cid<span class="o">=</span>ds<span class="o">@</span>cid<span class="p">[</span><span class="m">1</span><span class="o">:</span><span class="m">10</span><span class="p">]))</span>
+
+<span class="kp">identical</span><span class="p">(</span>a<span class="p">,</span> b<span class="p">)</span> <span class="c1"># TRUE</span>
+
+<span class="o">@</span>family GCT utilities
+</pre></div>
+</div>
+</div>
+<div class="section" id="annotating">
+<h2>Annotating<a class="headerlink" href="#annotating" title="Permalink to this headline">¶</a></h2>
+<p>Given a GCT object and either a <code class="docutils literal"><span class="pre">data.frame</span></code> or a path to an annotation table, apply the annotations to the GCT using the given <code class="docutils literal"><span class="pre">keyfield</span></code>.</p>
+<div class="highlight-r"><div class="highlight"><pre><span></span>annotate.gct<span class="p">(</span>g<span class="p">,</span> annot<span class="p">,</span> dimension<span class="o">=</span><span class="s">&quot;row&quot;</span><span class="p">,</span> keyfield<span class="o">=</span><span class="s">&quot;id&quot;</span><span class="p">)</span>
+
+<span class="o">@</span>description Given a GCT object and either a \code<span class="p">{</span>\link<span class="p">{</span><span class="kt">data.frame</span><span class="p">}}</span> or
+a path to an annotation <span class="kp">table</span><span class="p">,</span> apply the annotations to the
+gct using the given \code<span class="p">{</span>keyfield<span class="p">}</span><span class="m">.</span>
+
+<span class="o">@</span>param g a GCT object
+<span class="o">@</span>param annot a \code<span class="p">{</span>\link<span class="p">{</span><span class="kt">data.frame</span><span class="p">}}</span> or path to text table of annotations
+<span class="o">@</span>param dimension either <span class="s">&#39;row&#39;</span> or <span class="s">&#39;column&#39;</span> indicating which dimension
+  of \code<span class="p">{</span>g<span class="p">}</span> to annotate
+<span class="o">@</span>param keyfield the <span class="kt">character</span> name of the column <span class="kr">in</span> \code<span class="p">{</span>annot<span class="p">}</span> that
+  matches the row or column identifiers <span class="kr">in</span> \code<span class="p">{</span>g<span class="p">}</span>
+
+<span class="o">@</span><span class="kr">return</span> a GCT object with annotations applied to the specified
+  dimension
+
+<span class="o">@</span>examples
+\dontrun<span class="p">{</span>
+ g <span class="o">&lt;-</span> parse.gctx<span class="p">(</span><span class="s">&#39;/path/to/gct/file&#39;</span><span class="p">)</span>
+ g <span class="o">&lt;-</span> annotate.gct<span class="p">(</span>g<span class="p">,</span> <span class="s">&#39;/path/to/annot&#39;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="o">@</span>family GCT utilities
+</pre></div>
+</div>
+</div>
+<div class="section" id="transpose">
+<h2>Transpose<a class="headerlink" href="#transpose" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-r"><div class="highlight"><pre><span></span>transpose.gct<span class="p">(</span>g<span class="p">)</span>
+
+<span class="o">@</span>param g the \code<span class="p">{</span>GCT<span class="p">}</span> object
+
+<span class="o">@</span><span class="kr">return</span> a modified verion of the input \code<span class="p">{</span>GCT<span class="p">}</span> object
+  where the <span class="kt">matrix</span> has been transposed and the row and column
+  ids and annotations have been swapped.
+
+<span class="o">@</span>examples
+transpose.gct<span class="p">(</span>ds<span class="p">)</span>
+
+<span class="o">@</span>family GCT utilties
+<span class="o">@</span>export
+</pre></div>
+</div>
+</div>
+<div class="section" id="math">
+<h2>Math<a class="headerlink" href="#math" title="Permalink to this headline">¶</a></h2>
+<p><strong>Convert values in a matrix to ranks</strong></p>
+<div class="highlight-r"><div class="highlight"><pre><span></span>rank.gct<span class="p">(</span>g<span class="p">,</span> dim<span class="o">=</span><span class="s">&quot;row&quot;</span><span class="p">)</span>
+<span class="o">@</span>param g the \code<span class="p">{</span>GCT<span class="p">}</span> object to <span class="kp">rank</span>
+<span class="o">@</span>param dim the dimension along which to <span class="kp">rank</span>
+  <span class="p">(</span>row or column<span class="p">)</span>
+
+<span class="o">@</span><span class="kr">return</span> a modified version of \code<span class="p">{</span>g<span class="p">},</span> with the
+  values <span class="kr">in</span> the <span class="kt">matrix</span> converted to ranks
+
+<span class="o">@</span>examples
+<span class="p">(</span>ranked <span class="o">&lt;-</span> rank.gct<span class="p">(</span>ds<span class="p">,</span> dim<span class="o">=</span><span class="s">&quot;column&quot;</span><span class="p">))</span>
+<span class="c1"># scatter rank vs. score for a few columns</span>
+plot<span class="p">(</span>ds<span class="o">@</span>mat<span class="p">[,</span> <span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">],</span> ranked<span class="o">@</span>mat<span class="p">[,</span> <span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">],</span>
+  xlab<span class="o">=</span><span class="s">&quot;score&quot;</span><span class="p">,</span> ylab<span class="o">=</span><span class="s">&quot;rank&quot;</span><span class="p">)</span>
+
+<span class="o">@</span>family GCT utilities
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="contributing.html" class="btn btn-neutral float-right" title="Contribution guidelines" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="io.html" class="btn btn-neutral" title="IO (io.R)" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Connectivity Map at Broad Institute of MIT and Harvard, Inc..
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.0.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

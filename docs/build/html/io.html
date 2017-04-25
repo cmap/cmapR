@@ -1,0 +1,550 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>IO (io.R) &mdash; cmapR 1.0.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="cmapR 1.0.0 documentation" href="index.html"/>
+        <link rel="next" title="utils (utils.R)" href="utils.html"/>
+        <link rel="prev" title="Data (data.R)" href="data.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> cmapR
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="build.html">Installation</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="data.html">Data (data.R)</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">IO (io.R)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#gct-object-s4-class">GCT Object (S4 class)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#gctx-parsing-functions">GCTX parsing functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#gctx-writing-functions">GCTX writing functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#parsing-grp-files">Parsing GRP files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#writing-to-grp-files">Writing to .grp files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#parsing-gmx-files">Parsing GMX files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#parsing-gmt-files">Parsing GMT files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#writing-to-gmt-files">Writing to GMT files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#writing-a-data-frame-to-a-tsv-file">Writing a <code class="docutils literal"><span class="pre">data.frame</span></code> to a tsv file</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">utils (utils.R)</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contribution guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="licenses.html">BSD 3-Clause License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="citing.html">Citation Information</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">cmapR</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>IO (io.R)</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/io.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="io-io-r">
+<h1>IO (io.R)<a class="headerlink" href="#io-io-r" title="Permalink to this headline">¶</a></h1>
+<p>Generally, this module contains the GCT class and relevant method definitions. These are:</p>
+<div class="section" id="gct-object-s4-class">
+<h2>GCT Object (S4 class)<a class="headerlink" href="#gct-object-s4-class" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-r"><div class="highlight"><pre><span></span><span class="c1">#An S4 class to represent a GCT object</span>
+
+<span class="o">@</span>slot mat a <span class="kt">numeric</span> <span class="kt">matrix</span>
+<span class="o">@</span>slot rid a <span class="kt">character</span> <span class="kt">vector</span> of row ids
+<span class="o">@</span>slot cid a <span class="kt">character</span> <span class="kt">vector</span> of column ids
+<span class="o">@</span>slot rdesc a \code<span class="p">{</span><span class="kt">data.frame</span><span class="p">}</span> of row descriptors
+<span class="o">@</span>slot rdesc a \code<span class="p">{</span><span class="kt">data.frame</span><span class="p">}</span> of column descriptors
+<span class="o">@</span>slot src a <span class="kt">character</span> indicating the <span class="kn">source</span> <span class="p">(</span>usually file path<span class="p">)</span> of the data
+
+<span class="o">@</span>description The GCT class serves to represent annotated
+  matrices. The \code<span class="p">{</span>mat<span class="p">}</span> slot contains said data and the
+  \code<span class="p">{</span>rdesc<span class="p">}</span> and \code<span class="p">{</span>cdesc<span class="p">}</span> slots contain data frames <span class="kp">with</span>
+  annotations about the rows and columns<span class="p">,</span> respectively
+
+<span class="o">@</span>seealso \code<span class="p">{</span>\link<span class="p">{</span>parse.gctx<span class="p">}},</span> \code<span class="p">{</span>\link<span class="p">{</span>write.gctx<span class="p">}},</span> \code<span class="p">{</span>\link<span class="p">{</span>read.gctx.meta<span class="p">}},</span> \code<span class="p">{</span>\link<span class="p">{</span>read.gctx.ids<span class="p">}}</span>
+<span class="o">@</span>seealso \link<span class="p">{</span>http<span class="o">://</span>clue.io<span class="o">/</span>help<span class="p">}</span> <span class="kr">for</span> more information on the GCT <span class="kp">format</span>
+
+setClass<span class="p">(</span><span class="s">&quot;GCT&quot;</span><span class="p">,</span>
+         representation<span class="p">(</span>
+             mat <span class="o">=</span> <span class="s">&quot;matrix&quot;</span><span class="p">,</span>
+             rid <span class="o">=</span> <span class="s">&quot;character&quot;</span><span class="p">,</span>
+             cid <span class="o">=</span> <span class="s">&quot;character&quot;</span><span class="p">,</span>
+             rdesc <span class="o">=</span> <span class="s">&quot;data.frame&quot;</span><span class="p">,</span>
+             cdesc <span class="o">=</span> <span class="s">&quot;data.frame&quot;</span><span class="p">,</span>
+             version <span class="o">=</span> <span class="s">&quot;character&quot;</span><span class="p">,</span>
+             src <span class="o">=</span> <span class="s">&quot;character&quot;</span>
+         <span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="gctx-parsing-functions">
+<h2>GCTX parsing functions<a class="headerlink" href="#gctx-parsing-functions" title="Permalink to this headline">¶</a></h2>
+<p><strong>Parse a .gct or .gctx file to GCT object</strong></p>
+<div class="highlight-r"><div class="highlight"><pre><span></span>parse.gctx <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>fname<span class="p">,</span> rid<span class="o">=</span><span class="kc">NULL</span><span class="p">,</span> cid<span class="o">=</span><span class="kc">NULL</span><span class="p">,</span> set_annot_rownames<span class="o">=</span><span class="bp">F</span><span class="p">,</span> matrix_only<span class="o">=</span><span class="bp">F</span><span class="p">)</span>
+
+<span class="o">@</span>param fname path to the GCTX file on disk
+<span class="o">@</span>param rid either a <span class="kt">vector</span> of <span class="kt">character</span> or <span class="kt">integer</span>
+  row indices or a path to a grp file containing <span class="kt">character</span>
+  row indices. Only these indicies will be parsed from the
+  file.
+<span class="o">@</span>param cid either a <span class="kt">vector</span> of <span class="kt">character</span> or <span class="kt">integer</span>
+  column indices or a path to a grp file containing <span class="kt">character</span>
+  column indices. Only these indicies will be parsed from the
+  file.
+<span class="o">@</span>param set_annot_rownames boolean indicating whether to set the
+  rownames on the <span class="kp">row</span><span class="o">/</span>column metadata data.frames. Set this to
+  false <span class="kr">if</span> the GCTX file has duplicate <span class="kp">row</span><span class="o">/</span>column ids.
+<span class="o">@</span>param matrix_only boolean indicating whether to parse only
+  the <span class="kt">matrix</span> <span class="p">(</span>ignoring row and column annotations<span class="p">)</span>
+
+<span class="o">@</span>details \code<span class="p">{</span>parse.gctx<span class="p">}</span> also supports parsing of plain text
+  GCT files<span class="p">,</span> so this <span class="kr">function</span> can be used as a general GCT parser.
+
+<span class="o">@</span>examples
+gct_file <span class="o">&lt;-</span> <span class="kp">system.file</span><span class="p">(</span><span class="s">&quot;extdata&quot;</span><span class="p">,</span> <span class="s">&quot;modzs_n272x978.gctx&quot;</span><span class="p">,</span> package<span class="o">=</span><span class="s">&quot;roller&quot;</span><span class="p">)</span>
+<span class="p">(</span>ds <span class="o">&lt;-</span> parse.gctx<span class="p">(</span>gct_file<span class="p">))</span>
+
+<span class="c1"># matrix only</span>
+<span class="p">(</span>ds <span class="o">&lt;-</span> parse.gctx<span class="p">(</span>gct_file<span class="p">,</span> matrix_only<span class="o">=</span><span class="bp">T</span><span class="p">))</span>
+
+<span class="c1"># only the first 10 rows and columns</span>
+<span class="p">(</span>ds <span class="o">&lt;-</span> parse.gctx<span class="p">(</span>gct_file<span class="p">,</span> rid<span class="o">=</span><span class="m">1</span><span class="o">:</span><span class="m">10</span><span class="p">,</span> cid<span class="o">=</span><span class="m">1</span><span class="o">:</span><span class="m">10</span><span class="p">))</span>
+
+<span class="o">@</span>family GCTX parsing functions
+</pre></div>
+</div>
+<p><strong>Parse row/column metadata only</strong></p>
+<div class="highlight-r"><div class="highlight"><pre><span></span>read.gctx.meta <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>gctx_path<span class="p">,</span> dimension<span class="o">=</span><span class="s">&quot;row&quot;</span><span class="p">,</span> ids<span class="o">=</span><span class="kc">NULL</span><span class="p">,</span> set_annot_rownames<span class="o">=</span><span class="bp">T</span><span class="p">)</span>
+
+<span class="o">@</span>param gctx_path the path to the GCTX <span class="kp">file</span>
+<span class="o">@</span>param dimension which metadata to read <span class="p">(</span>row or column<span class="p">)</span>
+<span class="o">@</span>param ids a <span class="kt">character</span> <span class="kt">vector</span> of a subset of <span class="kp">row</span><span class="o">/</span>column ids
+  <span class="kr">for</span> which to read the metadata
+<span class="o">@</span>param set_annot_rownames a boolean indicating whether to set the
+  \code<span class="p">{</span><span class="kp">rownames</span><span class="p">}</span> addtribute of the returned \code<span class="p">{</span><span class="kt">data.frame</span><span class="p">}</span> to
+  the corresponding <span class="kp">row</span><span class="o">/</span>column ids.
+
+<span class="o">@</span><span class="kr">return</span> a \code<span class="p">{</span><span class="kt">data.frame</span><span class="p">}</span> of metadata
+
+<span class="o">@</span>examples
+gct_file <span class="o">&lt;-</span> <span class="kp">system.file</span><span class="p">(</span><span class="s">&quot;extdata&quot;</span><span class="p">,</span> <span class="s">&quot;modzs_n272x978.gctx&quot;</span><span class="p">,</span> package<span class="o">=</span><span class="s">&quot;roller&quot;</span><span class="p">)</span>
+<span class="c1"># row meta</span>
+row_meta <span class="o">&lt;-</span> read.gctx.meta<span class="p">(</span>gct_file<span class="p">)</span>
+str<span class="p">(</span>row_meta<span class="p">)</span>
+<span class="c1"># column meta</span>
+col_meta <span class="o">&lt;-</span> read.gctx.meta<span class="p">(</span>gct_file<span class="p">,</span> dimension<span class="o">=</span><span class="s">&quot;column&quot;</span><span class="p">)</span>
+str<span class="p">(</span>col_meta<span class="p">)</span>
+<span class="c1"># now for only the first 10 ids</span>
+col_meta_first10 <span class="o">&lt;-</span> read.gctx.meta<span class="p">(</span>gct_file<span class="p">,</span> dimension<span class="o">=</span><span class="s">&quot;column&quot;</span><span class="p">,</span> ids<span class="o">=</span>col_meta<span class="o">$</span>id<span class="p">[</span><span class="m">1</span><span class="o">:</span><span class="m">10</span><span class="p">])</span>
+str<span class="p">(</span>col_meta_first10<span class="p">)</span>
+
+<span class="o">@</span>family GCTX parsing functions
+</pre></div>
+</div>
+<p><strong>Parse row/column ids only</strong></p>
+<div class="highlight-r"><div class="highlight"><pre><span></span>read.gctx.ids <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>gctx_path<span class="p">,</span> dimension<span class="o">=</span><span class="s">&quot;row&quot;</span><span class="p">)</span>
+
+<span class="c1">#Read GCTX row or column ids</span>
+
+<span class="o">@</span>param gctx_path path to the GCTX <span class="kp">file</span>
+<span class="o">@</span>param dimension which ids to read <span class="p">(</span>row or column<span class="p">)</span>
+
+<span class="o">@</span><span class="kr">return</span> a <span class="kt">character</span> <span class="kt">vector</span> of row or column ids from the provided <span class="kp">file</span>
+
+<span class="o">@</span>examples
+gct_file <span class="o">&lt;-</span> <span class="kp">system.file</span><span class="p">(</span><span class="s">&quot;extdata&quot;</span><span class="p">,</span> <span class="s">&quot;modzs_n272x978.gctx&quot;</span><span class="p">,</span> package<span class="o">=</span><span class="s">&quot;roller&quot;</span><span class="p">)</span>
+<span class="c1"># row ids</span>
+rid <span class="o">&lt;-</span> read.gctx.ids<span class="p">(</span>gct_file<span class="p">)</span>
+<span class="kp">head</span><span class="p">(</span>rid<span class="p">)</span>
+<span class="c1"># column ids</span>
+cid <span class="o">&lt;-</span> read.gctx.ids<span class="p">(</span>gct_file<span class="p">,</span> dimension<span class="o">=</span><span class="s">&quot;column&quot;</span><span class="p">)</span>
+<span class="kp">head</span><span class="p">(</span>cid<span class="p">)</span>
+
+<span class="o">@</span>family GCTX parsing functions
+</pre></div>
+</div>
+</div>
+<div class="section" id="gctx-writing-functions">
+<h2>GCTX writing functions<a class="headerlink" href="#gctx-writing-functions" title="Permalink to this headline">¶</a></h2>
+<p><strong>Write a GCT object to disk in .gct format</strong></p>
+<div class="highlight-r"><div class="highlight"><pre><span></span>write.gct <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>ds<span class="p">,</span> ofile<span class="p">,</span> precision<span class="o">=</span><span class="m">4</span><span class="p">,</span> appenddim<span class="o">=</span><span class="bp">T</span><span class="p">,</span> ver<span class="o">=</span><span class="m">3</span><span class="p">)</span>
+
+<span class="o">@</span>param ds the GCT object
+<span class="o">@</span>param ofile the desired output filename
+<span class="o">@</span>param precision the <span class="kt">numeric</span> precision at which to
+  save the matrix. See \code<span class="p">{</span>details<span class="p">}</span><span class="m">.</span>
+<span class="o">@</span>param appenddim boolean indicating whether to <span class="kp">append</span>
+  <span class="kt">matrix</span> dimensions to filename
+<span class="o">@</span>param ver the GCT version to write. See \code<span class="p">{</span>details<span class="p">}</span><span class="m">.</span>
+
+<span class="o">@</span>details Since GCT is text <span class="kp">format</span><span class="p">,</span> the higher \code<span class="p">{</span>precision<span class="p">}</span>
+  you <span class="kp">choose</span><span class="p">,</span> the larger the file size.
+  \code<span class="p">{</span>ver<span class="p">}</span> is assumed to be <span class="m">3</span><span class="p">,</span> aka GCT version <span class="m">1.3</span><span class="p">,</span> which supports
+  embedded row and column metadata <span class="kr">in</span> the GCT file. Any other value
+  passed to \code<span class="p">{</span>ver<span class="p">}</span> will result <span class="kr">in</span> a GCT version <span class="m">1.2</span> file <span class="kp">which</span>
+  contains only the <span class="kt">matrix</span> data and no annotations.
+
+<span class="o">@</span><span class="kr">return</span> <span class="kc">NULL</span>
+
+<span class="o">@</span>examples
+\dontrun<span class="p">{</span>
+write.gct<span class="p">(</span>ds<span class="p">,</span> <span class="s">&quot;dataset&quot;</span><span class="p">,</span> precision<span class="o">=</span><span class="m">2</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="o">@</span>family GCTX parsing functions
+</pre></div>
+</div>
+<p><strong>Write a GCT object to disk in .gctx format</strong></p>
+<div class="highlight-r"><div class="highlight"><pre><span></span>write.gctx <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>ds<span class="p">,</span> ofile<span class="p">,</span> appenddim<span class="o">=</span><span class="bp">T</span><span class="p">,</span> compression_level<span class="o">=</span><span class="m">0</span><span class="p">,</span> matrix_only<span class="o">=</span><span class="bp">F</span><span class="p">)</span>
+
+<span class="o">@</span>param ds a GCT object
+<span class="o">@</span>param ofile the desired file path <span class="kr">for</span> writing
+<span class="o">@</span>param appenddim boolean indicating whether the
+  resulting filename will have dimensions appended
+  <span class="p">(</span>e.g. my_file_n384x978.gctx<span class="p">)</span>
+<span class="o">@</span>param compression_level <span class="kt">integer</span> between <span class="m">1-9</span> indicating
+  how much to compress data before writing. Higher values
+  result <span class="kr">in</span> smaller files but slower read times.
+<span class="o">@</span>param matrix_only boolean indicating whether to <span class="kp">write</span>
+  only the <span class="kt">matrix</span> data <span class="p">(</span>and skip <span class="kp">row</span><span class="p">,</span> column annotations<span class="p">)</span>
+
+<span class="o">@</span>examples
+\dontrun<span class="p">{</span>
+<span class="c1"># assume ds is a GCT object</span>
+write.gctx<span class="p">(</span>ds<span class="p">,</span> <span class="s">&quot;my/desired/outpath/and/filename&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="o">@</span>family GCTX parsing functions
+</pre></div>
+</div>
+<p><strong>Write a ``data.frame`` of metadata only to a GCTX file</strong></p>
+<div class="highlight-r"><div class="highlight"><pre><span></span>write.gctx.meta <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>ofile<span class="p">,</span> df<span class="p">,</span> dimension<span class="o">=</span><span class="s">&quot;row&quot;</span><span class="p">)</span>
+
+<span class="o">@</span>param ofile the desired file path <span class="kr">for</span> writing
+<span class="o">@</span>param df the \code<span class="p">{</span><span class="kt">data.frame</span><span class="p">}</span> of annotations
+<span class="o">@</span>param dimension the dimension to annotate
+  <span class="p">(</span>row or column<span class="p">)</span>
+
+<span class="o">@</span>examples
+\dontrun<span class="p">{</span>
+<span class="c1"># assume ds is a GCT object</span>
+write.gctx.meta<span class="p">(</span><span class="s">&quot;/my/file/path&quot;</span><span class="p">,</span> cdesc_char<span class="p">,</span> dimension<span class="o">=</span><span class="s">&quot;col&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="o">@</span>family GCTX parsing functions
+<span class="o">@</span>keywords internal
+</pre></div>
+</div>
+</div>
+<div class="section" id="parsing-grp-files">
+<h2>Parsing GRP files<a class="headerlink" href="#parsing-grp-files" title="Permalink to this headline">¶</a></h2>
+<p><strong>Parse a .grp file to vector</strong></p>
+<div class="highlight-r"><div class="highlight"><pre><span></span>parse.grp <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>fname<span class="p">)</span>
+
+<span class="o">@</span>param fname the file path to be parsed
+<span class="o">@</span><span class="kr">return</span> a <span class="kt">vector</span> of the contents of \code<span class="p">{</span>fname<span class="p">}</span>
+
+<span class="o">@</span>examples
+grp_path <span class="o">&lt;-</span> <span class="kp">system.file</span><span class="p">(</span><span class="s">&quot;extdata&quot;</span><span class="p">,</span> <span class="s">&quot;lm_epsilon_n978.grp&quot;</span><span class="p">,</span> package<span class="o">=</span><span class="s">&quot;roller&quot;</span><span class="p">)</span>
+values <span class="o">&lt;-</span> parse.grp<span class="p">(</span>grp_path<span class="p">)</span>
+str<span class="p">(</span>values<span class="p">)</span>
+
+<span class="o">@</span>family CMap parsing functions
+<span class="o">@</span>seealso \link<span class="p">{</span>http<span class="o">://</span>clue.io<span class="o">/</span>help<span class="p">}</span> <span class="kr">for</span> details on the GRP file <span class="kp">format</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="writing-to-grp-files">
+<h2>Writing to .grp files<a class="headerlink" href="#writing-to-grp-files" title="Permalink to this headline">¶</a></h2>
+<p><strong>Write a vector to a .grp file</strong></p>
+<div class="highlight-r"><div class="highlight"><pre><span></span>write.grp <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>vals<span class="p">,</span> fname<span class="p">)</span>
+
+<span class="o">@</span>param vals the <span class="kt">vector</span> of values to be written
+<span class="o">@</span>param fname the desired file name
+
+<span class="o">@</span>examples
+\dontrun<span class="p">{</span>
+write.grp<span class="p">(</span><span class="kc">letters</span><span class="p">,</span> <span class="s">&quot;letter.grp&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="o">@</span>family CMap parsing functions
+<span class="o">@</span>seealso \link<span class="p">{</span>http<span class="o">://</span>clue.io<span class="o">/</span>help<span class="p">}</span> <span class="kr">for</span> details on the GRP file <span class="kp">format</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="parsing-gmx-files">
+<h2>Parsing GMX files<a class="headerlink" href="#parsing-gmx-files" title="Permalink to this headline">¶</a></h2>
+<p><strong>Parse a .gmx file to a list</strong></p>
+<div class="highlight-r"><div class="highlight"><pre><span></span>parse.gmx <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>fname<span class="p">)</span>
+
+<span class="o">@</span>param fname the file path to be parsed
+
+<span class="o">@</span><span class="kr">return</span> a <span class="kt">list</span> of the contents of \code<span class="p">{</span>fname<span class="p">}</span><span class="m">.</span> See details.
+
+<span class="o">@</span>details \code<span class="p">{</span>parse.gmx<span class="p">}</span> returns a nested <span class="kt">list</span> object. The top
+  level contains one <span class="kt">list</span> per column <span class="kr">in</span> \code<span class="p">{</span>fname<span class="p">}</span><span class="m">.</span> Each of
+  these is itself a <span class="kt">list</span> with the following fields<span class="o">:</span>
+  <span class="o">-</span> \code<span class="p">{</span><span class="kp">head</span><span class="p">}</span><span class="o">:</span> the name of the data <span class="p">(</span>column <span class="kr">in</span> \code<span class="p">{</span>fname<span class="p">})</span>
+  <span class="o">-</span> \code<span class="p">{</span>desc<span class="p">}</span><span class="o">:</span> description of the corresponding data
+  <span class="o">-</span> \code<span class="p">{</span>len<span class="p">}</span><span class="o">:</span> the number of data items
+  <span class="o">-</span> \code<span class="p">{</span>entry<span class="p">}</span><span class="o">:</span> a <span class="kt">vector</span> of the data items
+
+<span class="o">@</span>examples
+gmx_path <span class="o">&lt;-</span> <span class="kp">system.file</span><span class="p">(</span><span class="s">&quot;extdata&quot;</span><span class="p">,</span> <span class="s">&quot;lm_probes.gmx&quot;</span><span class="p">,</span> package<span class="o">=</span><span class="s">&quot;roller&quot;</span><span class="p">)</span>
+gmx <span class="o">&lt;-</span> parse.gmx<span class="p">(</span>gmx_path<span class="p">)</span>
+str<span class="p">(</span>gmx<span class="p">)</span>
+
+<span class="o">@</span>family CMap parsing functions
+<span class="o">@</span>seealso \link<span class="p">{</span>http<span class="o">://</span>clue.io<span class="o">/</span>help<span class="p">}</span> <span class="kr">for</span> details on the GMX file <span class="kp">format</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="parsing-gmt-files">
+<h2>Parsing GMT files<a class="headerlink" href="#parsing-gmt-files" title="Permalink to this headline">¶</a></h2>
+<p><strong>Parse a .gmt file to a list</strong></p>
+<div class="highlight-r"><div class="highlight"><pre><span></span>parse.gmt <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>fname<span class="p">)</span>
+
+<span class="o">@</span>param fname the file path to be parsed
+
+<span class="o">@</span><span class="kr">return</span> a <span class="kt">list</span> of the contents of \code<span class="p">{</span>fname<span class="p">}</span><span class="m">.</span> See details.
+
+<span class="o">@</span>details \code<span class="p">{</span>parse.gmt<span class="p">}</span> returns a nested <span class="kt">list</span> object. The top
+  level contains one <span class="kt">list</span> per row <span class="kr">in</span> \code<span class="p">{</span>fname<span class="p">}</span><span class="m">.</span> Each of
+  these is itself a <span class="kt">list</span> with the following fields<span class="o">:</span>
+  <span class="o">-</span> \code<span class="p">{</span><span class="kp">head</span><span class="p">}</span><span class="o">:</span> the name of the data <span class="p">(</span>row <span class="kr">in</span> \code<span class="p">{</span>fname<span class="p">})</span>
+  <span class="o">-</span> \code<span class="p">{</span>desc<span class="p">}</span><span class="o">:</span> description of the corresponding data
+  <span class="o">-</span> \code<span class="p">{</span>len<span class="p">}</span><span class="o">:</span> the number of data items
+  <span class="o">-</span> \code<span class="p">{</span>entry<span class="p">}</span><span class="o">:</span> a <span class="kt">vector</span> of the data items
+
+<span class="o">@</span>examples
+gmt_path <span class="o">&lt;-</span> <span class="kp">system.file</span><span class="p">(</span><span class="s">&quot;extdata&quot;</span><span class="p">,</span> <span class="s">&quot;query_up.gmt&quot;</span><span class="p">,</span> package<span class="o">=</span><span class="s">&quot;roller&quot;</span><span class="p">)</span>
+gmt <span class="o">&lt;-</span> parse.gmt<span class="p">(</span>gmt_path<span class="p">)</span>
+str<span class="p">(</span>gmt<span class="p">)</span>
+
+<span class="o">@</span>family CMap parsing functions
+<span class="o">@</span>seealso \link<span class="p">{</span>http<span class="o">://</span>clue.io<span class="o">/</span>help<span class="p">}</span> <span class="kr">for</span> details on the GMT file <span class="kp">format</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="writing-to-gmt-files">
+<h2>Writing to GMT files<a class="headerlink" href="#writing-to-gmt-files" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-r"><div class="highlight"><pre><span></span>write.gmt <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>lst<span class="p">,</span> fname<span class="p">)</span>
+
+<span class="o">@</span>param lst the nested <span class="kt">list</span> to write. See \code<span class="p">{</span>details<span class="p">}</span><span class="m">.</span>
+<span class="o">@</span>param fname the desired file name
+
+<span class="o">@</span>details \code<span class="p">{</span>lst<span class="p">}</span> needs to be a nested <span class="kt">list</span> where each
+  <span class="kp">sub</span><span class="o">-</span><span class="kt">list</span> is itself a <span class="kt">list</span> with the following fields<span class="o">:</span>
+  <span class="o">-</span> \code<span class="p">{</span><span class="kp">head</span><span class="p">}</span><span class="o">:</span> the name of the data
+  <span class="o">-</span> \code<span class="p">{</span>desc<span class="p">}</span><span class="o">:</span> description of the corresponding data
+  <span class="o">-</span> \code<span class="p">{</span>len<span class="p">}</span><span class="o">:</span> the number of data items
+  <span class="o">-</span> \code<span class="p">{</span>entry<span class="p">}</span><span class="o">:</span> a <span class="kt">vector</span> of the data items
+
+<span class="o">@</span>examples
+\dontrun<span class="p">{</span>
+write.gmt<span class="p">(</span>gene_set<span class="p">,</span> <span class="s">&quot;gene_set.gmt&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="o">@</span>family CMap parsing functions
+<span class="o">@</span>seealso \link<span class="p">{</span>http<span class="o">://</span>clue.io<span class="o">/</span>help<span class="p">}</span> <span class="kr">for</span> details on the GMT file <span class="kp">format</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="writing-a-data-frame-to-a-tsv-file">
+<h2>Writing a <code class="docutils literal"><span class="pre">data.frame</span></code> to a tsv file<a class="headerlink" href="#writing-a-data-frame-to-a-tsv-file" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-r"><div class="highlight"><pre><span></span>write.tbl <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>tbl<span class="p">,</span> ofile<span class="p">,</span> <span class="kc">...</span><span class="p">)</span>
+
+<span class="o">@</span>param tbl the \code<span class="p">{</span><span class="kt">data.frame</span><span class="p">}</span> to be written
+<span class="o">@</span>param ofile the desired file name
+<span class="o">@</span>param <span class="kc">...</span> additional arguments passed on to \code<span class="p">{</span>write.table<span class="p">}</span>
+
+<span class="o">@</span>details This method simply calls \code<span class="p">{</span>write.table<span class="p">}</span> with some
+  preset arguments that generate a unquoted<span class="p">,</span> tab<span class="o">-</span>delimited <span class="kp">file</span>
+  without row names.
+
+<span class="o">@</span>examples
+\dontrun<span class="p">{</span>
+write.tbl<span class="p">(</span>cdesc_char<span class="p">,</span> <span class="s">&quot;col_meta.txt&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="o">@</span>seealso \code<span class="p">{</span>\link<span class="p">{</span>write.table<span class="p">}}</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="utils.html" class="btn btn-neutral float-right" title="utils (utils.R)" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="data.html" class="btn btn-neutral" title="Data (data.R)" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Connectivity Map at Broad Institute of MIT and Harvard, Inc..
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.0.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
