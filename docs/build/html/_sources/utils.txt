@@ -70,59 +70,9 @@ Concatenating
 	@family GCT utilities
 	@export
 
-**Merge two ``data.frame`` objects with precedence**
-
-Merge two ``data.frame``s, but where there are common fields those in ``{x}`` are maintained, and those in ``{y}`` are dropped. 
-
-.. highlight:: r
-
-::
-
-	merge_with_precedence <- function(x, y, by, allow.cartesian=T,
-	                                  as_data_frame = T)
-
-	@param x the \code{\link{data.frame}} whose columns take precedence
-	@param y another \code{\link{data.frame}}
-	@param by a vector of column names to merge on
-	@param allow.cartesian boolean indicating whether it's ok
-	  for repeated values in either table to merge with each other
-	  over and over again.
-	@param as_data_frame boolean indicating whether to ensure
-	  the returned object is a \code{\link{data.frame}} instead of a \code{\link{data.table}}.
-	  This ensures compatibility with GCT object conventions,
-	  that is, the \code{\link{rdesc}} and \code{\link{cdesc}} slots must be strictly
-	  \code{\link{data.frame}} objects.
-	  
-	@return a \code{\link{data.frame}} or \code{\link{data.table}} object
-	
-	@examples 
-	(x <- data.table(foo=letters[1:10], bar=1:10))
-	(y <- data.table(foo=letters[1:10], bar=11:20, baz=LETTERS[1:10]))
-	# the 'bar' column from y will be dropped on merge
-	merge_with_precedence(x, y, by="foo")
-	
-	@keywords internal
-	@seealso data.table::merge
-
 
 Slicing
 -------
-
-**Robust ``data.frame`` subset to a set of ids**
-
-.. highlight:: r
-
-::
-
-	subset_to_ids <- function(df, ids)
-
-	@param df \code{\link{data.frame}} to subset
-	@param ids the ids to subset to
-
-	@return a subset version of \code{df}
-
-	@keywords internal
-
 
 **Slice a GCT object using the provided row and/or column ids**
 
@@ -182,29 +132,6 @@ Given a GCT object and either a ``data.frame`` or a path to an annotation table,
 	@family GCT utilities
 
 
-id checking
------------
-
-**Check if a vector of column names are columns in a ``data.frame``**
-
-.. highlight:: r
-
-::
-
-	check_colnames <- function(test_names, df, throw_error=T) 
-
-	@param test_names a vector of column names to test
-	@param df the \code{\link{data.frame}} to test against
-	@param throw_error boolean indicating whether to throw an error if
-	  any \code{test_names} are not found in \code{df}
-
-	@return boolean indicating whether or not all \code{test_names} are
-	  columns of \code{df}
-
-	@examples 
-	check_colnames(c("pert_id", "pert_iname"), cdesc_char)            # TRUE
-	check_colnames(c("pert_id", "foobar"), cdesc_char, throw_error=F) # FALSE, suppress error
-
 Transpose
 ---------
 
@@ -230,21 +157,6 @@ Transpose
 Math
 ----
 
-**Check if x is a whole number**
-
-.. highlight:: r
-
-::
-
-	is.wholenumber <- function(x, tol = .Machine$double.eps^0.5) 
-
-	@param x number to test
-	@param tol the allowed tolerance
-	@return boolean indicating whether x is tol away from a whole number value
-
-	@examples
-	is.wholenumber(1)
-	is.wholenumber(0.5)
 
 **Convert values in a matrix to ranks**
 

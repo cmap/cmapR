@@ -92,7 +92,6 @@
 <li class="toctree-l2"><a class="reference internal" href="#concatenating">Concatenating</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#slicing">Slicing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#annotating">Annotating</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id-checking">id checking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#transpose">Transpose</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#math">Math</a></li>
 </ul>
@@ -208,49 +207,9 @@
 <span class="o">@</span>export
 </pre></div>
 </div>
-<p><strong>Merge two ``data.frame`` objects with precedence</strong></p>
-<p>Merge two <code class="docutils literal"><span class="pre">data.frame``s,</span> <span class="pre">but</span> <span class="pre">where</span> <span class="pre">there</span> <span class="pre">are</span> <span class="pre">common</span> <span class="pre">fields</span> <span class="pre">those</span> <span class="pre">in</span> <span class="pre">``{x}</span></code> are maintained, and those in <code class="docutils literal"><span class="pre">{y}</span></code> are dropped.</p>
-<div class="highlight-r"><div class="highlight"><pre><span></span>merge_with_precedence &lt;- function(x, y, by, allow.cartesian=T,
-                                  as_data_frame = T)
-
-@param x the \code{\link{data.frame}} whose columns take precedence
-@param y another \code{\link{data.frame}}
-@param by a vector of column names to merge on
-@param allow.cartesian boolean indicating whether it&#39;s ok
-  for repeated values in either table to merge with each other
-  over and over again.
-@param as_data_frame boolean indicating whether to ensure
-  the returned object is a \code{\link{data.frame}} instead of a \code{\link{data.table}}.
-  This ensures compatibility with GCT object conventions,
-  that is, the \code{\link{rdesc}} and \code{\link{cdesc}} slots must be strictly
-  \code{\link{data.frame}} objects.
-
-@return a \code{\link{data.frame}} or \code{\link{data.table}} object
-
-@examples
-(x &lt;- data.table(foo=letters[1:10], bar=1:10))
-(y &lt;- data.table(foo=letters[1:10], bar=11:20, baz=LETTERS[1:10]))
-# the &#39;bar&#39; column from y will be dropped on merge
-merge_with_precedence(x, y, by=&quot;foo&quot;)
-
-@keywords internal
-@seealso data.table::merge
-</pre></div>
-</div>
 </div>
 <div class="section" id="slicing">
 <h2>Slicing<a class="headerlink" href="#slicing" title="Permalink to this headline">¶</a></h2>
-<p><strong>Robust ``data.frame`` subset to a set of ids</strong></p>
-<div class="highlight-r"><div class="highlight"><pre><span></span>subset_to_ids <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>df<span class="p">,</span> ids<span class="p">)</span>
-
-<span class="o">@</span>param df \code<span class="p">{</span>\link<span class="p">{</span><span class="kt">data.frame</span><span class="p">}}</span> to <span class="kp">subset</span>
-<span class="o">@</span>param ids the ids to subset to
-
-<span class="o">@</span><span class="kr">return</span> a subset version of \code<span class="p">{</span>df<span class="p">}</span>
-
-<span class="o">@</span>keywords internal
-</pre></div>
-</div>
 <p><strong>Slice a GCT object using the provided row and/or column ids</strong></p>
 <div class="highlight-r"><div class="highlight"><pre><span></span>subset.gct<span class="p">(</span>g<span class="p">,</span> rid<span class="o">=</span><span class="kc">NULL</span><span class="p">,</span> cid<span class="o">=</span><span class="kc">NULL</span><span class="p">)</span>
 
@@ -300,25 +259,6 @@ gct using the given \code<span class="p">{</span>keyfield<span class="p">}</span
 </pre></div>
 </div>
 </div>
-<div class="section" id="id-checking">
-<h2>id checking<a class="headerlink" href="#id-checking" title="Permalink to this headline">¶</a></h2>
-<p><strong>Check if a vector of column names are columns in a ``data.frame``</strong></p>
-<div class="highlight-r"><div class="highlight"><pre><span></span>check_colnames <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>test_names<span class="p">,</span> df<span class="p">,</span> throw_error<span class="o">=</span><span class="bp">T</span><span class="p">)</span>
-
-<span class="o">@</span>param test_names a <span class="kt">vector</span> of column names to test
-<span class="o">@</span>param df the \code<span class="p">{</span>\link<span class="p">{</span><span class="kt">data.frame</span><span class="p">}}</span> to test against
-<span class="o">@</span>param throw_error boolean indicating whether to throw an error <span class="kr">if</span>
-  any \code<span class="p">{</span>test_names<span class="p">}</span> are not found <span class="kr">in</span> \code<span class="p">{</span>df<span class="p">}</span>
-
-<span class="o">@</span><span class="kr">return</span> boolean indicating whether or not all \code<span class="p">{</span>test_names<span class="p">}</span> are
-  columns of \code<span class="p">{</span>df<span class="p">}</span>
-
-<span class="o">@</span>examples
-check_colnames<span class="p">(</span><span class="kt">c</span><span class="p">(</span><span class="s">&quot;pert_id&quot;</span><span class="p">,</span> <span class="s">&quot;pert_iname&quot;</span><span class="p">),</span> cdesc_char<span class="p">)</span>            <span class="c1"># TRUE</span>
-check_colnames<span class="p">(</span><span class="kt">c</span><span class="p">(</span><span class="s">&quot;pert_id&quot;</span><span class="p">,</span> <span class="s">&quot;foobar&quot;</span><span class="p">),</span> cdesc_char<span class="p">,</span> throw_error<span class="o">=</span><span class="bp">F</span><span class="p">)</span> <span class="c1"># FALSE, suppress error</span>
-</pre></div>
-</div>
-</div>
 <div class="section" id="transpose">
 <h2>Transpose<a class="headerlink" href="#transpose" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-r"><div class="highlight"><pre><span></span>transpose.gct<span class="p">(</span>g<span class="p">)</span>
@@ -339,18 +279,6 @@ transpose.gct<span class="p">(</span>ds<span class="p">)</span>
 </div>
 <div class="section" id="math">
 <h2>Math<a class="headerlink" href="#math" title="Permalink to this headline">¶</a></h2>
-<p><strong>Check if x is a whole number</strong></p>
-<div class="highlight-r"><div class="highlight"><pre><span></span>is.wholenumber <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>x<span class="p">,</span> tol <span class="o">=</span> <span class="m">.</span>Machine<span class="o">$</span>double.eps<span class="o">^</span><span class="m">0.5</span><span class="p">)</span>
-
-<span class="o">@</span>param x number to test
-<span class="o">@</span>param tol the allowed tolerance
-<span class="o">@</span><span class="kr">return</span> boolean indicating whether x is tol away from a whole number value
-
-<span class="o">@</span>examples
-is.wholenumber<span class="p">(</span><span class="m">1</span><span class="p">)</span>
-is.wholenumber<span class="p">(</span><span class="m">0.5</span><span class="p">)</span>
-</pre></div>
-</div>
 <p><strong>Convert values in a matrix to ranks</strong></p>
 <div class="highlight-r"><div class="highlight"><pre><span></span>rank.gct<span class="p">(</span>g<span class="p">,</span> dim<span class="o">=</span><span class="s">&quot;row&quot;</span><span class="p">)</span>
 <span class="o">@</span>param g the \code<span class="p">{</span>GCT<span class="p">}</span> object to <span class="kp">rank</span>
