@@ -195,9 +195,10 @@ read.gctx.meta <- function(gctx_path, dimension="row", ids=NULL, set_annot_rowna
   }
   # make sure annots row ordering matches that of ids
   annots <- subset_to_ids(annots, ids)
+  annots$id <- as.character(annots$id)
   # use the id field to set the rownames
   if (set_annot_rownames) {
-    rownames(annots) <- as.character(annots$id)
+    rownames(annots) <- annots$id
   }
   return(annots)
 }
@@ -524,7 +525,7 @@ append.dim <- function(ofile, mat, extension="gct") {
   nr <- nrow(mat)
   outFile <- basename(ofile)
   filename <- strsplit(outFile,'.',fixed=T)[[1]][1]
-  ofile <- path.join(dirname(ofile),
+  ofile <- file.path(dirname(ofile),
                     sprintf('%s_n%dx%d.%s',filename,
                             nc, nr, extension))
   return(ofile)
