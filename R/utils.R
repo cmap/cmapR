@@ -34,7 +34,7 @@ setGeneric("melt.gct", function(g, suffixes=NULL, remove_symmetries=F,
   standardGeneric("melt.gct")
 })
 setMethod("melt.gct", signature("GCT"),
-          function(g, suffixes, remove_symmetries, keep_rdesc, keep_cdesc) {
+          function(g, suffixes, remove_symmetries=F, keep_rdesc=T, keep_cdesc=T) {
           # melt a gct object's matrix into a data.frame and merge row and column
           # annotations back in, using the provided suffixes
           # assumes rdesc and cdesc data.frames both have an 'id' field.
@@ -58,13 +58,14 @@ setMethod("melt.gct", signature("GCT"),
           d$id.x <- as.character(d$id.x)
           d$id.y <- as.character(d$id.y)
           # standard data.frame subset here to comply with testthat
-          d <- d[!is.na(d$value), , with=F]
-          if (keep_rdesc & keep_cdesc) {
+          d <- subset(d, !is.na(value))
+          if (keep_rdesc && keep_cdesc) {
             # merge back in both row and column descriptors
             setattr(d, "names", c("id", "id.y", "value"))
             d <- merge(d, data.table(g@rdesc), by="id")
             setnames(d, "id", "id.x")
             setnames(d, "id.y", "id")
+            d <- merge(d, data.table(g@cdesc), by="id")
             setnames(d, "id", "id.y")
           } else if (keep_rdesc) {
             # keep only row descriptors
