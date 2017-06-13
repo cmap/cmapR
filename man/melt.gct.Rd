@@ -39,7 +39,7 @@ head(melt.gct(ds))
 head(melt.gct(ds, suffixes = c("_gene", "_experiment")))
 
 # ignore row/column meta
-head(melt.gct(ds, keep_rdesc = F, keep_cdesc = F))
+head(melt.gct(ds, keep_rdesc = FALSE, keep_cdesc = FALSE))
 
 }
 \seealso{

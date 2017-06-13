@@ -486,7 +486,7 @@ setMethod("initialize",
 #' (ds <- parse.gctx(gct_file))
 #' 
 #' # matrix only
-#' (ds <- parse.gctx(gct_file, matrix_only=T))
+#' (ds <- parse.gctx(gct_file, matrix_only=TRUE))
 #' 
 #' # only the first 10 rows and columns
 #' (ds <- parse.gctx(gct_file, rid=1:10, cid=1:10))
