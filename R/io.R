@@ -775,6 +775,7 @@ parse.grp <- function(fname) {
 #' 
 #' @family CMap parsing functions
 #' @seealso \link{http://clue.io/help} for details on the GRP file format
+#' @export
 write.grp <- function(vals, fname) {
   if (is.list(vals)) vals <- unlist(vals)
   if (!is.vector(vals)) vals <- as.vector(vals)
