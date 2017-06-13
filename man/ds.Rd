@@ -6,7 +6,7 @@
 \title{An example of a GCT object with row and
 column metadata and gene expression values
 in the matrix.}
-\format{An object of class \code{GCT} with 978 rows and 272 columns.}
+\format{An object of class \code{GCT} with 10 rows and 10 columns.}
 \usage{
 ds
 }
