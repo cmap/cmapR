@@ -23,6 +23,6 @@ Check whether \code{test_names} are columns in the \code{\link{data.frame}} df
 }
 \examples{
 check_colnames(c("pert_id", "pert_iname"), cdesc_char)            # TRUE
-check_colnames(c("pert_id", "foobar"), cdesc_char, throw_error=F) # FALSE, suppress error
+check_colnames(c("pert_id", "foobar"), cdesc_char, throw_error=FALSE) # FALSE, suppress error
 }
 

@@ -111,7 +111,7 @@ is.wholenumber <- function(x, tol = .Machine$double.eps^0.5)  {
 #'   columns of \code{df}
 #' @examples 
 #' check_colnames(c("pert_id", "pert_iname"), cdesc_char)            # TRUE
-#' check_colnames(c("pert_id", "foobar"), cdesc_char, throw_error=F) # FALSE, suppress error
+#' check_colnames(c("pert_id", "foobar"), cdesc_char, throw_error=FALSE) # FALSE, suppress error
 #' @export
 check_colnames <- function(test_names, df, throw_error=T) {
   # check whether test_names are valid names in df
