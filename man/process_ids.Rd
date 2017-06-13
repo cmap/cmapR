@@ -31,7 +31,7 @@ This is a low-level helper function
 \examples{
 gct_file <- system.file("extdata", "modzs_n272x978.gctx", package="roller")
 ids <- read.gctx.ids(gct_file)
-processed_ids <- process_ids(ids[1:10], ids)
+processed_ids <- cmapR:::process_ids(ids[1:10], ids)
 str(processed_ids)
 
 }

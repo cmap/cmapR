@@ -93,7 +93,7 @@ suppressMessages({
 #' @examples 
 #' # meta data table with all character types
 #' str(cdesc_char)
-#' fixed <- fix.datatypes(cdesc_char)
+#' fixed <- cmapR:::fix.datatypes(cdesc_char)
 #' # note how some column classes have changed
 #' str(fixed)
 #' 
@@ -260,7 +260,7 @@ read.gctx.ids <- function(gctx_path, dimension="row") {
 #' @examples 
 #' gct_file <- system.file("extdata", "modzs_n272x978.gctx", package="roller")
 #' ids <- read.gctx.ids(gct_file)
-#' processed_ids <- process_ids(ids[1:10], ids)
+#' processed_ids <- cmapR:::process_ids(ids[1:10], ids)
 #' str(processed_ids)
 #' 
 #' @family GCTX parsing functions
@@ -718,7 +718,7 @@ write.gctx <- function(ds, ofile, appenddim=T, compression_level=0, matrix_only=
 #' @examples 
 #' \dontrun{
 #' # assume ds is a GCT object
-#' write.gctx.meta("/my/file/path", cdesc_char, dimension="col")
+#' cmapR:::write.gctx.meta("/my/file/path", cdesc_char, dimension="col")
 #' }
 #' @family GCTX parsing functions
 #' @keywords internal

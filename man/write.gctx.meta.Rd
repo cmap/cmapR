@@ -20,7 +20,7 @@ Write a \code{data.frame} of meta data to GCTX file
 \examples{
 \dontrun{
 # assume ds is a GCT object
-write.gctx.meta("/my/file/path", cdesc_char, dimension="col")
+cmapR:::write.gctx.meta("/my/file/path", cdesc_char, dimension="col")
 }
 }
 \seealso{

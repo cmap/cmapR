@@ -27,7 +27,7 @@ This is a low-level helper function
 \examples{
 # meta data table with all character types
 str(cdesc_char)
-fixed <- fix.datatypes(cdesc_char)
+fixed <- cmapR:::fix.datatypes(cdesc_char)
 # note how some column classes have changed
 str(fixed)
 

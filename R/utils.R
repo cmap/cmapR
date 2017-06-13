@@ -311,7 +311,7 @@ setMethod("merge.gct", signature("GCT", "GCT"),
 #' (x <- data.table(foo=letters[1:10], bar=1:10))
 #' (y <- data.table(foo=letters[1:10], bar=11:20, baz=LETTERS[1:10]))
 #' # the 'bar' column from y will be dropped on merge
-#' merge_with_precedence(x, y, by="foo")
+#' cmapR:::merge_with_precedence(x, y, by="foo")
 #'
 #' @keywords internal
 #' @seealso data.table::merge
