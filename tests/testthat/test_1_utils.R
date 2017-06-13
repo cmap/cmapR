@@ -3,6 +3,7 @@ context("Testing utility functions")
 test_that("melt.gct works properly", {
   mlt <- melt.gct(ds)
   expect_equal(nrow(mlt), nrow(ds@mat) * ncol(ds@mat))
+  expect_equal(ncol(mlt), ncol(ds@rdesc) + ncol(ds@cdesc) + 1)
 })
 
 test_that("merge.gct works properly", {
