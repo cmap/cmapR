@@ -30,6 +30,10 @@ the matrix (ignoring row and column annotations)}
 \description{
 Parse a GCTX file into the workspace as a GCT object
 }
+\details{
+\code{parse.gctx} also supports parsing of plain text
+  GCT files, so this function can be used as a general GCT parser.
+}
 \examples{
 gct_file <- system.file("extdata", "modzs_n272x978.gctx", package="roller")
 (ds <- parse.gctx(gct_file))
