@@ -516,19 +516,22 @@ parse.gctx <- function(fname, rid=NULL, cid=NULL, set_annot_rownames=F, matrix_o
 #'   will not use directly
 #'   
 #' @examples 
-#' (filename <- append.dim("filename", matrix(nrow=10, ncol=15)))
+#' (filename <- cmapR:::append.dim("my.gctx.filename", matrix(nrow=10, ncol=15)))
 #'   
 #' @keywords internal
 #' @family GCTX parsing functions
 append.dim <- function(ofile, mat, extension="gct") {
   nc <- ncol(mat)
   nr <- nrow(mat)
-  outFile <- basename(ofile)
-  filename <- strsplit(outFile,'.',fixed=T)[[1]][1]
-  ofile <- file.path(dirname(ofile),
+  filename <- basename(ofile)
+  if (grepl("n[0-9]+x[0-9]+\\.gct", filename)) {
+    # already has a dimensions token, ignore
+    filename <- sub("_n[0-9]+x[0-9]+\\.gct.*", "", filename)
+  } 
+  filename <- file.path(dirname(ofile),
                     sprintf('%s_n%dx%d.%s',filename,
                             nc, nr, extension))
-  return(ofile)
+  return(filename)
 }
 
 
