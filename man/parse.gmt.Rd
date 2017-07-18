@@ -25,7 +25,7 @@ Read a GMT file and return a list
   - \code{entry}: a vector of the data items
 }
 \examples{
-gmt_path <- system.file("extdata", "query_up.gmt", package="roller")
+gmt_path <- system.file("extdata", "query_up.gmt", package="cmapR")
 gmt <- parse.gmt(gmt_path)
 str(gmt)
 

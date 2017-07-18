@@ -29,7 +29,7 @@ This is a low-level helper function
   which most users will not need to access directly
 }
 \examples{
-gct_file <- system.file("extdata", "modzs_n272x978.gctx", package="roller")
+gct_file <- system.file("extdata", "modzs_n272x978.gctx", package="cmapR")
 ids <- read.gctx.ids(gct_file)
 processed_ids <- cmapR:::process_ids(ids[1:10], ids)
 str(processed_ids)

@@ -148,7 +148,7 @@ fix.datatypes <- function(meta) {
 #' @return a \code{data.frame} of metadata
 #' 
 #' @examples
-#' gct_file <- system.file("extdata", "modzs_n272x978.gctx", package="roller") 
+#' gct_file <- system.file("extdata", "modzs_n272x978.gctx", package="cmapR") 
 #' # row meta
 #' row_meta <- read.gctx.meta(gct_file)
 #' str(row_meta)
@@ -212,7 +212,7 @@ read.gctx.meta <- function(gctx_path, dimension="row", ids=NULL, set_annot_rowna
 #' @return a character vector of row or column ids from the provided file
 #' 
 #' @examples 
-#' gct_file <- system.file("extdata", "modzs_n272x978.gctx", package="roller")
+#' gct_file <- system.file("extdata", "modzs_n272x978.gctx", package="cmapR")
 #' # row ids
 #' rid <- read.gctx.ids(gct_file)
 #' head(rid)
@@ -258,7 +258,7 @@ read.gctx.ids <- function(gctx_path, dimension="row") {
 #'  \code{idx}: an integer list of their corresponding indices in \code{all_ids}
 #' 
 #' @examples 
-#' gct_file <- system.file("extdata", "modzs_n272x978.gctx", package="roller")
+#' gct_file <- system.file("extdata", "modzs_n272x978.gctx", package="cmapR")
 #' ids <- read.gctx.ids(gct_file)
 #' processed_ids <- cmapR:::process_ids(ids[1:10], ids)
 #' str(processed_ids)
@@ -482,7 +482,7 @@ setMethod("initialize",
 #'   GCT files, so this function can be used as a general GCT parser.
 #' 
 #' @examples 
-#' gct_file <- system.file("extdata", "modzs_n272x978.gctx", package="roller")
+#' gct_file <- system.file("extdata", "modzs_n272x978.gctx", package="cmapR")
 #' (ds <- parse.gctx(gct_file))
 #' 
 #' # matrix only
@@ -751,7 +751,7 @@ write.gctx.meta <- function(ofile, df, dimension="row") {
 #' @param fname the file path to be parsed
 #' @return a vector of the contents of \code{fname}
 #' @examples 
-#' grp_path <- system.file("extdata", "lm_epsilon_n978.grp", package="roller")
+#' grp_path <- system.file("extdata", "lm_epsilon_n978.grp", package="cmapR")
 #' values <- parse.grp(grp_path)
 #' str(values)
 #' @family CMap parsing functions
@@ -798,7 +798,7 @@ write.grp <- function(vals, fname) {
 #'   - \code{entry}: a vector of the data items
 #' 
 #' @examples 
-#' gmx_path <- system.file("extdata", "lm_probes.gmx", package="roller")
+#' gmx_path <- system.file("extdata", "lm_probes.gmx", package="cmapR")
 #' gmx <- parse.gmx(gmx_path)
 #' str(gmx)
 #' 
@@ -840,7 +840,7 @@ parse.gmx <- function(fname) {
 #'   - \code{entry}: a vector of the data items
 #' 
 #' @examples 
-#' gmt_path <- system.file("extdata", "query_up.gmt", package="roller")
+#' gmt_path <- system.file("extdata", "query_up.gmt", package="cmapR")
 #' gmt <- parse.gmt(gmt_path)
 #' str(gmt)
 #' 

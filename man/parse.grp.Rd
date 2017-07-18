@@ -16,7 +16,7 @@ a vector of the contents of \code{fname}
 Read a GRP file and return a vector of its contents
 }
 \examples{
-grp_path <- system.file("extdata", "lm_epsilon_n978.grp", package="roller")
+grp_path <- system.file("extdata", "lm_epsilon_n978.grp", package="cmapR")
 values <- parse.grp(grp_path)
 str(values)
 }

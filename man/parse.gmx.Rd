@@ -25,7 +25,7 @@ Read a GMX file and return a list
   - \code{entry}: a vector of the data items
 }
 \examples{
-gmx_path <- system.file("extdata", "lm_probes.gmx", package="roller")
+gmx_path <- system.file("extdata", "lm_probes.gmx", package="cmapR")
 gmx <- parse.gmx(gmx_path)
 str(gmx)
 
