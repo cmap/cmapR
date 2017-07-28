@@ -449,8 +449,8 @@ setMethod("initialize",
                                                     set_annot_rownames=set_annot_rownames)
                   }
                   else {
-                    .Object@rdesc <- data.frame()
-                    .Object@cdesc <- data.frame()
+                    .Object@rdesc <- data.frame(id=.Object@rid)
+                    .Object@cdesc <- data.frame(id=.Object@cid)
                   }
                   # close any open handles and return the object
                   H5close()
