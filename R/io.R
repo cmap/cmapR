@@ -129,7 +129,7 @@ fix.datatypes <- function(meta) {
             }
         }
         # insert back into the annotations
-        meta[[field.name]] = field
+        meta[[field.name]] <- field
     }
     return(meta)
 }
@@ -449,8 +449,8 @@ setMethod("initialize",
                                                     set_annot_rownames=set_annot_rownames)
                   }
                   else {
-                    .Object@rdesc <- data.frame(id=.Object@rid)
-                    .Object@cdesc <- data.frame(id=.Object@cid)
+                    .Object@rdesc <- data.frame(id=.Object@rid, stringsAsFactors = F)
+                    .Object@cdesc <- data.frame(id=.Object@cid, stringsAsFactors = F)
                   }
                   # close any open handles and return the object
                   H5close()
