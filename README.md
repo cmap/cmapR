@@ -8,7 +8,9 @@ Dependencies are listed in `DESCRIPTION`
 
 **Installing from source**
 
-The easiest way to install the `cmapR` repository is to point your R's `install.packages` function at a tarball of the `cmapR` archive. You can generate this archive by cloning this repository and doing the following:
+Perhaps the simplest way is to install directly from github using `devtools::install_github("cmap/cmapR")`.
+
+Alternatively, you can point your R's `install.packages` function at a tarball of the `cmapR` archive. You can generate this archive by cloning this repository and doing the following:
 
 	# make a gzip tar ball of the repo
 	R CMD build cmapR
