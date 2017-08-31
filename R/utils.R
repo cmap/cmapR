@@ -478,3 +478,4 @@ setMethod("rank.gct", signature("GCT"), function(g, dim) {
   # done
   return(g)
 })
+
