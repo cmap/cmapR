@@ -8,8 +8,9 @@ Maintainer: <clue@broadinstitute.org>
 Description: CMAP tools in R
 License: BSD
 LazyData: true
-Depends:
+Depends: R (>= 3.2.0),
+  methods
+Imports:
     rhdf5,
     data.table
-Imports: methods
 RoxygenNote: 5.0.1

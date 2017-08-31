@@ -42,6 +42,10 @@ setValidity("GCT",
       "rid must be the same length as number of matrix rows"
     if (ncols != length(object@cid))
       "cid must be the same length as number of matrix columns"
+    if (length(object@cid) > length(unique(object@cid)))
+      "cid must be unique"
+    if (length(object@rid) > length(unique(object@rid)))
+      "rid must be unique"
     if (nrow(object@cdesc) != ncols)
       "cdesc must have same number of rows as matrix has columns"
     if (nrow(object@rdesc) != nrows)
@@ -174,7 +178,7 @@ read.gctx.meta <- function(gctx_path, dimension="row", ids=NULL, set_annot_rowna
   } else {
     name <- "0/META/COL"
   }
-  raw_annots <- h5read(gctx_path, name=name) # returns a list
+  raw_annots <- rhdf5::h5read(gctx_path, name=name) # returns a list
   fields <- names(raw_annots)
   # define an empty data frame of the correct dimensions
   annots <-  data.frame(matrix(nrow=length(raw_annots[[fields[1]]]), ncol=length(fields)))
@@ -236,7 +240,7 @@ read.gctx.ids <- function(gctx_path, dimension="row") {
     name <- "0/META/COL/id"
   }
   # remove any spaces
-  ids <- gsub("\\s*$", "", h5read(gctx_path, name=name), perl=T)
+  ids <- gsub("\\s*$", "", rhdf5::h5read(gctx_path, name=name), perl=T)
   # cast as character
   ids <- as.character(ids)
   return(ids)
@@ -434,7 +438,7 @@ setMethod("initialize",
                   processed_rids <- process_ids(rid, all_rid, type="rid")
                   processed_cids <- process_ids(cid, all_cid, type="cid")
                   # read the data matrix
-                  .Object@mat <- h5read(src, name="0/DATA/0/matrix",
+                  .Object@mat <- rhdf5::h5read(src, name="0/DATA/0/matrix",
                                         index=list(processed_rids$idx, processed_cids$idx))
                   # set the row and column ids, casting as characters
                   .Object@rid <- processed_rids$ids
@@ -453,7 +457,7 @@ setMethod("initialize",
                     .Object@cdesc <- data.frame(id=.Object@cid, stringsAsFactors = F)
                   }
                   # close any open handles and return the object
-                  H5close()
+                  rhdf5::H5close()
                   message("done")
                   return(.Object)
               }
@@ -666,15 +670,15 @@ write.gctx <- function(ds, ofile, appenddim=T, compression_level=0, matrix_only=
   message(paste("writing", ofile))
   
   # start the file object
-  h5createFile(ofile)
+  rhdf5::h5createFile(ofile)
   
   # create all the necessary groups
-  h5createGroup(ofile, "0")
-  h5createGroup(ofile, "0/DATA")
-  h5createGroup(ofile, "0/DATA/0")
-  h5createGroup(ofile, "0/META")
-  h5createGroup(ofile, "0/META/COL")
-  h5createGroup(ofile, "0/META/ROW")
+  rhdf5::h5createGroup(ofile, "0")
+  rhdf5::h5createGroup(ofile, "0/DATA")
+  rhdf5::h5createGroup(ofile, "0/DATA/0")
+  rhdf5::h5createGroup(ofile, "0/META")
+  rhdf5::h5createGroup(ofile, "0/META/COL")
+  rhdf5::h5createGroup(ofile, "0/META/ROW")
   
   # create and write matrix data, using
   # chunking if dimensions exceed 1000
@@ -686,12 +690,12 @@ write.gctx <- function(ds, ofile, appenddim=T, compression_level=0, matrix_only=
   col_chunk_size <- min(floor(1024 / row_chunk_size), ncol(ds@mat))
   chunking <- c(row_chunk_size, col_chunk_size) 
   message(paste(c("chunk sizes:", chunking), collapse="\t"))
-  h5createDataset(ofile, "0/DATA/0/matrix", dim(ds@mat), chunk=chunking, level=compression_level)
-  h5write(ds@mat, ofile, "0/DATA/0/matrix")
+  rhdf5::h5createDataset(ofile, "0/DATA/0/matrix", dim(ds@mat), chunk=chunking, level=compression_level)
+  rhdf5::h5write(ds@mat, ofile, "0/DATA/0/matrix")
   
   # write annotations
-  h5write(ds@rid, ofile, "0/META/ROW/id")
-  h5write(ds@cid, ofile, "0/META/COL/id")
+  rhdf5::h5write(ds@rid, ofile, "0/META/ROW/id")
+  rhdf5::h5write(ds@cid, ofile, "0/META/COL/id")
   
   if (!matrix_only) {
     write.gctx.meta(ofile, ds@cdesc, dimension="column")
@@ -699,12 +703,12 @@ write.gctx <- function(ds, ofile, appenddim=T, compression_level=0, matrix_only=
   }
 
   # close any open handles
-  H5close()
+  rhdf5::H5close()
 
   # add the version annotation and close
-  fid <- H5Fopen(ofile)
-  h5writeAttribute("GCTX1.0", fid, "version")
-  H5close()
+  fid <- rhdf5::H5Fopen(ofile)
+  rhdf5::h5writeAttribute("GCTX1.0", fid, "version")
+  rhdf5::H5close()
 
 }
 
@@ -737,7 +741,7 @@ write.gctx.meta <- function(ofile, df, dimension="row") {
       if(class(v) == "factor" || class(v) == "AsIs") {
         v <- as.character(v)
       }
-      h5write(v, ofile, paste(path, field, sep=""))
+      rhdf5::h5write(v, ofile, paste(path, field, sep=""))
     }
   }
 }
