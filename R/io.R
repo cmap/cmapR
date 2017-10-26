@@ -758,7 +758,7 @@ write.gctx.meta <- function(ofile, df, dimension="row") {
 #' @seealso \link{http://clue.io/help} for details on the GRP file format
 #' @export
 parse.grp <- function(fname) {
-  grp <- scan(fname, what = "", quote = NULL, quiet = TRUE)
+  grp <- scan(fname, what = "", quote = NULL, quiet = TRUE, sep="\n")
   return(grp)
 }
 
