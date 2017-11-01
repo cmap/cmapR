@@ -73,6 +73,18 @@ suppressMessages({
   setMethod("dim", signature("GCT"), function(x) {
     dim(x@mat)
   })
+  setMethod("range", signature("GCT"), function(x, na.rm=F, finite=F) {
+    range(x@mat, na.rm=na.rm, finite=finite)
+  })
+  setMethod("max", signature("GCT"), function(x, na.rm=F) {
+    max(x@mat, na.rm=na.rm)
+  })
+  setMethod("min", signature("GCT"), function(x, na.rm=F) {
+    min(x@mat, na.rm=na.rm)
+  })
+  setMethod("diag", signature("GCT"), function(x) {
+    diag(x@mat)
+  })
 })
 
 

@@ -100,3 +100,13 @@ test_that("fix.datatypes correctly handles variety of data types", {
   # should be converted to numeric. 
   expect_true(is.numeric(fixed$sci_note))
 })
+
+test_that("various built-in functions have been correctly adatped to GCT", {
+  expect_equal(nrow(ds), nrow(ds@mat))
+  expect_equal(ncol(ds), ncol(ds@mat))
+  expect_equal(dim(ds), dim(ds@mat))
+  expect_equal(range(ds), range(ds@mat))
+  expect_equal(min(ds), min(ds@mat))
+  expect_equal(max(ds), max(ds@mat))
+  expect_equal(diag(ds), diag(ds@mat))
+})
