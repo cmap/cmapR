@@ -459,7 +459,7 @@ setMethod("transpose.gct", signature("GCT"), function(g) {
 #' 
 #' @family GCT utilities
 #' @export
-setGeneric("rank.gct", function(g, dim="row") {
+setGeneric("rank.gct", function(g, dim="col") {
   standardGeneric("rank.gct")
 })
 setMethod("rank.gct", signature("GCT"), function(g, dim) {
