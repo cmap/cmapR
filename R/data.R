@@ -1,4 +1,4 @@
-# descriptions of roller datasets
+# descriptions of cmapR datasets
 
 #' An example collection of gene sets
 #' as used in the Lamb 2006 CMap paper.
