@@ -1,6 +1,6 @@
 # cmapR (CMap R code)
 
-Parsing and utility functions for analyzing CMap data. For documentation, please visit [this project's ReadTheDocs page](http://cmapr.readthedocs.io/en/latest/index.html). To learn more about the CMap project at the Broad Institute, please visit [clue.io](https://clue.io).
+Parsing and utility functions for analyzing CMap data. For documentation, please visit [this project's ReadTheDocs page](http://cmapr.readthedocs.io/en/latest/index.html). There is also a tutorial available [here](https://github.com/cmap/cmapR/blob/master/cmapR_tutorial.ipynb). To learn more about the CMap project at the Broad Institute, please visit [clue.io](https://clue.io).
 
 ### Install instructions
 
