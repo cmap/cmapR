@@ -29,4 +29,6 @@ You can also source individual files as needed instead of installing the entire 
 
 	# For example, just load the IO methods
 	source("cmapR/R/io.R")
-	
+
+### Citation information
+If you use GCTx and/or cmapR in your work, please cite [Enache et al.](https://www.biorxiv.org/content/early/2017/11/30/227041)
