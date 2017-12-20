@@ -38,20 +38,27 @@ setValidity("GCT",
     # slots are in sync
     nrows <- nrow(object@mat)
     ncols <- ncol(object@mat)
-    if (nrows != length(object@rid))
-      "rid must be the same length as number of matrix rows"
-    if (ncols != length(object@cid))
-      "cid must be the same length as number of matrix columns"
-    if (length(object@cid) > length(unique(object@cid)))
-      "cid must be unique"
-    if (length(object@rid) > length(unique(object@rid)))
-      "rid must be unique"
-    if (nrow(object@cdesc) != ncols)
-      "cdesc must have same number of rows as matrix has columns"
-    if (nrow(object@rdesc) != nrows)
-      "rdesc must have same number of rows as matrix has rows"
-    else
-      T
+    if (nrows != length(object@rid)) {
+      return("rid must be the same length as number of matrix rows")
+    }
+    if (ncols != length(object@cid)) {
+      return("cid must be the same length as number of matrix columns")
+    }
+    if (length(object@cid) > length(unique(object@cid))) {
+      return("cid must be unique")
+    }
+    if (length(object@rid) > length(unique(object@rid))) {
+      return("rid must be unique")
+    }
+    if (nrow(object@cdesc) != ncols & nrow(object@cdesc) != 0) {
+      return("cdesc must either have 0 rows or the same number of rows as matrix has columns")
+    }
+    if (nrow(object@rdesc) != nrows & nrow(object@rdesc) != 0) {
+      return("rdesc must either have 0 rows or the same number of rows as matrix has rows")
+    }
+    else {
+      return(T)
+    }
   }
 )
 
@@ -324,155 +331,179 @@ process_ids <- function(ids, all_ids, type="rid") {
 # define the initialization method for the GCT class
 setMethod("initialize",
           signature = "GCT",
-          definition = function(.Object, src, rid = NULL, cid = NULL, set_annot_rownames = F,
+          definition = function(.Object, mat=NULL, rdesc=NULL, cdesc=NULL, src=NULL, rid=NULL, cid=NULL, set_annot_rownames=F,
                                 matrix_only=F) {
+            # if we were supplied a matrix and annotations, use them
+            if (!is.null(mat)) {
+              .Object@mat <- mat
+              # if given rid and cid, use those as well
+              if (!is.null(rid)) {
+                .Object@rid <- rid
+              } else {
+                .Object@rid <- rownames(mat)
+              }
+              if (!is.null(cid)) {
+                .Object@cid <- cid
+              } else {
+                .Object@cid <- colnames(mat)
+              }
+            }
+            if (!is.null(rdesc)) {
+              .Object@rdesc <- rdesc
+            }
+            if (!is.null(cdesc)) {
+              .Object@cdesc <- cdesc
+            } else if (!is.null(src)) {
+              # we were not given a matrix, were we given a src file?
               # check to make sure it's either .gct or .gctx
               if (! (grepl(".gct$", src) || grepl(".gctx$", src) ))
-                  stop("Either a .gct or .gctx file must be given")
+                stop("Either a .gct or .gctx file must be given")
               if (grepl(".gct$", src)) {
-                  if ( ! is.null(rid) || !is.null(cid) )
-                      warning(paste("rid and cid values may only be given for .gctx files, not .gct files\n",
-                        "ignoring"))
-                  # parse the .gct
-                  .Object@src = src
-                  # get the .gct version by reading first line
-                  .Object@version = scan(src, what = "", nlines = 1, sep = "\t", quiet = TRUE)[1]
-                  # get matrix dimensions by reading second line
-                  dimensions = scan(src, what = double(0), nlines = 1, skip = 1, sep = "\t", quiet = TRUE)
-                  nrmat = dimensions[1]
-                  ncmat = dimensions[2]
-                  if (length(dimensions)==4) {
-                    # a #1.3 file
-                    message("parsing as GCT v1.3")
-                    nrhd <- dimensions[3]
-                    nchd <- dimensions[4]
+                if ( ! is.null(rid) || !is.null(cid) )
+                  warning(paste("rid and cid values may only be given for .gctx files, not .gct files\n",
+                                "ignoring"))
+                # parse the .gct
+                .Object@src = src
+                # get the .gct version by reading first line
+                .Object@version = scan(src, what = "", nlines = 1, sep = "\t", quiet = TRUE)[1]
+                # get matrix dimensions by reading second line
+                dimensions = scan(src, what = double(0), nlines = 1, skip = 1, sep = "\t", quiet = TRUE)
+                nrmat = dimensions[1]
+                ncmat = dimensions[2]
+                if (length(dimensions)==4) {
+                  # a #1.3 file
+                  message("parsing as GCT v1.3")
+                  nrhd <- dimensions[3]
+                  nchd <- dimensions[4]
+                } else {
+                  # a #1.2 file
+                  message("parsing as GCT v1.2")
+                  nrhd <- 0
+                  nchd <- 0
+                }
+                message(paste(src, nrmat, "rows,", ncmat, "cols,", nrhd, "row descriptors,", nchd, "col descriptors"))
+                # read in header line
+                header = scan(src, what = "", nlines = 1, skip = 2, sep = "\t", quote = NULL, quiet = TRUE)
+                # construct row header and column id's from the header line
+                if ( nrhd > 0 ) {
+                  rhd <- header[2:(nrhd+1)]
+                  cid <- header[-(nrhd+1):-1]
+                  col_offset <- 1
+                }
+                else {
+                  if (any(grepl("description", header, ignore.case=T))) {
+                    # check for presence of description column in v1.2 files
+                    col_offset <- 2
                   } else {
-                    # a #1.2 file
-                    message("parsing as GCT v1.2")
-                    nrhd <- 0
-                    nchd <- 0
+                    col_offset <- col_offset <- 1
                   }
-                  message(paste(src, nrmat, "rows,", ncmat, "cols,", nrhd, "row descriptors,", nchd, "col descriptors"))
-                  # read in header line
-                  header = scan(src, what = "", nlines = 1, skip = 2, sep = "\t", quote = NULL, quiet = TRUE)
-                  # construct row header and column id's from the header line
-                  if ( nrhd > 0 ) {
-                      rhd <- header[2:(nrhd+1)]
-                      cid <- header[-(nrhd+1):-1]
-                      col_offset <- 1
-                  }
-                  else {
-                      if (any(grepl("description", header, ignore.case=T))) {
-                        # check for presence of description column in v1.2 files
-                        col_offset <- 2
-                      } else {
-                        col_offset <- col_offset <- 1
-                      }
-                      rhd = NULL
-                      cid = header[(1+col_offset):length(header)]
-                  }
-                  # read in the next set of headers (column annotations) and shape into a matrix
-                  if ( nchd > 0 ) {
-                      header = scan(src, what = "", nlines = nchd, skip = 3, sep = "\t", 
-                                    quote = NULL, quiet = TRUE)		
-                      header = matrix(header, nrow = nchd, 
-                                      ncol = ncmat + nrhd + 1, byrow = TRUE)
-                      # extract the column header and column descriptions
-                      chd = header[,1]
-                      cdesc = header[,-(nrhd+1):-1]
-                      # need to transpose in the case where there's only one column annotation
-                      if ( nchd == 1 )
-                          cdesc = t(cdesc)
-                  }
-                  else {
-                      chd = NULL
-                      cdesc = data.frame()
-                  }
-                  # read in the data matrix and row descriptions, shape into a matrix
-                  mat = scan(src, what = "", nlines = nrmat, 
-                             skip = 3 + nchd, sep = "\t", quote = NULL, quiet = TRUE)
-                  mat = matrix(mat, nrow = nrmat, ncol = ncmat + nrhd + col_offset, 
-                               byrow = TRUE)
-                  # message(paste(dim(mat), collapse="\t"))
-                  # Extract the row id's row descriptions, and the data matrix
-                  rid = mat[,1]
-                  if ( nrhd > 0 ) {
-                      # need as.matrix for the case where there's only one row annotation
-                      rdesc = as.matrix(mat[,2:(nrhd + 1)])
-                      mat = matrix(as.numeric(mat[,-(nrhd + 1):-1]),
-                                   nrow = nrmat, ncol = ncmat)
-                  }
-                  else {
-                      rdesc = data.frame()
-                      mat = matrix(as.numeric(mat[, (1+col_offset):ncol(mat)]), nrow = nrmat, ncol = ncmat)
-                  }
-                  # assign names to the data matrix and the row and column descriptions
-                  # message(paste(dim(mat), collapse="\t"))
-                  dimnames(mat) = list(rid, cid)
-                  if ( nrhd > 0 ) {
-                      dimnames(rdesc) = list(rid,rhd)
-                      rdesc = as.data.frame(rdesc, stringsAsFactors = FALSE)
-                  }
-                  if ( nchd > 0 ) {
-                      cdesc = t(cdesc)
-                      dimnames(cdesc) = list(cid,chd)
-                      cdesc = as.data.frame(cdesc, stringsAsFactors = FALSE)
-                  }
-                  # assign to the GCT slots
-                  .Object@mat = mat
-                  .Object@rid = rownames(mat)
-                  .Object@cid = colnames(mat)
-                  if (!matrix_only) {
-                    # return annotations as well as matrix
-                    .Object@rdesc = fix.datatypes(rdesc)
-                    .Object@cdesc = fix.datatypes(cdesc)
-                    # add id columns to rdesc and cdesc
-                    .Object@rdesc$id <- rownames(.Object@rdesc)
-                    .Object@cdesc$id <- rownames(.Object@cdesc)
-                  }
-                  return(.Object)
+                  rhd = NULL
+                  cid = header[(1+col_offset):length(header)]
+                }
+                # read in the next set of headers (column annotations) and shape into a matrix
+                if ( nchd > 0 ) {
+                  header = scan(src, what = "", nlines = nchd, skip = 3, sep = "\t", 
+                                quote = NULL, quiet = TRUE)		
+                  header = matrix(header, nrow = nchd, 
+                                  ncol = ncmat + nrhd + 1, byrow = TRUE)
+                  # extract the column header and column descriptions
+                  chd = header[,1]
+                  cdesc = header[,-(nrhd+1):-1]
+                  # need to transpose in the case where there's only one column annotation
+                  if ( nchd == 1 )
+                    cdesc = t(cdesc)
+                }
+                else {
+                  chd = NULL
+                  cdesc = data.frame()
+                }
+                # read in the data matrix and row descriptions, shape into a matrix
+                mat = scan(src, what = "", nlines = nrmat, 
+                           skip = 3 + nchd, sep = "\t", quote = NULL, quiet = TRUE)
+                mat = matrix(mat, nrow = nrmat, ncol = ncmat + nrhd + col_offset, 
+                             byrow = TRUE)
+                # message(paste(dim(mat), collapse="\t"))
+                # Extract the row id's row descriptions, and the data matrix
+                rid = mat[,1]
+                if ( nrhd > 0 ) {
+                  # need as.matrix for the case where there's only one row annotation
+                  rdesc = as.matrix(mat[,2:(nrhd + 1)])
+                  mat = matrix(as.numeric(mat[,-(nrhd + 1):-1]),
+                               nrow = nrmat, ncol = ncmat)
+                }
+                else {
+                  rdesc = data.frame()
+                  mat = matrix(as.numeric(mat[, (1+col_offset):ncol(mat)]), nrow = nrmat, ncol = ncmat)
+                }
+                # assign names to the data matrix and the row and column descriptions
+                # message(paste(dim(mat), collapse="\t"))
+                dimnames(mat) = list(rid, cid)
+                if ( nrhd > 0 ) {
+                  dimnames(rdesc) = list(rid,rhd)
+                  rdesc = as.data.frame(rdesc, stringsAsFactors = FALSE)
+                }
+                if ( nchd > 0 ) {
+                  cdesc = t(cdesc)
+                  dimnames(cdesc) = list(cid,chd)
+                  cdesc = as.data.frame(cdesc, stringsAsFactors = FALSE)
+                }
+                # assign to the GCT slots
+                .Object@mat = mat
+                .Object@rid = rownames(mat)
+                .Object@cid = colnames(mat)
+                if (!matrix_only) {
+                  # return annotations as well as matrix
+                  .Object@rdesc = fix.datatypes(rdesc)
+                  .Object@cdesc = fix.datatypes(cdesc)
+                  # add id columns to rdesc and cdesc
+                  .Object@rdesc$id <- rownames(.Object@rdesc)
+                  .Object@cdesc$id <- rownames(.Object@cdesc)
+                }
               }
               else { 
-                  # parse the .gctx
-                  message(paste("reading", src))
-                  .Object@src = src
-                  # if the rid's or column id's are .grp files, read them in
-                  if ( length(rid) == 1 && grepl(".grp$", rid) )
-                      rid <- parse.grp(rid)
-                  if ( length(cid) == 1 && grepl(".grp$", cid) )
-                      cid <- parse.grp(cid)
-                  # get all the row and column ids
-                  all_rid <- read.gctx.ids(src, dimension="row")
-                  all_cid <- read.gctx.ids(src, dimension="col")
-                  # if rid or cid specified, read only those rows/columns
-                  # if already numeric, use as is
-                  # else convert to numeric indices
-                  processed_rids <- process_ids(rid, all_rid, type="rid")
-                  processed_cids <- process_ids(cid, all_cid, type="cid")
-                  # read the data matrix
-                  .Object@mat <- h5read(src, name="0/DATA/0/matrix",
-                                        index=list(processed_rids$idx, processed_cids$idx))
-                  # set the row and column ids, casting as characters
-                  .Object@rid <- processed_rids$ids
-                  .Object@cid <- processed_cids$ids
-                  rownames(.Object@mat) <- processed_rids$ids
-                  colnames(.Object@mat) <- processed_cids$ids
-                  # get the meta data
-                  if (!matrix_only) {
-                    .Object@rdesc <- read.gctx.meta(src, dimension="row", ids=processed_rids$ids,
-                                                    set_annot_rownames=set_annot_rownames)
-                    .Object@cdesc <- read.gctx.meta(src, dimension="col", ids=processed_cids$ids,
-                                                    set_annot_rownames=set_annot_rownames)
-                  }
-                  else {
-                    .Object@rdesc <- data.frame(id=.Object@rid, stringsAsFactors = F)
-                    .Object@cdesc <- data.frame(id=.Object@cid, stringsAsFactors = F)
-                  }
-                  # close any open handles and return the object
-                  H5close()
-                  message("done")
-                  return(.Object)
+                # parse the .gctx
+                message(paste("reading", src))
+                .Object@src = src
+                # if the rid's or column id's are .grp files, read them in
+                if ( length(rid) == 1 && grepl(".grp$", rid) )
+                  rid <- parse.grp(rid)
+                if ( length(cid) == 1 && grepl(".grp$", cid) )
+                  cid <- parse.grp(cid)
+                # get all the row and column ids
+                all_rid <- read.gctx.ids(src, dimension="row")
+                all_cid <- read.gctx.ids(src, dimension="col")
+                # if rid or cid specified, read only those rows/columns
+                # if already numeric, use as is
+                # else convert to numeric indices
+                processed_rids <- process_ids(rid, all_rid, type="rid")
+                processed_cids <- process_ids(cid, all_cid, type="cid")
+                # read the data matrix
+                .Object@mat <- h5read(src, name="0/DATA/0/matrix",
+                                      index=list(processed_rids$idx, processed_cids$idx))
+                # set the row and column ids, casting as characters
+                .Object@rid <- processed_rids$ids
+                .Object@cid <- processed_cids$ids
+                rownames(.Object@mat) <- processed_rids$ids
+                colnames(.Object@mat) <- processed_cids$ids
+                # get the meta data
+                if (!matrix_only) {
+                  .Object@rdesc <- read.gctx.meta(src, dimension="row", ids=processed_rids$ids,
+                                                  set_annot_rownames=set_annot_rownames)
+                  .Object@cdesc <- read.gctx.meta(src, dimension="col", ids=processed_cids$ids,
+                                                  set_annot_rownames=set_annot_rownames)
+                }
+                else {
+                  .Object@rdesc <- data.frame(id=.Object@rid, stringsAsFactors = F)
+                  .Object@cdesc <- data.frame(id=.Object@cid, stringsAsFactors = F)
+                }
+                # close any open handles and return the object
+                H5close()
+                message("done")
               }
+            }
+            # finally, make sure object is valid before returning
+            ok <- validObject(.Object)
+            return(.Object)
           }
 )
 
@@ -580,6 +611,8 @@ write.gct <- function(ds, ofile, precision=4, appenddim=T, ver=3) {
   if (!class(ds)=="GCT") {
     stop("ds must be a GCT object")
   }
+  # make sure it's valid
+  ok <- validObject(ds)
   # append the dimensions of the data set, if desired
   if (appenddim) ofile <- append.dim(ofile, ds@mat, extension="gct")
   
@@ -673,6 +706,12 @@ write.gct <- function(ds, ofile, precision=4, appenddim=T, ver=3) {
 #' @family GCTX parsing functions
 #' @export
 write.gctx <- function(ds, ofile, appenddim=T, compression_level=0, matrix_only=F) {
+  if (!class(ds)=="GCT") {
+    stop("ds must be a GCT object")
+  }
+  # make sure it's valid
+  ok <- validObject(ds)
+  # add dimensions to filename if desired
   if (appenddim) ofile <- append.dim(ofile, ds@mat, extension="gctx")
   # check if the file already exists
   if (file.exists(ofile)) {
