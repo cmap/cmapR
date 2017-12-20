@@ -4,7 +4,7 @@
 \alias{rank.gct}
 \title{Convert a GCT object's matrix to ranks}
 \usage{
-rank.gct(g, dim = "row")
+rank.gct(g, dim = "col")
 }
 \arguments{
 \item{g}{the \code{GCT} object to rank}
