@@ -5,7 +5,7 @@
 \title{Write a GCT object to disk in GCTX format}
 \usage{
 write.gctx(ds, ofile, appenddim = T, compression_level = 0,
-  matrix_only = F)
+  matrix_only = F, max_chunk_kb = 1024)
 }
 \arguments{
 \item{ds}{a GCT object}
@@ -22,6 +22,9 @@ result in smaller files but slower read times.}
 
 \item{matrix_only}{boolean indicating whether to write
 only the matrix data (and skip row, column annotations)}
+
+\item{max_chunk_kb}{for chunking, the maximum number of KB
+a given chunk will occupy}
 }
 \description{
 Write a GCT object to disk in GCTX format
@@ -39,4 +42,3 @@ Other GCTX parsing functions: \code{\link{append.dim}},
   \code{\link{read.gctx.meta}},
   \code{\link{write.gctx.meta}}, \code{\link{write.gct}}
 }
-

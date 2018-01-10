@@ -697,6 +697,8 @@ write.gct <- function(ds, ofile, precision=4, appenddim=T, ver=3) {
 #'   result in smaller files but slower read times.
 #' @param matrix_only boolean indicating whether to write
 #'   only the matrix data (and skip row, column annotations)
+#' @param max_chunk_kb for chunking, the maximum number of KB
+#'   a given chunk will occupy
 #' 
 #' @examples 
 #' \dontrun{
@@ -705,7 +707,8 @@ write.gct <- function(ds, ofile, precision=4, appenddim=T, ver=3) {
 #' }
 #' @family GCTX parsing functions
 #' @export
-write.gctx <- function(ds, ofile, appenddim=T, compression_level=0, matrix_only=F) {
+write.gctx <- function(ds, ofile, appenddim=T, compression_level=0, matrix_only=F,
+                       max_chunk_kb=1024) {
   if (!class(ds)=="GCT") {
     stop("ds must be a GCT object")
   }
@@ -731,14 +734,17 @@ write.gctx <- function(ds, ofile, appenddim=T, compression_level=0, matrix_only=
   h5createGroup(ofile, "0/META/COL")
   h5createGroup(ofile, "0/META/ROW")
   
-  # create and write matrix data, using
-  # chunking if dimensions exceed 1000
-  # assume values are 32 bit (4 bytes each),
-  # so we can fit 1024 / 4 = 256 values in 1 KB (1024 bytes)
-  row_chunk_size <- min(nrow(ds@mat), 1000)
-  # column chunk, such that row * col <= 1024
-  # should play with these values
-  col_chunk_size <- min(floor(1024 / row_chunk_size), ncol(ds@mat))
+  # create and write matrix data, using chunking
+  bits_per_element <- switch(storage.mode(ds@mat),
+                             "double" = 64,
+                             "integer" = 32)
+  elem_per_kb <- max_chunk_kb * 8 / bits_per_element
+  # assume matrix is of dimensions row_dim x col_dim 
+  row_dim <- nrow(ds)
+  col_dim <- ncol(ds)
+  row_chunk_size <- min(row_dim, 1000)
+  # column chunk, such that row * col <= max_chunk_kb
+  col_chunk_size <- min(((max_chunk_kb * elem_per_kb) %/% row_chunk_size), col_dim)
   chunking <- c(row_chunk_size, col_chunk_size) 
   message(paste(c("chunk sizes:", chunking), collapse="\t"))
   h5createDataset(ofile, "0/DATA/0/matrix", dim(ds@mat), chunk=chunking, level=compression_level)
