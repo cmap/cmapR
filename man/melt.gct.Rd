@@ -47,4 +47,3 @@ Other GCT utilities: \code{\link{annotate.gct}},
   \code{\link{merge.gct}}, \code{\link{rank.gct}},
   \code{\link{subset.gct}}
 }
-

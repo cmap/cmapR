@@ -30,4 +30,3 @@ write.tbl(cdesc_char, "col_meta.txt")
 \seealso{
 \code{\link{write.table}}
 }
-

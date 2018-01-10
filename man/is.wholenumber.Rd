@@ -21,4 +21,3 @@ Check if x is a whole number
 is.wholenumber(1)
 is.wholenumber(0.5)
 }
-

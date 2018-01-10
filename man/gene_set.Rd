@@ -17,4 +17,3 @@ An example collection of gene sets
 as used in the Lamb 2006 CMap paper.
 }
 \keyword{datasets}
-

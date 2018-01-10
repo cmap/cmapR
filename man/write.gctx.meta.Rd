@@ -31,4 +31,3 @@ Other GCTX parsing functions: \code{\link{append.dim}},
   \code{\link{write.gct}}
 }
 \keyword{internal}
-

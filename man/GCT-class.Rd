@@ -25,9 +25,9 @@ The GCT class serves to represent annotated
 
 \item{\code{src}}{a character indicating the source (usually file path) of the data}
 }}
+
 \seealso{
 \code{\link{parse.gctx}}, \code{\link{write.gctx}}, \code{\link{read.gctx.meta}}, \code{\link{read.gctx.ids}}
 
 \link{http://clue.io/help} for more information on the GCT format
 }
-

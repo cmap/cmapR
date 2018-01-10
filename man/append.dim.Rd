@@ -37,4 +37,3 @@ Other GCTX parsing functions: \code{\link{fix.datatypes}},
   \code{\link{write.gct}}
 }
 \keyword{internal}
-

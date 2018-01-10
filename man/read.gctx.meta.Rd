@@ -45,4 +45,3 @@ Other GCTX parsing functions: \code{\link{append.dim}},
   \code{\link{write.gctx.meta}}, \code{\link{write.gctx}},
   \code{\link{write.gct}}
 }
-

@@ -16,4 +16,3 @@ parsed from or parse.gctx. Initially all the
 columns are of type character.
 }
 \keyword{datasets}
-

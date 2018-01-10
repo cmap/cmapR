@@ -18,4 +18,3 @@ a subset version of \code{df}
 Do a robust \code{\link{data.frame}} subset to a set of ids
 }
 \keyword{internal}
-

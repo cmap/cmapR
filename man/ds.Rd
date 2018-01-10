@@ -16,4 +16,3 @@ column metadata and gene expression values
 in the matrix.
 }
 \keyword{datasets}
-
