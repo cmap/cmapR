@@ -13,6 +13,7 @@
 #'   the lower triangle of the matrix (only applies if \code{g@mat} is symmetric)
 #' @param suffixes the character suffixes to be applied if there are
 #'   collisions between the names of the row and column descriptors
+#' @param ... further arguments passed along to \code{data.table::merge}
 #'   
 #' @return a \code{\link{data.table}} object with the row and column ids and the matrix
 #'   values and (optinally) the row and column descriptors
@@ -30,11 +31,11 @@
 #' @family GCT utilities
 #' @export
 setGeneric("melt.gct", function(g, suffixes=NULL, remove_symmetries=F,
-                                keep_rdesc=T, keep_cdesc=T) {
+                                keep_rdesc=T, keep_cdesc=T, ...) {
   standardGeneric("melt.gct")
 })
 setMethod("melt.gct", signature("GCT"),
-          function(g, suffixes, remove_symmetries=F, keep_rdesc=T, keep_cdesc=T) {
+          function(g, suffixes, remove_symmetries=F, keep_rdesc=T, keep_cdesc=T, ...) {
           # melt a gct object's matrix into a data.frame and merge row and column
           # annotations back in, using the provided suffixes
           # assumes rdesc and cdesc data.frames both have an 'id' field.
@@ -62,21 +63,21 @@ setMethod("melt.gct", signature("GCT"),
           if (keep_rdesc && keep_cdesc) {
             # merge back in both row and column descriptors
             setattr(d, "names", c("id", "id.y", "value"))
-            d <- merge(d, data.table(g@rdesc), by="id")
+            d <- merge(d, data.table(g@rdesc), by="id", ...)
             setnames(d, "id", "id.x")
             setnames(d, "id.y", "id")
-            d <- merge(d, data.table(g@cdesc), by="id")
+            d <- merge(d, data.table(g@cdesc), by="id", ...)
             setnames(d, "id", "id.y")
           } else if (keep_rdesc) {
             # keep only row descriptors
             rdesc <- data.table(g@rdesc)
             setnames(rdesc, "id", "id.x")
-            d <- merge(d, rdesc, by="id.x")
+            d <- merge(d, rdesc, by="id.x", ...)
           } else if (keep_cdesc) {
             # keep only column descriptors
             cdesc <- data.table(g@cdesc)
             setnames(cdesc, "id", "id.y")
-            d <- merge(d, cdesc, by="id.y")
+            d <- merge(d, cdesc, by="id.y", ...)
           }
           # use suffixes if provided
           if (!is.null(suffixes) & length(suffixes) == 2) {

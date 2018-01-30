@@ -5,7 +5,7 @@
 \title{Transform a GCT object in to a long form \code{\link{data.table}} (aka 'melt')}
 \usage{
 melt.gct(g, suffixes = NULL, remove_symmetries = F, keep_rdesc = T,
-  keep_cdesc = T)
+  keep_cdesc = T, ...)
 }
 \arguments{
 \item{g}{the GCT object}
@@ -21,6 +21,8 @@ descriptors in the final result}
 
 \item{keep_cdesc}{boolean indicating whether to keep the column
 descriptors in the final result}
+
+\item{...}{further arguments passed along to \code{data.table::merge}}
 }
 \value{
 a \code{\link{data.table}} object with the row and column ids and the matrix
