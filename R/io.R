@@ -497,7 +497,12 @@ setMethod("initialize",
                   .Object@cdesc <- data.frame(id=.Object@cid, stringsAsFactors = F)
                 }
                 # close any open handles and return the object
-                H5close()
+                # close any open handles
+                if(utils::packageVersion('rhdf5') < "2.23.0") {
+                    H5close()
+                } else {
+                    h5closeAll()
+                }
                 message("done")
               }
             }
@@ -760,12 +765,16 @@ write.gctx <- function(ds, ofile, appenddim=T, compression_level=0, matrix_only=
   }
 
   # close any open handles
-  H5close()
+  if(utils::packageVersion('rhdf5') < "2.23.0") {
+    H5close()
+  } else {
+    h5closeAll()
+  }
 
   # add the version annotation and close
   fid <- H5Fopen(ofile)
   h5writeAttribute("GCTX1.0", fid, "version")
-  H5close()
+  H5Fclose(fid)
 
 }
 
