@@ -497,7 +497,6 @@ setMethod("initialize",
                   .Object@cdesc <- data.frame(id=.Object@cid, stringsAsFactors = F)
                 }
                 # close any open handles and return the object
-                # close any open handles
                 if(utils::packageVersion('rhdf5') < "2.23.0") {
                     H5close()
                 } else {
