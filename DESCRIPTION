@@ -1,8 +1,8 @@
 Package: cmapR
 Type: Package
 Title: CMap tools in R
-Version: 1.0
-Date: 2017-03-29
+Version: 1.0.1
+Date: 2018-01-30
 Author: CMap Group at The Broad Institute
 Maintainer: <clue@broadinstitute.org>
 Description: CMAP tools in R
