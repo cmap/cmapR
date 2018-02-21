@@ -6,6 +6,8 @@ Parsing and utility functions for analyzing CMap data. For documentation, please
 
 Dependencies are listed in `DESCRIPTION`
 
+
+
 **Installing from source**
 
 Perhaps the simplest way is to install directly from github using `devtools::install_github("cmap/cmapR")`.
