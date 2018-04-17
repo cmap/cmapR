@@ -480,3 +480,53 @@ setMethod("rank.gct", signature("GCT"), function(g, dim) {
   return(g)
 })
 
+
+#' Convert a GCT object to a Biobase-compatible ExpressionSet object
+#' 
+#' @param g the \code{GCT} object to convert
+#' 
+#' @return an \code{ExpressionSet} index with the same row/column 
+#' metadata (if available in the GCT instance)
+#'   
+#' @examples 
+#' my_exp_set <- gct2expressionSet(ds)
+#' 
+#' @family GCT utilities
+#' @export
+setGeneric("gct2expressionSet", function(g) {
+  standardGeneric("gct2expressionSet")
+})
+setMethod("gct2expressionSet", signature("GCT"), function(g) {
+  # convert rdesc field to AnnotatedDataFrame if present
+  if (!is.null(ds@rdesc)){
+    radf <- convert_to_annotatedDataFrame(ds@rdesc)
+  } else {
+    rid_df <- as.data.frame(rownames(ds@mat))
+    radf <- convert_to_annotatedDataFrame(rid_df, id_var="rownames(ds@mat)")
+  }
+
+  # convert cdesc field to AnnotatedDataFrame if present
+  if (!is.null(ds@cdesc)){
+    cadf <- convert_to_annotatedDataFrame(ds@cdesc)
+  } else {
+    cid_df <- as.data.frame(colnames(ds@mat))
+    cadf <- convert_to_annotatedDataFrame(cid_df, id_var="colnames(ds@mat)")
+  }
+  
+  g2e <- ExpressionSet(ds@mat, phenoData=cadf, featureData=radf)
+  # done
+  return(g2e)
+})
+
+#' Make a rdesc or cdesc DataFrame into a properly
+#' formatted AnnotatedDataFrame instance 
+#' 
+#' @param df \code{\link{data.frame}} to convert
+#' @return adf, df as an AnnotatedDataFrame
+#' @keywords internal
+convert_to_annotatedDataFrame <- function(df, id_var="id") {
+  # set id field to rownames of df; need to remove default DataFrame indices if present
+  df <- column_to_rownames(remove_rownames(df), var=id_var)
+  adf <- as(df, "AnnotatedDataFrame")
+  return(adf)
+}
