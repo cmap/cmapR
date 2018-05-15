@@ -163,3 +163,22 @@ test_that("rank.gct works properly", {
   expect_equal(unname(diag(cor(ds@mat, ranked_col@mat, method="spearman"))),
                rep(-1, ncol(ds@mat)))
 })
+
+test_that("check_dups works properly", {
+  foo <- c("a", "b", "c", "a")
+  expect_error(check_dups(foo))
+})
+
+test_that("na_pad_matrix works properly", {
+  m <- matrix(1, nrow=3, ncol=2)
+  rownames(m) <- as.character(1:3)
+  colnames(m) <- c("a", "b")
+  padded <- na_pad_matrix(m, row_universe=as.character(1:5),
+                          col_universe=letters[1:4])
+  expect_equal(nrow(padded), 5)
+  expect_equal(ncol(padded), 4)
+  expect_true(all(is.na(padded[4:5, ])))
+  expect_true(all(is.na(padded[, 3:4])))
+  expect_false(any(is.na(padded[1:3, 1:2])))
+})
+

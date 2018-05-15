@@ -480,3 +480,167 @@ setMethod("rank.gct", signature("GCT"), function(g, dim) {
   return(g)
 })
 
+#' Check for duplicates in a vector
+#' @param x the vector
+#' @param name the name of the object to print
+#'   in an error message if duplicates are found
+#' @return NULL
+#' @examples 
+#' check_dups(c("a", "b", "c", "a", "d"))
+check_dups <- function(x, name="") {
+  if (anyDuplicated(x)) {
+    stop(paste(name, "has duplicated values:",
+               paste(x[duplicated(x)], collaps="\n"),
+               sep="\n"))
+  }
+}
+
+#' Pad a matrix with additional rows/columns of NA values
+#' 
+#' @param m a matrix with unique row and column names
+#' @param row_universe a vector with the universe of possible
+#'   row names
+#' @param col_universe a vector with the universe of possible
+#'   column names
+#' 
+#' @return a matrix
+#' 
+#' @examples 
+#' m <- matrix(rnorm(10), nrow=2)
+#' rownames(m) <- c("A", "B")
+#' colnames(m) <- letters[1:5]
+#' na_pad_matrix(m, row_universe=LETTERS, col_universe=letters)
+#' 
+#' @export
+na_pad_matrix <- function(m, row_universe=NULL, col_universe=NULL) {
+  # make sure row/col names are assigned and unique
+  if (is.null(colnames(m)) || is.null(rownames(m))) {
+    stop("m must have unique row and column names assigned")
+  }
+  check_dups(rownames(m), name="m rownames")
+  check_dups(colnames(m), name="m colnames")
+  # get original row and col names
+  orig_rows <- rownames(m)
+  orig_cols <- colnames(m)
+  # figure out which new rows to add
+  if (is.null(row_universe)) {
+    rows_to_add <- c()
+  } else {
+    rows_to_add <- setdiff(row_universe, orig_rows)
+  }
+  # figure out which new columns to add
+  if (is.null(col_universe)) {
+    cols_to_add <- c()
+  } else {
+    cols_to_add <- setdiff(col_universe, orig_cols)
+  }
+  # add new rows
+  new_rows <- matrix(NA, ncol=ncol(m), nrow=length(rows_to_add))
+  m <- rbind(m, new_rows)
+  rownames(m) <- c(orig_rows, rows_to_add)
+  # add new columns
+  new_cols <- matrix(NA, ncol=length(cols_to_add), nrow=nrow(m))
+  m <- cbind(m, new_cols)
+  colnames(m) <- c(orig_cols, cols_to_add)
+  return(m)
+}
+
+#' Align the rows and columns of two matrices
+#' 
+#' @param m1 a matrix with unique row and column names
+#' @param m2 a matrix with unique row and column names
+#' @param ... additional matrices with unique row and
+#'   column names
+#' @param L a list of matrix objects. If this is given,
+#'   m1, m2, and ... are ignored
+#' @param na.pad boolean indicating whether to pad the
+#'   combined matrix with NAs for rows/columns that are
+#'   not shared by m1 and m2.
+#' @param as.3D boolean indicating whether to return the
+#'   result as a 3D array. If FALSE, will return a list.
+#'   
+#' @return an object containing the aligned matrices. Will
+#'   either be a list or a 3D array
+#' 
+#' @examples 
+#' # construct some example matrices
+#' m1 <- matrix(rnorm(20), nrow=4)
+#' rownames(m1) <- letters[1:4]
+#' colnames(m1) <- LETTERS[1:5]
+#' m2 <- matrix(rnorm(20), nrow=5)
+#' rownames(m2) <- letters[1:5]
+#' colnames(m2) <- LETTERS[1:4]
+#' m1
+#' m2
+#' 
+#' # align them, padding with NA and returning a 3D array
+#' align_matrices(m1, m2)
+#' 
+#' # align them, not padding and retuning a list
+#' align_matrices(m1, m2, na.pad=F, as.3D=F)
+#' 
+#' @export
+align_matrices <- function(m1, m2, ..., L=NULL, na.pad=T, as.3D=T) {
+  # get the additional matrices if given
+  if (!is.null(L)) {
+    if (is.list(L) && all(unlist(lapply(L, is.matrix)))) {
+      matrices <- L
+    } else {
+      stop("L must be a list of matrices")
+    }
+  } else {
+    matrices <- list(m1, m2, ...) 
+  }
+  n_matrices <- length(matrices)
+  # make sure row/col names are assigned and unique
+  lapply(1:n_matrices, function(i) {
+    if (is.null(colnames(matrices[[i]])) ||
+        is.null(rownames(matrices[[i]]))) {
+      stop(paste("matrix", i, "must have unique row and column names"))
+    }
+    check_dups(rownames(matrices[[i]]), name=paste("matrix", i, "rownames"))
+    check_dups(colnames(matrices[[i]]), name=paste("matrix", i, "colnames"))
+  })
+  # figure out the common rows and columns
+  common_rows <- sort(Reduce(intersect, lapply(matrices, rownames)))
+  common_cols <- sort(Reduce(intersect, lapply(matrices, colnames)))
+  # if we're not NA padding, this is all we need to do
+  if (!na.pad) {
+    matrices <- lapply(matrices, function(m) {
+      m[common_rows, common_cols]
+    })
+  } else {
+    # transform the matrices so that they contain the
+    # union of rows/cols padded with NA where needed
+    row_universe <- sort(Reduce(union, lapply(matrices, rownames)))
+    col_universe <- sort(Reduce(union, lapply(matrices, colnames)))
+    matrices <- lapply(matrices, function(m) {
+      padded <- na_pad_matrix(m, row_universe=row_universe,
+                    col_universe=col_universe)
+      # rearrange the rows and columns so they're in a consistent order
+      # for each matrix
+      padded[row_universe, col_universe]
+    })
+  }
+  # if we're not converting to 3D array, return a list
+  if (!as.3D) {
+    return(matrices)
+  } else {
+    # initialize an empty 3D array
+    arr3d <- array(NA, dim=c(length(row_universe),
+                             length(col_universe),
+                             length(matrices)),
+                   # set the dimnames using the first matrix
+                   # b/c we assume they're the same for all
+                   # matrices
+                   dimnames=list(rownames(matrices[[1]]),
+                              colnames(matrices[[1]]),
+                              names(matrices)))
+    # and fill with the aligned matrices
+    for (i in 1:length(matrices)) {
+      arr3d[, , i] <- matrices[[i]]
+    }
+    return(arr3d)
+  }
+}
+
