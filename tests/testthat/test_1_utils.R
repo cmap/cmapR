@@ -182,3 +182,12 @@ test_that("na_pad_matrix works properly", {
   expect_false(any(is.na(padded[1:3, 1:2])))
 })
 
+test_that("align_matrices works properly", {
+  # read ground truth 3D array
+  arr3d <- readRDS("arr3d.rds")
+  # try to construct the same thing using
+  # align_matrices
+  matrices <- readRDS("matrices.rds")
+  res <- align_matrices(L=matrices)
+  expect_identical(res, arr3d)
+})

@@ -545,7 +545,7 @@ na_pad_matrix <- function(m, row_universe=NULL, col_universe=NULL) {
   return(m)
 }
 
-#' Align the rows and columns of two matrices
+#' Align the rows and columns of two (or more) matrices
 #' 
 #' @param m1 a matrix with unique row and column names
 #' @param m2 a matrix with unique row and column names
