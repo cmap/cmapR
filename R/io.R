@@ -18,8 +18,8 @@
 #'   
 #' @seealso \code{\link{parse.gctx}}, \code{\link{write.gctx}}, \code{\link{read.gctx.meta}}, \code{\link{read.gctx.ids}}
 #' @seealso \link{http://clue.io/help} for more information on the GCT format
-setClass("GCT",
-         representation(
+methods::setClass("GCT",
+         methods::representation(
              mat = "matrix",
              rid = "character",
              cid = "character",
@@ -32,7 +32,7 @@ setClass("GCT",
 
 
 # set up methods for checking GCT validity
-setValidity("GCT",
+methods::setValidity("GCT",
   function(object) {
     # check whether dimensions of various
     # slots are in sync
@@ -65,31 +65,31 @@ setValidity("GCT",
 suppressMessages({
   # set method for displaying a GCT object
   # just use the 'str' function to show its structure
-  setMethod("show", signature("GCT"), function(object) {
-    str(object)
+  setMethod("show", methods::signature("GCT"), function(object) {
+    utils::str(object)
   })
 
   # dim, nrow and ncol to display the # of rows and columns
   # for a GCT object's matrix
-  setMethod("ncol", signature("GCT"), function(x) {
+  setMethod("ncol", methods::signature("GCT"), function(x) {
     ncol(x@mat)
   })
-  setMethod("nrow", signature("GCT"), function(x) {
+  setMethod("nrow", methods::signature("GCT"), function(x) {
     nrow(x@mat)
   })
-  setMethod("dim", signature("GCT"), function(x) {
+  setMethod("dim", methods::signature("GCT"), function(x) {
     dim(x@mat)
   })
-  setMethod("range", signature("GCT"), function(x, na.rm=F, finite=F) {
+  setMethod("range", methods::signature("GCT"), function(x, na.rm=F, finite=F) {
     range(x@mat, na.rm=na.rm, finite=finite)
   })
-  setMethod("max", signature("GCT"), function(x, na.rm=F) {
+  setMethod("max", methods::signature("GCT"), function(x, na.rm=F) {
     max(x@mat, na.rm=na.rm)
   })
-  setMethod("min", signature("GCT"), function(x, na.rm=F) {
+  setMethod("min", methods::signature("GCT"), function(x, na.rm=F) {
     min(x@mat, na.rm=na.rm)
   })
-  setMethod("diag", signature("GCT"), function(x) {
+  setMethod("diag", methods::signature("GCT"), function(x) {
     diag(x@mat)
   })
 })
@@ -197,7 +197,7 @@ read.gctx.meta <- function(gctx_path, dimension="row", ids=NULL, set_annot_rowna
   } else {
     name <- "0/META/COL"
   }
-  raw_annots <- h5read(gctx_path, name=name) # returns a list
+  raw_annots <- rhdf5::h5read(gctx_path, name=name) # returns a list
   fields <- names(raw_annots)
   # define an empty data frame of the correct dimensions
   annots <-  data.frame(matrix(nrow=length(raw_annots[[fields[1]]]), ncol=length(fields)))
@@ -259,7 +259,7 @@ read.gctx.ids <- function(gctx_path, dimension="row") {
     name <- "0/META/COL/id"
   }
   # remove any spaces
-  ids <- gsub("\\s*$", "", h5read(gctx_path, name=name), perl=T)
+  ids <- gsub("\\s*$", "", rhdf5::h5read(gctx_path, name=name), perl=T)
   # cast as character
   ids <- as.character(ids)
   return(ids)
@@ -329,7 +329,7 @@ process_ids <- function(ids, all_ids, type="rid") {
 
 
 # define the initialization method for the GCT class
-setMethod("initialize",
+methods::setMethod("initialize",
           signature = "GCT",
           definition = function(.Object, mat=NULL, rdesc=NULL, cdesc=NULL, src=NULL, rid=NULL, cid=NULL, set_annot_rownames=F,
                                 matrix_only=F) {
@@ -478,7 +478,7 @@ setMethod("initialize",
                 processed_rids <- process_ids(rid, all_rid, type="rid")
                 processed_cids <- process_ids(cid, all_cid, type="cid")
                 # read the data matrix
-                .Object@mat <- h5read(src, name="0/DATA/0/matrix",
+                .Object@mat <- rhdf5::h5read(src, name="0/DATA/0/matrix",
                                       index=list(processed_rids$idx, processed_cids$idx))
                 # set the row and column ids, casting as characters
                 .Object@rid <- processed_rids$ids
@@ -498,7 +498,7 @@ setMethod("initialize",
                 }
                 # close any open handles and return the object
                 if(utils::packageVersion('rhdf5') < "2.23.0") {
-                    H5close()
+                    rhdf5::H5close()
                 } else {
                     h5closeAll()
                 }
@@ -506,7 +506,7 @@ setMethod("initialize",
               }
             }
             # finally, make sure object is valid before returning
-            ok <- validObject(.Object)
+            ok <- methods::validObject(.Object)
             return(.Object)
           }
 )
@@ -545,7 +545,7 @@ setMethod("initialize",
 #' @family GCTX parsing functions
 #' @export
 parse.gctx <- function(fname, rid=NULL, cid=NULL, set_annot_rownames=F, matrix_only=F) {
-    ds <- new("GCT",
+    ds <- methods::new("GCT",
               src = fname,
               rid = rid,
               cid = cid,
@@ -616,7 +616,7 @@ write.gct <- function(ds, ofile, precision=4, appenddim=T, ver=3) {
     stop("ds must be a GCT object")
   }
   # make sure it's valid
-  ok <- validObject(ds)
+  ok <- methods::validObject(ds)
   # append the dimensions of the data set, if desired
   if (appenddim) ofile <- append.dim(ofile, ds@mat, extension="gct")
   
@@ -717,7 +717,7 @@ write.gctx <- function(ds, ofile, appenddim=T, compression_level=0, matrix_only=
     stop("ds must be a GCT object")
   }
   # make sure it's valid
-  ok <- validObject(ds)
+  ok <- methods::validObject(ds)
   # add dimensions to filename if desired
   if (appenddim) ofile <- append.dim(ofile, ds@mat, extension="gctx")
   # check if the file already exists
@@ -728,15 +728,15 @@ write.gctx <- function(ds, ofile, appenddim=T, compression_level=0, matrix_only=
   message(paste("writing", ofile))
   
   # start the file object
-  h5createFile(ofile)
+  rhdf5::h5createFile(ofile)
   
   # create all the necessary groups
-  h5createGroup(ofile, "0")
-  h5createGroup(ofile, "0/DATA")
-  h5createGroup(ofile, "0/DATA/0")
-  h5createGroup(ofile, "0/META")
-  h5createGroup(ofile, "0/META/COL")
-  h5createGroup(ofile, "0/META/ROW")
+  rhdf5::h5createGroup(ofile, "0")
+  rhdf5::h5createGroup(ofile, "0/DATA")
+  rhdf5::h5createGroup(ofile, "0/DATA/0")
+  rhdf5::h5createGroup(ofile, "0/META")
+  rhdf5::h5createGroup(ofile, "0/META/COL")
+  rhdf5::h5createGroup(ofile, "0/META/ROW")
   
   # create and write matrix data, using chunking
   bits_per_element <- switch(storage.mode(ds@mat),
@@ -751,12 +751,12 @@ write.gctx <- function(ds, ofile, appenddim=T, compression_level=0, matrix_only=
   col_chunk_size <- min(((max_chunk_kb * elem_per_kb) %/% row_chunk_size), col_dim)
   chunking <- c(row_chunk_size, col_chunk_size) 
   message(paste(c("chunk sizes:", chunking), collapse="\t"))
-  h5createDataset(ofile, "0/DATA/0/matrix", dim(ds@mat), chunk=chunking, level=compression_level)
-  h5write(ds@mat, ofile, "0/DATA/0/matrix")
+  rhdf5::h5createDataset(ofile, "0/DATA/0/matrix", dim(ds@mat), chunk=chunking, level=compression_level)
+  rhdf5::h5write.default(ds@mat, ofile, "0/DATA/0/matrix")
   
   # write annotations
-  h5write(as.character(ds@rid), ofile, "0/META/ROW/id")
-  h5write(as.character(ds@cid), ofile, "0/META/COL/id")
+  rhdf5::h5write.default(as.character(ds@rid), ofile, "0/META/ROW/id")
+  rhdf5::h5write.default(as.character(ds@cid), ofile, "0/META/COL/id")
   
   if (!matrix_only) {
     write.gctx.meta(ofile, ds@cdesc, dimension="column")
@@ -765,15 +765,15 @@ write.gctx <- function(ds, ofile, appenddim=T, compression_level=0, matrix_only=
 
   # close any open handles
   if(utils::packageVersion('rhdf5') < "2.23.0") {
-    H5close()
+    rhdf5::H5close()
   } else {
     h5closeAll()
   }
 
   # add the version annotation and close
-  fid <- H5Fopen(ofile)
-  h5writeAttribute("GCTX1.0", fid, "version")
-  H5Fclose(fid)
+  fid <- rhdf5::H5Fopen(ofile)
+  rhdf5::h5writeAttribute.character("GCTX1.0", fid, "version")
+  rhdf5::H5Fclose(fid)
 
 }
 
@@ -806,7 +806,7 @@ write.gctx.meta <- function(ofile, df, dimension="row") {
       if(class(v) == "factor" || class(v) == "AsIs") {
         v <- as.character(v)
       }
-      h5write(v, ofile, paste(path, field, sep=""))
+      rhdf5::h5write.default(v, ofile, paste(path, field, sep=""))
     }
   }
 }
@@ -875,7 +875,7 @@ write.grp <- function(vals, fname) {
 #' @seealso \link{http://clue.io/help} for details on the GMX file format
 #' @export
 parse.gmx <- function(fname) {
-    tmp <- read.table(fname, sep = "\t", 
+    tmp <- utils::read.table(fname, sep = "\t", 
                      header = TRUE, stringsAsFactors = FALSE)
     # preallocate a list for the gmx
     L <- list()
@@ -994,6 +994,6 @@ write.gmt <- function(lst, fname) {
 #' @seealso \code{\link{write.table}}
 #' @export
 write.tbl <- function(tbl, ofile, ...) {
-    write.table(tbl, file = ofile, sep="\t", quote=F,
+    utils::write.table(tbl, file = ofile, sep="\t", quote=F,
       col.names=T, row.names=F, ...)
 }

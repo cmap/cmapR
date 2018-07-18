@@ -52,38 +52,38 @@ setMethod("melt.gct", signature("GCT"),
           if (remove_symmetries & isSymmetric(mat)) {
             mat[upper.tri(mat, diag=F)] <- NA
           }
-          mat <- data.table(mat)
+          mat <- data.table::data.table(mat)
           mat$rid <- g@rid
-          d <- melt(mat, id.vars="rid")
-          setattr(d, "names", c("id.x", "id.y", "value"))
+          d <- data.table::melt(mat, id.vars="rid")
+          data.table::setattr(d, "names", c("id.x", "id.y", "value"))
           d$id.x <- as.character(d$id.x)
           d$id.y <- as.character(d$id.y)
           # standard data.frame subset here to comply with testthat
           d <- subset(d, !is.na(value))
           if (keep_rdesc && keep_cdesc) {
             # merge back in both row and column descriptors
-            setattr(d, "names", c("id", "id.y", "value"))
-            d <- merge(d, data.table(g@rdesc), by="id", ...)
-            setnames(d, "id", "id.x")
-            setnames(d, "id.y", "id")
-            d <- merge(d, data.table(g@cdesc), by="id", ...)
-            setnames(d, "id", "id.y")
+            data.table::setattr(d, "names", c("id", "id.y", "value"))
+            d <- merge(d, data.table::data.table(g@rdesc), by="id", ...)
+            data.table::setnames(d, "id", "id.x")
+            data.table::setnames(d, "id.y", "id")
+            d <- merge(d, data.table::data.table(g@cdesc), by="id", ...)
+            data.table::setnames(d, "id", "id.y")
           } else if (keep_rdesc) {
             # keep only row descriptors
-            rdesc <- data.table(g@rdesc)
-            setnames(rdesc, "id", "id.x")
+            rdesc <- data.table::data.table(g@rdesc)
+            data.table::setnames(rdesc, "id", "id.x")
             d <- merge(d, rdesc, by="id.x", ...)
           } else if (keep_cdesc) {
             # keep only column descriptors
-            cdesc <- data.table(g@cdesc)
-            setnames(cdesc, "id", "id.y")
+            cdesc <- data.table::data.table(g@cdesc)
+            data.table::setnames(cdesc, "id", "id.y")
             d <- merge(d, cdesc, by="id.y", ...)
           }
           # use suffixes if provided
           if (!is.null(suffixes) & length(suffixes) == 2) {
             newnames <- gsub("\\.x", suffixes[1], names(d))
             newnames <- gsub("\\.y", suffixes[2], newnames)
-            setattr(d, "names", newnames)
+            data.table::setattr(d, "names", newnames)
           }
           message("done")
           return(d)
@@ -249,7 +249,7 @@ setMethod("merge.gct", signature("GCT", "GCT"),
             # we're just appending rows so don't need to do anything
             # special with the rid or rdesc. just cat them
             newg@rid <- c(g1@rid, g2@rid)
-            newg@rdesc <- data.frame(rbind(data.table(g1@rdesc), data.table(g2@rdesc), fill=T))
+            newg@rdesc <- data.frame(rbind(data.table::data.table(g1@rdesc), data.table::data.table(g2@rdesc), fill=T))
             # need figure out the index for how to sort the columns of
             # g2@mat so that they are in sync with g1@mat
             idx <- match(g1@cid, g2@cid)
@@ -270,7 +270,7 @@ setMethod("merge.gct", signature("GCT", "GCT"),
             # we're just appending columns so don't need to do anything
             # special with cid or cdesc. just cat them
             newg@cid <- c(g1@cid, g2@cid)
-            newg@cdesc <- data.frame(rbind(data.table(g1@cdesc), data.table(g2@cdesc), fill=T))
+            newg@cdesc <- data.frame(rbind(data.table::data.table(g1@cdesc), data.table::data.table(g2@cdesc), fill=T))
             # need figure out the index for how to sort the rows of
             # g2@mat so that they are in sync with g1@mat
             idx <- match(g1@rid, g2@rid)
@@ -321,11 +321,11 @@ merge_with_precedence <- function(x, y, by, allow.cartesian=T,
   trash <- check_colnames(by, x)
   trash <- check_colnames(by, y)
   # cast as data.tables
-  x <- data.table(x)
-  y <- data.table(y)
+  x <- data.table::data.table(x)
+  y <- data.table::data.table(y)
   # get rid of row names
-  setattr(x, "rownames", NULL)
-  setattr(y, "rownames", NULL)
+  data.table::setattr(x, "rownames", NULL)
+  data.table::setattr(y, "rownames", NULL)
   common_cols <- intersect(names(x), names(y))
   y_keepcols <- unique(c(by, setdiff(names(y), common_cols)))
   y <- y[, y_keepcols, with=F]
@@ -379,7 +379,7 @@ setMethod("annotate.gct", signature("GCT"),
             annot <- fread(annot)
           } else {
             # convert to data.table
-            annot <- data.table(annot)
+            annot <- data.table::data.table(annot)
           }
           # convert the keyfield column to id for merging
           # assumes the gct object has an id field in its existing annotations
