@@ -500,7 +500,7 @@ methods::setMethod("initialize",
                 if(utils::packageVersion('rhdf5') < "2.23.0") {
                     rhdf5::H5close()
                 } else {
-                    h5closeAll()
+                  rhdf5::h5closeAll()
                 }
                 message("done")
               }
@@ -767,7 +767,7 @@ write.gctx <- function(ds, ofile, appenddim=T, compression_level=0, matrix_only=
   if(utils::packageVersion('rhdf5') < "2.23.0") {
     rhdf5::H5close()
   } else {
-    h5closeAll()
+    rhdf5::h5closeAll()
   }
 
   # add the version annotation and close
