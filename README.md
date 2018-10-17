@@ -10,7 +10,7 @@ Dependencies are listed in `DESCRIPTION`
 
 **Installing from source**
 
-Perhaps the simplest way is to install directly from github using `devtools::install_github("cmap/cmapR")`.
+Perhaps the simplest way is to install directly from github using `devtools::install_github("cmap/cmapR")`. Note that this requires having previously installed the `devtools` package.
 
 Alternatively, you can point your R's `install.packages` function at a tarball of the `cmapR` archive. You can generate this archive by cloning this repository and doing the following:
 
