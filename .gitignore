@@ -36,3 +36,6 @@ vignettes/*.pdf
 .Rproj.user
 
 \.ipynb_checkpoints/
+
+# contests directory
+contests/*
