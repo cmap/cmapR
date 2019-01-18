@@ -777,6 +777,106 @@ write.gctx <- function(ds, ofile, appenddim=T, compression_level=0, matrix_only=
 
 }
 
+#' Update the matrix of an existing GCTX file
+#' 
+#' @param x an array of data
+#' @param ofile the filename of the GCTX to update
+#' @param rid integer indices or character ids of the rows
+#'   to update
+#' @param cid integer indices or character ids of the columns
+#'   to update
+#' 
+#' @details Overwrite the rows and columns of \code{ofile} 
+#' as indicated by \code{rid} and \code{cid} respectively.
+#' \code{rid} and \code{cid} can either be integer indices
+#' or character ids corresponding to the row and column ids
+#' in \code{ofile}.
+#' 
+#' @examples
+#' \dontrun{
+#' m <- matrix(rnorm(20), nrow=10)
+#' # update by integer indices
+#' update.gctx(m, ofile="my.gctx", rid=1:10, cid=1:2)
+#' # update by character ids
+#' row_ids <- letters[1:10]
+#' col_ids <- LETTERS[1:2]
+#' update.gctx(m, ofile="my.gctx", rid=row_ids, cid=col_ids)
+#' }
+#' @export
+update.gctx <- function(x, ofile, rid=NULL, cid=NULL) {
+  # x must be numeric
+  stopifnot(is.numeric(x))
+  # must give us at least one of rid or cid
+  if (is.null(rid) && is.null(cid)) {
+    stop("one of rid or cid must not be NULL")
+  }
+  # make sure the dimensions of x agree with the 
+  # number of rid and cid supplied
+  if (is.matrix(x)) {
+    stopifnot(all(dim(x) == c(length(rid), length(cid))))
+  } else {
+    # x is a vector, so we must be updating in one dimension
+    if(!is.null(rid) & !is.null(cid)) {
+      stop(paste("x is a vector so you can only update in one dimension",
+                 "(only one of rid or cid can be non-NULL)", sep="\n"))
+    }
+    if (is.null(rid)) {
+      stopifnot(length(cid) == length(x))
+    }
+    if (is.null(cid)) {
+      stopifnot(length(rid) == length(x))
+    }
+  }
+  # get the dimensions of the file in question
+  info <- rhdf5::h5dump(ofile, load=F)
+  dims <- as.numeric(unlist(strsplit(info[["0"]][["DATA"]][["0"]][["matrix"]][["dim"]], " x ")))
+  # get the full space of row and column ids
+  all_rid <- cmapR::read.gctx.ids(ofile, dim="row")
+  all_cid <- cmapR::read.gctx.ids(ofile, dim="col")
+  # helper functions to validate integer and character ids
+  validate_integer_ids <- function(ids, maxdim, which_dim) {
+    stopifnot(all(ids > 0))
+    out_of_range <- setdiff(ids, seq_len(maxdim))
+    if (length(out_of_range) > 0) {
+      stop(paste("the following", which_dim, "indices are out of range\n",
+                 paste(out_of_range, collapse="\n")))
+    }
+  }
+  validate_character_ids <- function(ids, all_ids, which_dim) {
+    out_of_range <- setdiff(ids, all_ids)
+    if (length(out_of_range) > 0) {
+      stop(paste("the following", which_dim, "ids do not exist in the dataset\n",
+                 paste(out_of_range, collapse="\n")))
+    }
+  }
+  # given integer ids
+  if (is.integer(rid)) {
+    validate_integer_ids(rid, dims[1], "row")
+    ridx <- rid
+  }
+  if (is.integer(cid)) {
+    validate_integer_ids(cid, dims[2], "column")
+    cidx <- cid
+  }
+  # given character ids
+  if (is.character(rid)) {
+    validate_character_ids(rid, all_rid, "row")
+    ridx <- match(rid, all_rid)
+  }
+  if (is.character(cid)) {
+    validate_character_ids(cid, all_cid, "column")
+    cidx <- match(cid, all_cid)
+  }
+  # make the updates to the specified rows/columns
+  rhdf5::h5write.default(x, ofile, "0/DATA/0/matrix", index=list(ridx, cidx))
+  # close any open handles
+  if(utils::packageVersion('rhdf5') < "2.23.0") {
+    rhdf5::H5close()
+  } else {
+    rhdf5::h5closeAll()
+  }
+}
+
 #' Write a \code{data.frame} of meta data to GCTX file
 #' 
 #' @param ofile the desired file path for writing
