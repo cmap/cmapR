@@ -27,3 +27,4 @@ Other CMap parsing functions: \code{\link{parse.gmt}},
   \code{\link{parse.gmx}}, \code{\link{write.gmt}},
   \code{\link{write.grp}}
 }
+\concept{CMap parsing functions}

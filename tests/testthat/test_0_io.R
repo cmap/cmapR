@@ -110,3 +110,35 @@ test_that("various built-in functions have been correctly adatped to GCT", {
   expect_equal(max(ds), max(ds@mat))
   expect_equal(diag(ds), diag(ds@mat))
 })
+
+test_that("update.gctx works correctly", {
+  # make a copy of the example dataset
+  fpath <- "test_copy_n5x10.gctx"
+  if (file.exists(fpath)) file.remove(fpath)
+  file.copy("test_n5x10.gctx", fpath)
+  # modify rows 3-7, columns 2-4 to contain all zeros
+  m <- matrix(0, nrow=5, ncol=3)
+  # update using integer indices
+  update.gctx(m, ofile=fpath, rid=3:7, cid=2:4)
+  tmp <- parse.gctx(fpath)
+  tmp_m <- tmp@mat[3:7, 2:4]
+  dimnames(tmp_m) <- NULL
+  expect_identical(m, tmp_m)
+  # update using character ids
+  m2 <- matrix(1, nrow=5, ncol=3)
+  rid <- read.gctx.ids("test_n5x10.gctx", dim="row")
+  cid <- read.gctx.ids("test_n5x10.gctx", dim="col")
+  update.gctx(m2, ofile=fpath, rid=rid[3:7], cid=cid[2:4])
+  tmp2 <- parse.gctx(fpath)
+  tmp_m2 <- tmp2@mat[3:7, 2:4]
+  dimnames(tmp_m2) <- NULL
+  expect_identical(m2, tmp_m2)
+  # try updating indices that don't exist in the dataset
+  # should produce an error
+  expect_error(update.gctx(m2, ofile=fpath, rid=3:7, cid=20:30))
+  # try updating indices that don't correspond to dims of array
+  # should produce an error
+  expect_error(update.gctx(m2, ofile=fpath, rid=3:7, cid=1:2))
+  expect_error(update.gctx(rep(0, 10), ofile=fpath, rid=3:7, cid=1:2))
+  if (file.exists(fpath)) file.remove(fpath)
+})
