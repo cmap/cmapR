@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{align_matrices}
 \alias{align_matrices}
-\title{Align the rows and columns of two matrices}
+\title{Align the rows and columns of two (or more) matrices}
 \usage{
 align_matrices(m1, m2, ..., L = NULL, na.pad = T, as.3D = T)
 }
@@ -29,7 +29,7 @@ an object containing the aligned matrices. Will
   either be a list or a 3D array
 }
 \description{
-Align the rows and columns of two matrices
+Align the rows and columns of two (or more) matrices
 }
 \examples{
 # construct some example matrices

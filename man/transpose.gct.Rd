@@ -21,3 +21,4 @@ Transpose a GCT object
 transpose.gct(ds)
 
 }
+\concept{GCT utilties}

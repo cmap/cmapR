@@ -33,3 +33,4 @@ Other GCT utilities: \code{\link{annotate.gct}},
   \code{\link{melt.gct}}, \code{\link{rank.gct}},
   \code{\link{subset.gct}}
 }
+\concept{GCT utilities}
