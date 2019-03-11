@@ -38,3 +38,4 @@ Other GCT utilities: \code{\link{melt.gct}},
   \code{\link{merge.gct}}, \code{\link{rank.gct}},
   \code{\link{subset.gct}}
 }
+\concept{GCT utilities}
