@@ -651,6 +651,10 @@ align_matrices <- function(m1, m2, ..., L=NULL, na.pad=T, as.3D=T) {
 #' @param col_field the column name in cdesc to search on
 #' @param rdesc a \code{data.frame} of row annotations
 #' @param cdesc a \code{data.frame} of column annotations
+#' @param row_keyfield the column name of \code{rdesc} to use
+#'    for annotating the rows of \code{g}
+#' @param col_keyfield the column name of \code{cdesc} to use
+#'    for annotating the rows of \code{g}
 #' 
 #' @description extract the elements from a \code{GCT} object
 #'   where the values of \code{row_field} and \code{col_field}
@@ -677,16 +681,20 @@ align_matrices <- function(m1, m2, ..., L=NULL, na.pad=T, as.3D=T) {
 #' 
 #' @export
 extract.gct <- function(g, row_field, col_field,
-                        rdesc=NULL, cdesc=NULL) {
-  # what are the common values
-  if (is.null(rdesc)) {
+                        rdesc=NULL, cdesc=NULL,
+                        row_keyfield="id", col_keyfield="id") {
+  # annotate the gct object if external annotations have been provided
+  if (!is.null(rdesc)) {
+    g <- annotate.gct(g, rdesc, dim="row", keyfield=row_keyfield)
     rdesc <- g@rdesc
   }
-  if (is.null(cdesc)) {
+  if (!is.null(cdesc)) {
+    g <- annotate.gct(g, cdesc, dim="col", keyfield=col_keyfield)
     cdesc <- g@cdesc
   }
-  rdesc <- data.table::data.table(rdesc)
-  cdesc <- data.table::data.table(cdesc)
+  rdesc <- data.table::data.table(g@rdesc)
+  cdesc <- data.table::data.table(g@cdesc)
+  # what are the common values
   common_vals <- intersect(rdesc[[row_field]], cdesc[[col_field]])
   mask <- matrix(F, nrow=nrow(g), ncol=ncol(g))
   for (v in common_vals) {

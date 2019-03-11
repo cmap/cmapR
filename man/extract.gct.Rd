@@ -4,7 +4,8 @@
 \alias{extract.gct}
 \title{Exract elements from a GCT matrix}
 \usage{
-extract.gct(g, row_field, col_field, rdesc = NULL, cdesc = NULL)
+extract.gct(g, row_field, col_field, rdesc = NULL, cdesc = NULL,
+  row_keyfield = "id", col_keyfield = "id")
 }
 \arguments{
 \item{g}{the GCT object}
@@ -16,6 +17,12 @@ extract.gct(g, row_field, col_field, rdesc = NULL, cdesc = NULL)
 \item{rdesc}{a \code{data.frame} of row annotations}
 
 \item{cdesc}{a \code{data.frame} of column annotations}
+
+\item{row_keyfield}{the column name of \code{rdesc} to use
+for annotating the rows of \code{g}}
+
+\item{col_keyfield}{the column name of \code{cdesc} to use
+for annotating the rows of \code{g}}
 }
 \value{
 a list of the following elements
