@@ -191,3 +191,13 @@ test_that("align_matrices works properly", {
   res <- align_matrices(L=matrices)
   expect_identical(res, arr3d)
 })
+
+test_that("extract.gct works properly", {
+  # read ground truth result
+  truth_res <- readRDS("extract.gct.res.rds")
+  # try to construct the same thing using
+  # extract.gct
+  test_res <- extract.gct(cmapR::kd_gct, row_field="pr_gene_symbol",
+                          col_field="pert_mfc_desc")
+  expect_equal(truth_res, test_res)
+})

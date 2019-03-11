@@ -19,12 +19,14 @@ extract.gct(g, row_field, col_field, rdesc = NULL, cdesc = NULL)
 }
 \value{
 a list of the following elements
-* \code{mask} a logical matrix of the same dimensions as
-      \code{ds@mat} indicating which matrix elements have
-      been extracted
-* \code{idx} a numerical vector index into \code{ds@mat}
-      representing which elements have been extracted
-* \code{vals} a vector of the extracted values
+\describe{
+  \item{mask}{a logical matrix of the same dimensions as
+        \code{ds@mat} indicating which matrix elements have
+        been extracted}
+ \item{idx}{an array index into \code{ds@mat}
+        representing which elements have been extracted}
+ \item{vals}{a vector of the extracted values}
+ }
 }
 \description{
 extract the elements from a \code{GCT} object

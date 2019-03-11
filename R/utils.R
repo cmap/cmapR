@@ -659,12 +659,14 @@ align_matrices <- function(m1, m2, ..., L=NULL, na.pad=T, as.3D=T) {
 #'   to extract all the values of the targeted genes.
 #'   
 #' @return a list of the following elements
-#' * \code{mask} a logical matrix of the same dimensions as
-#'       \code{ds@mat} indicating which matrix elements have
-#'       been extracted
-#' * \code{idx} a numerical vector index into \code{ds@mat}
-#'       representing which elements have been extracted
-#' * \code{vals} a vector of the extracted values
+#' \describe{
+#'   \item{mask}{a logical matrix of the same dimensions as
+#'         \code{ds@mat} indicating which matrix elements have
+#'         been extracted}
+#'  \item{idx}{an array index into \code{ds@mat}
+#'         representing which elements have been extracted}
+#'  \item{vals}{a vector of the extracted values}
+#'  }
 #' 
 #' @examples
 #' # get the values for all targeted genes from a 
@@ -692,10 +694,27 @@ extract.gct <- function(g, row_field, col_field,
     cidx <- which(cdesc[[col_field]] == v)
     mask[ridx, cidx] <- T
   }
+  idx <- which(mask, arr.ind=T)
+  vals <- g@mat[mask]
+  # data.frame containing the extracted values
+  # alongside their row and column annotations
+  df = cbind(
+    {
+      x <- rdesc[idx[, 1], ]
+      setattr(x, "names", paste("row", names(x), sep="_"))
+      x
+    },
+    {
+      y <- cdesc[idx[, 2], ]
+      setattr(y, "names", paste("col", names(y), sep="_"))
+      y
+    })
+  df$value <- vals
   return(list(
     mask = mask,
-    idx = which(mask, arr.ind=T),
-    vals = g@mat[mask]
+    idx = idx,
+    vals = vals,
+    df = df 
   ))
 }
 
