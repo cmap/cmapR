@@ -644,3 +644,58 @@ align_matrices <- function(m1, m2, ..., L=NULL, na.pad=T, as.3D=T) {
   }
 }
 
+#' Exract elements from a GCT matrix
+#' 
+#' @param g the GCT object
+#' @param row_field the column name in rdesc to search on
+#' @param col_field the column name in cdesc to search on
+#' @param rdesc a \code{data.frame} of row annotations
+#' @param cdesc a \code{data.frame} of column annotations
+#' 
+#' @description extract the elements from a \code{GCT} object
+#'   where the values of \code{row_field} and \code{col_field}
+#'   are the same. A concrete example is if \code{ds} represents
+#'   a pairwise similarity matrix between perturbagens and you
+#'   want to extract all the similarities where the row and 
+#'   column perturbagens are the same.
+#'   
+#' @return a list of the following elements
+#' * \code{mask} a logical matrix of the same dimensions as
+#'       \code{ds@mat} indicating which matrix elements have
+#'       been extracted
+#' * \code{idx} a numerical vector index into \code{ds@mat}
+#'       representing which elements have been extracted
+#' * \code{vals} a vector of the extracted values
+#' 
+#' @examples 
+#' m <- cor(ds@mat)
+#' g <- new("GCT", mat=m, rdesc=ds@cdesc, cdesc=ds@cdesc)
+#' same_pert_cor <- extract.gct(g, row_field="pert_id", col_field="pert_id")
+#' str(same_pert_cor)
+#' 
+#' @export
+extract.gct <- function(g, row_field, col_field,
+                        rdesc=NULL, cdesc=NULL) {
+  # what are the common values
+  if (is.null(rdesc)) {
+    rdesc <- g@rdesc
+  }
+  if (is.null(cdesc)) {
+    cdesc <- g@cdesc
+  }
+  rdesc <- data.table::data.table(rdesc)
+  cdesc <- data.table::data.table(cdesc)
+  common_vals <- intersect(rdesc[[row_field]], cdesc[[col_field]])
+  mask <- matrix(F, nrow=nrow(ds), ncol=ncol(ds))
+  for (v in common_vals) {
+    ridx <- which(rdesc[[row_field]] == v)
+    cidx <- which(cdesc[[col_field]] == v)
+    mask[ridx, cidx] <- T
+  }
+  return(list(
+    mask = mask,
+    idx = which(mask, arr.ind=T),
+    vals = ds@mat[mask]
+  ))
+}
+

@@ -3,6 +3,7 @@
 export(align_matrices)
 export(annotate.gct)
 export(check_colnames)
+export(extract.gct)
 export(is.wholenumber)
 export(melt.gct)
 export(merge.gct)
