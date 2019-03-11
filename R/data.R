@@ -14,3 +14,7 @@
 #' column metadata and gene expression values
 #' in the matrix.
 "ds"
+
+#' An example GCT object of knockdown experiments
+#' targeting a subset of landmark genes.
+"kd_gct"

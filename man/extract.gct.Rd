@@ -29,15 +29,15 @@ a list of the following elements
 \description{
 extract the elements from a \code{GCT} object
   where the values of \code{row_field} and \code{col_field}
-  are the same. A concrete example is if \code{ds} represents
-  a pairwise similarity matrix between perturbagens and you
-  want to extract all the similarities where the row and 
-  column perturbagens are the same.
+  are the same. A concrete example is if \code{g} represents
+  a matrix of signatures of genetic perturbations, and you wan
+  to extract all the values of the targeted genes.
 }
 \examples{
-m <- cor(ds@mat)
-g <- new("GCT", mat=m, rdesc=ds@cdesc, cdesc=ds@cdesc)
-same_pert_cor <- extract.gct(g, row_field="pert_id", col_field="pert_id")
-str(same_pert_cor)
+# get the values for all targeted genes from a 
+# dataset of knockdown experiments 
+res <- extract.gct(kd_gct, row_field="pr_gene_symbol", col_field="pert_mfc_desc")
+str(res)
+stats::quantile(res$vals)
 
 }

@@ -654,10 +654,9 @@ align_matrices <- function(m1, m2, ..., L=NULL, na.pad=T, as.3D=T) {
 #' 
 #' @description extract the elements from a \code{GCT} object
 #'   where the values of \code{row_field} and \code{col_field}
-#'   are the same. A concrete example is if \code{ds} represents
-#'   a pairwise similarity matrix between perturbagens and you
-#'   want to extract all the similarities where the row and 
-#'   column perturbagens are the same.
+#'   are the same. A concrete example is if \code{g} represents
+#'   a matrix of signatures of genetic perturbations, and you wan
+#'   to extract all the values of the targeted genes.
 #'   
 #' @return a list of the following elements
 #' * \code{mask} a logical matrix of the same dimensions as
@@ -667,11 +666,12 @@ align_matrices <- function(m1, m2, ..., L=NULL, na.pad=T, as.3D=T) {
 #'       representing which elements have been extracted
 #' * \code{vals} a vector of the extracted values
 #' 
-#' @examples 
-#' m <- cor(ds@mat)
-#' g <- new("GCT", mat=m, rdesc=ds@cdesc, cdesc=ds@cdesc)
-#' same_pert_cor <- extract.gct(g, row_field="pert_id", col_field="pert_id")
-#' str(same_pert_cor)
+#' @examples
+#' # get the values for all targeted genes from a 
+#' # dataset of knockdown experiments 
+#' res <- extract.gct(kd_gct, row_field="pr_gene_symbol", col_field="pert_mfc_desc")
+#' str(res)
+#' stats::quantile(res$vals)
 #' 
 #' @export
 extract.gct <- function(g, row_field, col_field,
@@ -686,7 +686,7 @@ extract.gct <- function(g, row_field, col_field,
   rdesc <- data.table::data.table(rdesc)
   cdesc <- data.table::data.table(cdesc)
   common_vals <- intersect(rdesc[[row_field]], cdesc[[col_field]])
-  mask <- matrix(F, nrow=nrow(ds), ncol=ncol(ds))
+  mask <- matrix(F, nrow=nrow(g), ncol=ncol(g))
   for (v in common_vals) {
     ridx <- which(rdesc[[row_field]] == v)
     cidx <- which(cdesc[[col_field]] == v)
@@ -695,7 +695,7 @@ extract.gct <- function(g, row_field, col_field,
   return(list(
     mask = mask,
     idx = which(mask, arr.ind=T),
-    vals = ds@mat[mask]
+    vals = g@mat[mask]
   ))
 }
 
