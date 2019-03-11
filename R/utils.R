@@ -701,12 +701,12 @@ extract.gct <- function(g, row_field, col_field,
   df = cbind(
     {
       x <- rdesc[idx[, 1], ]
-      setattr(x, "names", paste("row", names(x), sep="_"))
+      data.table::setattr(x, "names", paste("row", names(x), sep="_"))
       x
     },
     {
       y <- cdesc[idx[, 2], ]
-      setattr(y, "names", paste("col", names(y), sep="_"))
+      data.table::setattr(y, "names", paste("col", names(y), sep="_"))
       y
     })
   df$value <- vals
