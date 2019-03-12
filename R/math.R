@@ -35,3 +35,84 @@ robust.zscore <- function(x, min_mad=1e-6, ...) {
   }
   return((x - med) / (mad *1.4826))
 }
+
+#' Threshold a numeric vector
+#' 
+#' @param x the vector
+#' @param minval minium allowed value
+#' @param maxval maximum allowed value
+#' 
+#' @return a thresholded version of \code{x}
+#' 
+#' @examples 
+#' x <- rnorm(20)
+#' threshold(x, -0.1, -0.1)
+#' 
+#' @export
+threshold <- function(x, minval, maxval) {
+  # threshold a vector using the minval and maxval supplied
+  x[x < minval] <- minval
+  x[x > maxval] <- maxval
+  return(x)
+}
+
+#' Collapse the rows or columns of a matrix using  
+#' weighted averaging
+#' 
+#' @description This is equivalent to the 'modz' procedure
+#'   used in collapsing replicates in traditional L1000
+#'   data processing. The weight for each replicate is
+#'   computed as its normalized average correlation to
+#'   the other replicates in the set.
+#' 
+#' @param m a numeric matrix where the rows or columns are
+#'   assumed to be replicates
+#' @param dimension the dimension to collapse. either 'row'
+#'     or 'col'
+#' @param method the correlation method to use
+#'
+#' @return a list with the following elements
+#'  \describe{
+#'    \item{values}{a vector of the collapsed values}
+#'    \item{correlations}{a vector of the pairwise correlations}
+#'    \item{weights}{a vector of the computed weights}
+#'  }
+#'
+#' @examples
+#' m <- matrix(rnorm(30), ncol=3)
+#' distil(m)
+#' 
+#' @export
+distil <- function(m, dimension="col", method="spearman") {
+  if (!is.numeric(m)) {
+    stop("m must be numeric")
+  }
+  if (!(dimension %in% c("row", "col"))) {
+    stop("dimension must be either row or col")
+  }
+  if (dimension == "row") {
+    # collapsing across rows, transpose
+    m <- t(m)
+  }
+  # ignore any columns containing NA values
+  na_idx <- apply(m, 2, function(x) any(is.na(x)))
+  # make sure to enforce that the resulting object is 
+  # a matrix so that cor function will work
+  m <- as.matrix(m[, !na_idx])
+  # compute pairwise correlation matrix
+  # and threshold negative values to 0.01
+  corr <- cmapR:::threshold(cor(m, method=method), 0.01, 1)
+  # set diagnoal to 0
+  diag(corr) <- 0
+  row_sums <- apply(corr, 1, sum)
+  # normalize sums to get weights
+  weights <- row_sums / sum(row_sums)
+  # multiply input matrix by weights
+  weighted_mat <- t(t(m) * weights)
+  # and now take the sum
+  v <- apply(weighted_mat, 1, sum)
+  return(list(
+    values = v,
+    correlations = corr[upper.tri(corr)],
+    weights = weights))
+}

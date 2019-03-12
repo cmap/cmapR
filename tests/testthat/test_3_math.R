@@ -6,3 +6,10 @@ test_that("robust.zscore works properly", {
   test_rz <- cmapR::robust.zscore(x)
   expect_identical(test_rz, truth_rz)
 })
+
+test_that("distil works properly", {
+  m <- readRDS("rnorm_matrix.rds")
+  truth_distil <- readRDS("distil_result.rds")
+  test_distil <- cmapR::distil(m)
+  expect_identical(test_distil, truth_distil)
+})
