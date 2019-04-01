@@ -580,7 +580,7 @@ na_pad_matrix <- function(m, row_universe=NULL, col_universe=NULL) {
 #' align_matrices(m1, m2, na.pad=F, as.3D=F)
 #' 
 #' @export
-align_matrices <- function(m1, m2, ..., L=NULL, na.pad=T, as.3D=T) {
+align_matrices <- function(m1, m2, ..., L=NULL, na.pad=T, as.3D=TRUE) {
   # get the additional matrices if given
   if (!is.null(L)) {
     if (is.list(L) && all(unlist(lapply(L, is.matrix)))) {
