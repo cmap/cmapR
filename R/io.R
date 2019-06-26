@@ -1070,6 +1070,33 @@ write.gmt <- function(lst, fname) {
   }
 }
 
+#' Read an LXB file and return a matrix
+#' 
+#' @param lxb_path the path to the lxb file
+#' @param columns which columns in the lxb file to retain
+#' @param newnames what to name these columns in the returned matrix
+#' 
+#' @examples 
+#' lxb_path <- system.file("extdata", "example.lxb", package="cmapR")
+#' lxb_data <- lxb2mat(lxb_path)
+#' str(lxb_data)
+#' 
+#' @importFrom prada readFCS exprs
+#' 
+#' @family CMap parsing functions
+#' @export
+lxb2mat <- function(lxb_path, columns=c("RID", "RP1"),
+                    newnames=c("barcode_id", "FI")) {
+  message(paste("reading", lxb_path))
+  # suppressing warning about signed integers since
+  # lxb data will be unsigned
+  lxb <- suppressWarnings(prada::readFCS(lxb_path))
+  m <- prada::exprs(lxb)[, columns]
+  keep_idx <- m[, 1] != 0
+  m <- m[keep_idx, ]
+  colnames(m) <- newnames
+  return(m)
+}
 
 ########################################
 ### Other Misc. utility functions ######
