@@ -164,9 +164,6 @@ fix.datatypes <- function(meta) {
 #' @param dimension which metadata to read (row or column)
 #' @param ids a character vector of a subset of row/column ids
 #'   for which to read the metadata
-#' @param set_annot_rownames a boolean indicating whether to set the 
-#'   \code{rownames} addtribute of the returned \code{data.frame} to
-#'   the corresponding row/column ids.
 #'  
 #' @return a \code{data.frame} of metadata
 #' 
@@ -184,7 +181,7 @@ fix.datatypes <- function(meta) {
 #' 
 #' @family GCTX parsing functions
 #' @export
-read.gctx.meta <- function(gctx_path, dimension="row", ids=NULL, set_annot_rownames=T) {
+read.gctx.meta <- function(gctx_path, dimension="row", ids=NULL) {
   if (!file.exists(gctx_path)) {
     stop(paste(gctx_path, "does not exist"))
   }
@@ -219,10 +216,6 @@ read.gctx.meta <- function(gctx_path, dimension="row", ids=NULL, set_annot_rowna
   # make sure annots row ordering matches that of ids
   annots <- subset_to_ids(annots, ids)
   annots$id <- as.character(annots$id)
-  # use the id field to set the rownames
-  if (set_annot_rownames) {
-    rownames(annots) <- annots$id
-  }
   return(annots)
 }
 
@@ -331,8 +324,8 @@ process_ids <- function(ids, all_ids, type="rid") {
 # define the initialization method for the GCT class
 methods::setMethod("initialize",
           signature = "GCT",
-          definition = function(.Object, mat=NULL, rdesc=NULL, cdesc=NULL, src=NULL, rid=NULL, cid=NULL, set_annot_rownames=F,
-                                matrix_only=F) {
+          definition = function(.Object, mat=NULL, rdesc=NULL, cdesc=NULL, src=NULL, rid=NULL, cid=NULL,
+                                matrix_only=FALSE) {
             # if we were supplied a matrix and annotations, use them
             if (!is.null(mat)) {
               .Object@mat <- mat
@@ -487,10 +480,8 @@ methods::setMethod("initialize",
                 colnames(.Object@mat) <- processed_cids$ids
                 # get the meta data
                 if (!matrix_only) {
-                  .Object@rdesc <- read.gctx.meta(src, dimension="row", ids=processed_rids$ids,
-                                                  set_annot_rownames=set_annot_rownames)
-                  .Object@cdesc <- read.gctx.meta(src, dimension="col", ids=processed_cids$ids,
-                                                  set_annot_rownames=set_annot_rownames)
+                  .Object@rdesc <- read.gctx.meta(src, dimension="row", ids=processed_rids$ids)
+                  .Object@cdesc <- read.gctx.meta(src, dimension="col", ids=processed_cids$ids)
                 }
                 else {
                   .Object@rdesc <- data.frame(id=.Object@rid, stringsAsFactors = F)
@@ -523,9 +514,6 @@ methods::setMethod("initialize",
 #'   column indices or a path to a grp file containing character
 #'   column indices. Only these indicies will be parsed from the
 #'   file.
-#' @param set_annot_rownames boolean indicating whether to set the
-#'   rownames on the row/column metadata data.frames. Set this to 
-#'   false if the GCTX file has duplicate row/column ids.
 #' @param matrix_only boolean indicating whether to parse only
 #'   the matrix (ignoring row and column annotations)
 #'
@@ -544,12 +532,11 @@ methods::setMethod("initialize",
 #' 
 #' @family GCTX parsing functions
 #' @export
-parse.gctx <- function(fname, rid=NULL, cid=NULL, set_annot_rownames=F, matrix_only=F) {
+parse.gctx <- function(fname, rid=NULL, cid=NULL, matrix_only=FALSE) {
     ds <- methods::new("GCT",
               src = fname,
               rid = rid,
               cid = cid,
-              set_annot_rownames = set_annot_rownames,
               matrix_only = matrix_only)
     return(ds)
 }

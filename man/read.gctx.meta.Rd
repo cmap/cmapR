@@ -4,8 +4,7 @@
 \alias{read.gctx.meta}
 \title{Parse row or column metadata from GCTX files}
 \usage{
-read.gctx.meta(gctx_path, dimension = "row", ids = NULL,
-  set_annot_rownames = T)
+read.gctx.meta(gctx_path, dimension = "row", ids = NULL)
 }
 \arguments{
 \item{gctx_path}{the path to the GCTX file}
@@ -14,10 +13,6 @@ read.gctx.meta(gctx_path, dimension = "row", ids = NULL,
 
 \item{ids}{a character vector of a subset of row/column ids
 for which to read the metadata}
-
-\item{set_annot_rownames}{a boolean indicating whether to set the 
-\code{rownames} addtribute of the returned \code{data.frame} to
-the corresponding row/column ids.}
 }
 \value{
 a \code{data.frame} of metadata
