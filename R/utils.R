@@ -176,7 +176,7 @@ setMethod("subset.gct", signature("GCT"),
             # simple helper function to handle id/idx conversion
             # for character or integer ids
             if (is.character(ids)) {
-              idx <- which(ref_ids %in% ids)
+              idx <- match(ids, ref_ids)
             } else if (all(is.wholenumber(ids))) {
               idx <- ids
               ids <- ref_ids[idx]
