@@ -4,13 +4,16 @@
 \alias{rank.gct}
 \title{Convert a GCT object's matrix to ranks}
 \usage{
-rank.gct(g, dim = "col")
+rank.gct(g, dim = "col", decreasing = T)
 }
 \arguments{
 \item{g}{the \code{GCT} object to rank}
 
 \item{dim}{the dimension along which to rank
 (row or column)}
+
+\item{decreasing}{boolean indicating whether
+higher values should get lower ranks}
 }
 \value{
 a modified version of \code{g}, with the

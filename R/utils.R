@@ -179,10 +179,11 @@ setMethod("subset.gct", signature("GCT"),
               idx <- match(ids, ref_ids)
             } else if (all(is.wholenumber(ids))) {
               idx <- ids
-              ids <- ref_ids[idx]
             } else {
-              stop(paste(param, "must be character or ingeter"))
+              stop(paste(param, "must be character or integer"))
             }
+            idx <- idx[!is.na(idx)]
+            ids <- ref_ids[idx]
             return(list(ids=ids, idx=idx))
           }
           processed_rid <- process_ids(rid, g@rid, "rid")
@@ -448,6 +449,8 @@ setMethod("transpose.gct", signature("GCT"), function(g) {
 #' @param g the \code{GCT} object to rank
 #' @param dim the dimension along which to rank
 #'   (row or column)
+#' @param decreasing boolean indicating whether
+#'    higher values should get lower ranks
 #' 
 #' @return a modified version of \code{g}, with the
 #'   values in the matrix converted to ranks
@@ -460,10 +463,10 @@ setMethod("transpose.gct", signature("GCT"), function(g) {
 #' 
 #' @family GCT utilities
 #' @export
-setGeneric("rank.gct", function(g, dim="col") {
+setGeneric("rank.gct", function(g, dim="col", decreasing=T) {
   standardGeneric("rank.gct")
 })
-setMethod("rank.gct", signature("GCT"), function(g, dim) {
+setMethod("rank.gct", signature("GCT"), function(g, dim, decreasing=T) {
   # check to make sure dim is allowed
   if (dim=="column") dim <- "col"
   if (!(dim %in% c("row","col"))){
@@ -471,10 +474,13 @@ setMethod("rank.gct", signature("GCT"), function(g, dim) {
   }
   # rank along the specified axis. transpose if ranking rows so that the data 
   # comes back in the correct format
+  if (decreasing) {
+    g@mat <- -1*g@mat
+  }
   if (dim == 'row'){
-    g@mat <- t(apply(g@mat, 1, function(x) rank(-1*x)))
+    g@mat <- t(apply(g@mat, 1, function(x) rank(x)))
   } else {
-    g@mat <- (apply(g@mat, 2, function(x) rank(-1*x)))
+    g@mat <- (apply(g@mat, 2, function(x) rank(x)))
   }
   # done
   return(g)

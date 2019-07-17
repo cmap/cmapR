@@ -162,6 +162,11 @@ test_that("rank.gct works properly", {
   # scores if we use spearman. all correlations should be -1
   expect_equal(unname(diag(cor(ds@mat, ranked_col@mat, method="spearman"))),
                rep(-1, ncol(ds@mat)))
+  ranked_col_inc <- rank.gct(ds, dim="column", decreasing=F)
+  # ranked increasing data should be completely correlated with
+  # scores if we use spearman. all correlations should be -1
+  expect_equal(unname(diag(cor(ds@mat, ranked_col_inc@mat, method="spearman"))),
+               rep(1, ncol(ds@mat)))
 })
 
 test_that("check_dups works properly", {
