@@ -43,8 +43,10 @@ setMethod("melt.gct", signature("GCT"),
           # keep_rdesc and keep_cdesc, respectively.
           # if remove_symmetries, will check whether matrix is symmetric
           # and return only values corresponding to the upper triangle
-          # g@rdesc$id <- rownames(g@rdesc)
-          # g@cdesc$id <- rownames(g@cdesc)
+          # check whether rdesc/cdesc are empty
+          # if so, fill with id column
+          if (nrow(g@rdesc) == 0) g@rdesc <- data.frame(id=g@rid)
+          if (nrow(g@cdesc) == 0) g@cdesc <- data.frame(id=g@cid)
           # first, check if matrix is symmetric
           # if it is, use only the upper triangle
           message("melting GCT object...")
@@ -63,21 +65,21 @@ setMethod("melt.gct", signature("GCT"),
           if (keep_rdesc && keep_cdesc) {
             # merge back in both row and column descriptors
             data.table::setattr(d, "names", c("id", "id.y", "value"))
-            d <- merge(d, data.table::data.table(g@rdesc), by="id", ...)
+            d <- merge(d, data.table::data.table(g@rdesc), by="id", all.x=T, ...)
             data.table::setnames(d, "id", "id.x")
             data.table::setnames(d, "id.y", "id")
-            d <- merge(d, data.table::data.table(g@cdesc), by="id", ...)
+            d <- merge(d, data.table::data.table(g@cdesc), by="id", all.x=T, ...)
             data.table::setnames(d, "id", "id.y")
           } else if (keep_rdesc) {
             # keep only row descriptors
             rdesc <- data.table::data.table(g@rdesc)
             data.table::setnames(rdesc, "id", "id.x")
-            d <- merge(d, rdesc, by="id.x", ...)
+            d <- merge(d, rdesc, by="id.x", all.x=T, ...)
           } else if (keep_cdesc) {
             # keep only column descriptors
             cdesc <- data.table::data.table(g@cdesc)
             data.table::setnames(cdesc, "id", "id.y")
-            d <- merge(d, cdesc, by="id.y", ...)
+            d <- merge(d, cdesc, by="id.y", all.x=T, ...)
           }
           # use suffixes if provided
           if (!is.null(suffixes) & length(suffixes) == 2) {
