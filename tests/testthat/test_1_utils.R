@@ -1,10 +1,21 @@
 context("Testing utility functions")
 
 test_that("melt.gct works properly", {
+  # standard
   ds <- cmapR::ds
   mlt <- melt.gct(ds)
   expect_equal(nrow(mlt), nrow(ds@mat) * ncol(ds@mat))
   expect_equal(ncol(mlt), ncol(ds@rdesc) + ncol(ds@cdesc) + 1)
+  # ignore row/col annots
+  mlt <- melt.gct(ds, keep_rdesc = FALSE, keep_cdesc = FALSE)
+  expect_equal(nrow(mlt), nrow(ds@mat) * ncol(ds@mat))
+  expect_equal(ncol(mlt), 3)
+  # handle case where rdesc and cdesc are empty
+  ds@rdesc <- data.frame()
+  ds@cdesc <- data.frame()
+  mlt <- melt.gct(ds)
+  expect_equal(nrow(mlt), nrow(ds@mat) * ncol(ds@mat))
+  expect_equal(ncol(mlt), 3)
 })
 
 test_that("merge.gct works properly", {
