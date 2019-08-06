@@ -408,7 +408,7 @@ methods::setMethod("initialize",
                 }
                 else {
                   chd = NULL
-                  cdesc <- data.frame()
+                  cdesc <- data.frame(id=cid)
                 }
                 # read in the data matrix and row descriptions, shape into a matrix
                 mat <- scan(src, what = "", nlines = nrmat, 
@@ -425,7 +425,7 @@ methods::setMethod("initialize",
                                nrow = nrmat, ncol = ncmat)
                 }
                 else {
-                  rdesc <- data.frame()
+                  rdesc <- data.frame(id=rid)
                   mat <- matrix(as.numeric(mat[, (1+col_offset):ncol(mat)]), nrow = nrmat, ncol = ncmat)
                 }
                 # assign names to the data matrix and the row and column descriptions
