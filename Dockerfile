@@ -1,5 +1,6 @@
 FROM nginx
-COPY docs/build/html /usr/share/nginx/html
+RUN mkdir -p /usr/share/nginx/html/cmapR
+COPY docs/build/html /usr/share/nginx/html/cmapR
 COPY nginx.conf /etc/nginx/
 EXPOSE 9080
 CMD ["nginx", "-g", "daemon off;"]
