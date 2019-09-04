@@ -12,5 +12,6 @@ Depends: R (>= 3.2.0)
 Imports:
   methods,
   rhdf5,
-  data.table
+  data.table,
+  prada
 RoxygenNote: 6.1.1
