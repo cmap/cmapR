@@ -495,6 +495,7 @@ setMethod("rank.gct", signature("GCT"), function(g, dim, decreasing=T) {
 #' @return NULL
 #' @examples 
 #' check_dups(c("a", "b", "c", "a", "d"))
+#' @export
 check_dups <- function(x, name="") {
   if (anyDuplicated(x)) {
     stop(paste(name, "has duplicated values:",
