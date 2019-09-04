@@ -488,6 +488,7 @@ setMethod("rank.gct", signature("GCT"), function(g, dim, decreasing=T) {
   return(g)
 })
 
+# TODO: update to catch the error thrown in example
 #' Check for duplicates in a vector
 #' @param x the vector
 #' @param name the name of the object to print
