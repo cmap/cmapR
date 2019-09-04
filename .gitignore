@@ -39,3 +39,5 @@ vignettes/*.pdf
 
 # contests directory
 contests/*
+
+.idea

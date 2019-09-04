@@ -14,6 +14,8 @@ A docker container with cmapR can be obtained here: https://hub.docker.com/r/cma
 
 Perhaps the simplest way is to install directly from github using `devtools::install_github("cmap/cmapR")`. Note that this requires having previously installed the `devtools` package.
 
+The script `install_cmapR.R` takes care of installing all the dependencies and then running `devtools::install_github("cmap/cmapR")`, so you can simply source this script after cloning this repository.
+
 Alternatively, you can point your R's `install.packages` function at a tarball of the `cmapR` archive. You can generate this archive by cloning this repository and doing the following:
 
 	# make a gzip tar ball of the repo
