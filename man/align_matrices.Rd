@@ -4,7 +4,7 @@
 \alias{align_matrices}
 \title{Align the rows and columns of two (or more) matrices}
 \usage{
-align_matrices(m1, m2, ..., L = NULL, na.pad = T, as.3D = TRUE)
+align_matrices(m1, m2, ..., L = NULL, na.pad = TRUE, as.3D = TRUE)
 }
 \arguments{
 \item{m1}{a matrix with unique row and column names}
@@ -46,6 +46,6 @@ m2
 align_matrices(m1, m2)
 
 # align them, not padding and retuning a list
-align_matrices(m1, m2, na.pad=F, as.3D=F)
+align_matrices(m1, m2, na.pad=FALSE, as.3D=FALSE)
 
 }

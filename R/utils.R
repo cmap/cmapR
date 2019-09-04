@@ -585,10 +585,10 @@ na_pad_matrix <- function(m, row_universe=NULL, col_universe=NULL) {
 #' align_matrices(m1, m2)
 #' 
 #' # align them, not padding and retuning a list
-#' align_matrices(m1, m2, na.pad=F, as.3D=F)
+#' align_matrices(m1, m2, na.pad=FALSE, as.3D=FALSE)
 #' 
 #' @export
-align_matrices <- function(m1, m2, ..., L=NULL, na.pad=T, as.3D=TRUE) {
+align_matrices <- function(m1, m2, ..., L=NULL, na.pad=TRUE, as.3D=TRUE) {
   # get the additional matrices if given
   if (!is.null(L)) {
     if (is.list(L) && all(unlist(lapply(L, is.matrix)))) {
