@@ -43,6 +43,7 @@ test_that("merge.gct works properly", {
   expect_false(identical(ds1@cid, ds2@cid))
   
   ## CHECK ROW MERGING ##
+  ds2@rid <- rownames(ds2@mat) <- ds2@rdesc$id <- paste("ds2", ds2@rid, sep=":")
   mrg <- merge.gct(ds1, ds2, dimension="row")
   
   # check the matrix
@@ -75,6 +76,8 @@ test_that("merge.gct works properly", {
   expect_identical(mrg@cdesc, ds1@cdesc)
   
   ## CHECK COLUMN MERGING ##
+  ds2@rid <- rownames(ds2@mat) <- ds2@rdesc$id <- gsub("ds2:", "", ds2@rid)
+  ds2@cid <- colnames(ds2@mat) <- ds2@cdesc$id <- paste("ds2", ds2@cid, sep=":")
   mrg <- merge.gct(ds1, ds2, dimension="col")
   
   # check the matrix

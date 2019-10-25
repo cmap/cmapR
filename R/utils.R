@@ -243,49 +243,62 @@ setGeneric("merge.gct", function(g1, g2, dimension="row", matrix_only=F) {
 })
 setMethod("merge.gct", signature("GCT", "GCT"),
           function(g1, g2, dimension, matrix_only) {
+          # helper function to add new rows to a data.table
+          add_new_records <- function(df1, df2, id_col="id") {
+            df1 <- data.table::data.table(df1)
+            df2 <- data.table::data.table(df2)
+            data.frame(rbind(df1, df2[ !df2[[id_col]] %in% df1[[id_col]], ],
+                             use.names=T, fill=T))
+          }
           # given two gcts objects g1 and g2, merge them
           # on the specified dimension
           if (dimension == "column") dimension <- "col"
           if (dimension == "row") {
             message("appending rows...")
-            newg <- g1
-            # we're just appending rows so don't need to do anything
-            # special with the rid or rdesc. just cat them
-            newg@rid <- c(g1@rid, g2@rid)
-            newg@rdesc <- data.frame(rbind(data.table::data.table(g1@rdesc), data.table::data.table(g2@rdesc), fill=T))
             # need figure out the index for how to sort the columns of
             # g2@mat so that they are in sync with g1@mat
-            idx <- match(g1@cid, g2@cid)
-            newg@mat <- rbind(g1@mat, g2@mat[, idx])
+            # first na pad the matrices
+            col_universe <- union(g1@cid, g2@cid)
+            m1 <- na_pad_matrix(g1@mat, col_universe = col_universe)
+            m2 <- na_pad_matrix(g2@mat, col_universe = col_universe)
+            idx <- match(colnames(m1), colnames(m2))
+            mat <- rbind(m1, m2[, idx])
             if (!matrix_only) {
-              # apply the same sort order to the rows of g2@cdesc so that
-              # it's in sync with the final merged matrix
-              # figure out which fields are common and keep from the first gct
-              cmn_names <- intersect(names(g1@cdesc), names(g2@cdesc))
-              newg@cdesc <- cbind(g1@cdesc, g2@cdesc[idx, !(names(g2@cdesc) %in% cmn_names)])
+              # we're just appending rows so don't need to do anything
+              # special with the rid or rdesc. just cat them
+              rdesc <- data.frame(rbind(data.table::data.table(g1@rdesc),
+                                        data.table::data.table(g2@rdesc), fill=T))
+              # update cdesc to include any new records
+              cdesc <- add_new_records(g1@cdesc, g2@cdesc)
+              idx <- match(colnames(mat), cdesc$id)
+              cdesc <- cdesc[idx, ]
+              newg <- new("GCT", mat=mat, rdesc=rdesc, cdesc=cdesc)
             } else {
-              newg@cdesc <- data.frame()
+              newg <- new("GCT", mat=mat)
             }
           }
           else if (dimension == "col") {
             message("appending columns...")
-            newg <- g1
-            # we're just appending columns so don't need to do anything
-            # special with cid or cdesc. just cat them
-            newg@cid <- c(g1@cid, g2@cid)
-            newg@cdesc <- data.frame(rbind(data.table::data.table(g1@cdesc), data.table::data.table(g2@cdesc), fill=T))
             # need figure out the index for how to sort the rows of
             # g2@mat so that they are in sync with g1@mat
-            idx <- match(g1@rid, g2@rid)
-            newg@mat <- cbind(g1@mat, g2@mat[idx, ])
+            # first na pad the matrices
+            row_universe <- union(g1@rid, g2@rid)
+            m1 <- na_pad_matrix(g1@mat, row_universe = row_universe)
+            m2 <- na_pad_matrix(g2@mat, row_universe = row_universe)
+            idx <- match(rownames(m1), rownames(m2))
+            mat <- cbind(m1, m2[idx, ])
             if (!matrix_only) {
-              # apply the same sort order to the rows of g2@rdesc so that
-              # it's in sync with the final merged matrix
-              # figure out which fields are common and keep from the first gct
-              cmn_names <- intersect(names(g1@rdesc), names(g2@rdesc))
-              newg@rdesc <- cbind(g1@rdesc, g2@rdesc[idx, !(names(g2@rdesc) %in% cmn_names)])
+              # we're just appending rows so don't need to do anything
+              # special with the rid or rdesc. just cat them
+              cdesc <- data.frame(rbind(data.table::data.table(g1@cdesc),
+                                        data.table::data.table(g2@cdesc), fill=T))
+              # update rdesc to include any new records
+              rdesc <- add_new_records(g1@rdesc, g2@rdesc)
+              idx <- match(rownames(mat), rdesc$id)
+              rdesc <- rdesc[idx, ]
+              newg <- new("GCT", mat=mat, rdesc=rdesc, cdesc=cdesc)
             } else {
-              newg@rdesc <- data.frame()
+              newg <- new("GCT", mat=mat)
             }
           } else {
             stop("dimension must be either row or col")
