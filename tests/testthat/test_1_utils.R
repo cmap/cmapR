@@ -159,6 +159,7 @@ test_that("annotate.gct works properly", {
 })
 
 test_that("transpose.gct works properly", {
+  ds <- cmapR::ds
   dst <- transpose.gct(ds)
   expect_identical(ds@mat, t(dst@mat))
   expect_identical(ds@cdesc, dst@rdesc)
@@ -168,6 +169,7 @@ test_that("transpose.gct works properly", {
 })
 
 test_that("rank.gct works properly", {
+  ds <- cmapR::ds
   ranked_row <- rank.gct(ds, dim="row")
   expect_identical(range(ranked_row@mat), c(1, ncol(ds@mat)))
   ranked_col <- rank.gct(ds, dim="column")
