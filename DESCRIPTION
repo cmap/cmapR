@@ -13,4 +13,6 @@ Imports:
   rhdf5,
   data.table,
   prada
+Suggests: knitr
+VignetteBuilder: knitr
 RoxygenNote: 6.1.1
