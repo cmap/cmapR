@@ -2,7 +2,7 @@
 install.packages("data.table")
 
 install.packages("BiocManager") # to install rhdf5
-BiocManager::install(c("rhdf5", "prada"), version = "3.8")
+BiocManager::install(c("rhdf5", "prada"))
 
 install.packages("devtools")    # to install cmapR from this GitHub repo
 
