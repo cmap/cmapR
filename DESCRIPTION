@@ -1,14 +1,13 @@
 Package: cmapR
 Type: Package
 Title: CMap tools in R
-Version: 1.0.1
+Version: 0.99.0
 Date: 2018-01-30
-Author: CMap Group at The Broad Institute
-Maintainer: <clue@broadinstitute.org>
-Description: CMAP tools in R
+Author: Ted Natoli <tnatoli@broadinstitute.org>
+Maintainer: Ted Natoli <tnatoli@broadinstitute.org>
+Description: Parse, manipulate, and write common CMap data objects.
 License: BSD
-LazyData: true
-Depends: R (>= 3.2.0)
+Depends: R (>= 3.4.0)
 Imports:
   methods,
   rhdf5,
