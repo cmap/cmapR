@@ -16,4 +16,6 @@ Imports:
 Suggests: knitr
 VignetteBuilder: knitr
 biocViews: DataImport, DataRepresentation
+URL: https://github.com/cmap/cmapR
+BugReports: https://github.com/cmap/cmapR/issues
 RoxygenNote: 6.1.1
