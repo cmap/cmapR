@@ -4,10 +4,10 @@ Title: CMap tools in R
 Version: 0.99.0
 Date: 2018-01-30
 Author: Ted Natoli <tnatoli@broadinstitute.org>
-Maintainer: Ted Natoli <tnatoli@broadinstitute.org>
+Maintainer: Ted Natoli <ted.e.natoli@gmail.com>
 Description: Parse, manipulate, and write common CMap data objects.
-License: BSD
-Depends: R (>= 3.4.0)
+License: file LICENSE.txt
+Depends: R (>= 3.6.0)
 Imports:
   methods,
   rhdf5,
@@ -15,4 +15,5 @@ Imports:
   prada
 Suggests: knitr
 VignetteBuilder: knitr
+biocViews: DataImport, DataRepresentation
 RoxygenNote: 6.1.1
