@@ -23,9 +23,9 @@
 #' 
 #' @export
 robust.zscore <- function(x, min_mad=1e-6, ...) {
-  med <- median(x, ...)        # median
+  med <- stats::median(x, ...)        # median
   abs_dev <- abs(x - med) # absolute deviation
-  mad <- median(abs_dev, ...)  # median absolute deviation
+  mad <- stats::median(abs_dev, ...)  # median absolute deviation
   # if the MAD is zero, try to estimate from the 
   # data by using the max instead of median, or the
   # min_mad value supplied as an argument, whichever
@@ -33,7 +33,7 @@ robust.zscore <- function(x, min_mad=1e-6, ...) {
   if (mad==0) {
     mad <- max(max(abs_dev, ...), min_mad, ...)
   }
-  return((x - med) / (mad *1.4826))
+  return((x - med) / (mad*1.4826))
 }
 
 #' Threshold a numeric vector
@@ -101,7 +101,7 @@ distil <- function(m, dimension="col", method="spearman") {
   m <- as.matrix(m[, !na_idx])
   # compute pairwise correlation matrix
   # and threshold negative values to 0.01
-  corr <- cmapR:::threshold(cor(m, method=method), 0.01, 1)
+  corr <- cmapR:::threshold(stats::cor(m, method=method), 0.01, 1)
   # set diagnoal to 0
   diag(corr) <- 0
   row_sums <- apply(corr, 1, sum)
