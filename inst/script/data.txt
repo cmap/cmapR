@@ -1,0 +1,29 @@
+This file describes the data files included in the cmapR repository.
+
+* example.lxb
+This is an example .lxb file demonstrating the Luminex flow cytometry format.
+It contains raw fluorescent intensity observations from a single well
+in an L1000 experiment.
+
+* lm_epsilon_n978.grp
+This is a .grp file (one entry per line) containing the Affymetrix probeset
+identifiers for the 978 L1000 landmark genes.
+
+* lm_probes.gmx
+This is a .gmx file containing lists of the multiple different L1000
+landmark probe pools. It is intended to demonstrate the .gmx format.
+
+* modzs_n272x978.gct
+This is an example of a .gct file intended to demonstrate the format.
+The data included are replicate-collapsed, differential expression values
+for 272 L1000 experiments.
+
+* modzs_n272x978.gctx
+This file contains exactly the same data as modzs_n272x978.gct, represented
+in .gctx (binary) format. It is intended to demonstrate the .gctx format.
+
+* query_up.gmt
+This is an example .gmt file containing 8 gene sets. Each gene set is
+represented as a row of Affymetrix probeset identifiers. It is intended to
+demonstrate the .gmt format. The gene sets were originally obtained from
+MSigDB (http://software.broadinstitute.org/gsea/msigdb)
