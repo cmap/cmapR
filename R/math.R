@@ -101,7 +101,7 @@ distil <- function(m, dimension="col", method="spearman") {
   m <- as.matrix(m[, !na_idx])
   # compute pairwise correlation matrix
   # and threshold negative values to 0.01
-  corr <- cmapR:::threshold(stats::cor(m, method=method), 0.01, 1)
+  corr <- threshold(stats::cor(m, method=method), 0.01, 1)
   # set diagnoal to 0
   diag(corr) <- 0
   row_sums <- apply(corr, 1, sum)
