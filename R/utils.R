@@ -395,7 +395,7 @@ setGeneric("annotate.gct", function(g, annot, dimension="row", keyfield="id") {
 })
 setMethod("annotate.gct", signature("GCT"),
           function(g, annot, dimension, keyfield) {
-          if (!(any(class(annot) == "data.frame"))) {
+          if (is.character(annot)) {
             # given a file path, try to read it in
             annot <- fread(annot)
           } else {

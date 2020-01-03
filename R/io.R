@@ -604,7 +604,7 @@ append.dim <- function(ofile, mat, extension="gct") {
 #' @family GCTX parsing functions
 #' @export
 write.gct <- function(ds, ofile, precision=4, appenddim=TRUE, ver=3) {
-  if (!class(ds)=="GCT") {
+  if (!methods::is(ds, "GCT")) {
     stop("ds must be a GCT object")
   }
   # make sure it's valid
@@ -706,7 +706,7 @@ write.gct <- function(ds, ofile, precision=4, appenddim=TRUE, ver=3) {
 write.gctx <- function(ds, ofile, appenddim=TRUE, compression_level=0,
                        matrix_only=FALSE,
                        max_chunk_kb=1024) {
-  if (!class(ds)=="GCT") {
+  if (!methods::is(ds, "GCT")) {
     stop("ds must be a GCT object")
   }
   # make sure it's valid
@@ -900,13 +900,20 @@ write.gctx.meta <- function(ofile, df, dimension="row") {
       if (field == "id") next
       v <- df[, i]
       # convert factors to character
-      if(class(v) == "factor" || class(v) == "AsIs") {
+      if(is.factor(v) || methods::is(v, "AsIs")) {
         v <- as.character(v)
       }
       rhdf5::h5write.default(v, ofile, paste(path, field, sep=""))
     }
   }
 }
+
+###########################################
+### accessor functions for GCT objects  ###
+###########################################
+
+setGeneric("mat", function(x) standardGeneric("mat"))
+setMethod("mat", "GCT", function(x) x@mat)
 
 
 ###########################################
