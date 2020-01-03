@@ -18,7 +18,7 @@ a character vector of row or column ids from the provided file
 Read GCTX row or column ids
 }
 \examples{
-gct_file <- system.file("extdata", "modzs_n272x978.gctx", package="cmapR")
+gct_file <- system.file("extdata", "modzs_n25x50.gctx", package="cmapR")
 # row ids
 rid <- read.gctx.ids(gct_file)
 head(rid)

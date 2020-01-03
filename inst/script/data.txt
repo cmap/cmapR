@@ -13,13 +13,12 @@ identifiers for the 978 L1000 landmark genes.
 This is a .gmx file containing lists of the multiple different L1000
 landmark probe pools. It is intended to demonstrate the .gmx format.
 
-* modzs_n272x978.gct
+* modzs_n25x50.gct
 This is an example of a .gct file intended to demonstrate the format.
-The data included are replicate-collapsed, differential expression values
-for 272 L1000 experiments.
+The data included are replicate-collapsed, differential expression values.
 
-* modzs_n272x978.gctx
-This file contains exactly the same data as modzs_n272x978.gct, represented
+* modzs_n25x50.gctx
+This file contains exactly the same data as modzs_n25x50.gct, represented
 in .gctx (binary) format. It is intended to demonstrate the .gctx format.
 
 * query_up.gmt

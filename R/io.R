@@ -169,7 +169,7 @@ fix.datatypes <- function(meta) {
 #' @return a \code{data.frame} of metadata
 #' 
 #' @examples
-#' gct_file <- system.file("extdata", "modzs_n272x978.gctx", package="cmapR") 
+#' gct_file <- system.file("extdata", "modzs_n25x50.gctx", package="cmapR") 
 #' # row meta
 #' row_meta <- read.gctx.meta(gct_file)
 #' str(row_meta)
@@ -231,7 +231,7 @@ read.gctx.meta <- function(gctx_path, dimension="row", ids=NULL) {
 #' @return a character vector of row or column ids from the provided file
 #' 
 #' @examples 
-#' gct_file <- system.file("extdata", "modzs_n272x978.gctx", package="cmapR")
+#' gct_file <- system.file("extdata", "modzs_n25x50.gctx", package="cmapR")
 #' # row ids
 #' rid <- read.gctx.ids(gct_file)
 #' head(rid)
@@ -277,7 +277,7 @@ read.gctx.ids <- function(gctx_path, dimension="row") {
 #'  \code{idx}: an integer list of their corresponding indices in \code{all_ids}
 #' 
 #' @examples 
-#' gct_file <- system.file("extdata", "modzs_n272x978.gctx", package="cmapR")
+#' gct_file <- system.file("extdata", "modzs_n25x50.gctx", package="cmapR")
 #' ids <- read.gctx.ids(gct_file)
 #' processed_ids <- cmapR:::process_ids(ids[1:10], ids)
 #' str(processed_ids)
@@ -541,7 +541,7 @@ methods::setMethod("initialize",
 #' @return a GCT object
 #' 
 #' @examples 
-#' gct_file <- system.file("extdata", "modzs_n272x978.gctx", package="cmapR")
+#' gct_file <- system.file("extdata", "modzs_n25x50.gctx", package="cmapR")
 #' (ds <- parse.gctx(gct_file))
 #' 
 #' # matrix only
@@ -572,9 +572,11 @@ parse.gctx <- function(fname, rid=NULL, cid=NULL, matrix_only=FALSE) {
 #' 
 #' @details This is a helper function that most users
 #'   will not use directly
-#'   
+#' 
 #' @examples 
-#' (filename <- cmapR:::append.dim("my.gctx.filename", matrix(nrow=10, ncol=15)))
+#' (filename <- cmapR:::append.dim("my.gctx.filename",
+#'   matrix(nrow=10, ncol=15)))
+#'   
 #'   
 #' @keywords internal
 #' @family GCTX parsing functions
@@ -893,7 +895,7 @@ update.gctx <- function(x, ofile, rid=NULL, cid=NULL) {
 #' @examples 
 #' \dontrun{
 #' # assume ds is a GCT object
-#' cmapR:::write.gctx.meta("/my/file/path", cdesc_char, dimension="col")
+#' write.gctx.meta("/my/file/path", cdesc_char, dimension="col")
 #' }
 #' @family GCTX parsing functions
 #' @keywords internal

@@ -21,7 +21,7 @@ a \code{data.frame} of metadata
 Parse row or column metadata from GCTX files
 }
 \examples{
-gct_file <- system.file("extdata", "modzs_n272x978.gctx", package="cmapR") 
+gct_file <- system.file("extdata", "modzs_n25x50.gctx", package="cmapR") 
 # row meta
 row_meta <- read.gctx.meta(gct_file)
 str(row_meta)

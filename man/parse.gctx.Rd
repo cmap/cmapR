@@ -33,7 +33,7 @@ Parse a GCTX file into the workspace as a GCT object
   GCT files, so this function can be used as a general GCT parser.
 }
 \examples{
-gct_file <- system.file("extdata", "modzs_n272x978.gctx", package="cmapR")
+gct_file <- system.file("extdata", "modzs_n25x50.gctx", package="cmapR")
 (ds <- parse.gctx(gct_file))
 
 # matrix only

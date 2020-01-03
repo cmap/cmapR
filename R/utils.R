@@ -126,7 +126,8 @@ check_colnames <- function(test_names, df, throw_error=TRUE) {
   diffs <- setdiff(test_names, names(df))
   if (length(diffs) > 0) {
     if (throw_error) {
-      stop(paste("the following column names are not found in", deparse(substitute(df)), ":",
+      stop(paste("the following column names are not found in",
+                 deparse(substitute(df)), ":",
                  paste(diffs, collapse=" "), "\n"))
     } else {
       return(FALSE)
@@ -393,7 +394,7 @@ merge_with_precedence <- function(x, y, by, allow.cartesian=TRUE,
 #'   dimension
 #'   
 #' @examples 
-#' gct_path <- system.file("extdata", "modzs_n272x978.gctx", package="cmapR")
+#' gct_path <- system.file("extdata", "modzs_n25x50.gctx", package="cmapR")
 #' # read the GCT file, getting the matrix only
 #' g <- parse.gctx(gct_path, matrix_only=TRUE)
 #' # separately, read the column annotations and then apply them using
@@ -427,14 +428,16 @@ setMethod("annotate.gct", signature("GCT"),
           if (dimension == "column") dimension <- "col"
           if (dimension == "row") {
             orig_id <- g@rdesc$id
-            merged <- merge_with_precedence(g@rdesc, annot, by="id", allow.cartesian=T,
+            merged <- merge_with_precedence(g@rdesc, annot, by="id",
+                                            allow.cartesian=T,
                                             as_data_frame=T)
             idx <- match(orig_id, merged$id)
             merged <- merged[idx, ]
             g@rdesc <- merged
           } else if (dimension == "col") {
             orig_id <- g@cdesc$id
-            merged <- merge_with_precedence(g@cdesc, annot, by="id", allow.cartesian=T,
+            merged <- merge_with_precedence(g@cdesc, annot, by="id",
+                                            allow.cartesian=T,
                                             as_data_frame=T)
             idx <- match(orig_id, merged$id)
             merged <- merged[idx, ]

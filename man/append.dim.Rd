@@ -25,7 +25,9 @@ This is a helper function that most users
   will not use directly
 }
 \examples{
-(filename <- cmapR:::append.dim("my.gctx.filename", matrix(nrow=10, ncol=15)))
+(filename <- cmapR:::append.dim("my.gctx.filename",
+  matrix(nrow=10, ncol=15)))
+  
   
 }
 \seealso{

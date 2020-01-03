@@ -30,7 +30,7 @@ a path to an annotation table, apply the annotations to the
 gct using the given \code{keyfield}.
 }
 \examples{
-gct_path <- system.file("extdata", "modzs_n272x978.gctx", package="cmapR")
+gct_path <- system.file("extdata", "modzs_n25x50.gctx", package="cmapR")
 # read the GCT file, getting the matrix only
 g <- parse.gctx(gct_path, matrix_only=TRUE)
 # separately, read the column annotations and then apply them using
