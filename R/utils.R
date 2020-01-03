@@ -162,23 +162,23 @@ subset_to_ids <- function(df, ids) {
 #' @return a GCT object
 #' @examples
 #' # first 10 rows and columns by index
-#' (a <- subset.gct(ds, rid=1:10, cid=1:10))
+#' (a <- subset_gct(ds, rid=1:10, cid=1:10))
 #' 
 #' # first 10 rows and columns using character ids
 #' # use \code{get_gct_ids} to extract the ids
 #' rid <- get_gct_ids(ds, dim="row")
 #' cid <- get_gct_ids(ds, dim="col")
-#' (b <- subset.gct(ds, rid=rid[1:10], cid=cid[1:10]))
+#' (b <- subset_gct(ds, rid=rid[1:10], cid=cid[1:10]))
 #' 
 #' identical(a, b) # TRUE
 #' 
 #' @family GCT utilities
 #' @export
-setGeneric("subset.gct", function(g, rid=NULL, cid=NULL) {
-  standardGeneric("subset.gct")
+setGeneric("subset_gct", function(g, rid=NULL, cid=NULL) {
+  standardGeneric("subset_gct")
 })
-#' @rdname subset.gct
-setMethod("subset.gct", signature("GCT"),
+#' @rdname subset_gct
+setMethod("subset_gct", signature("GCT"),
           function(g, rid, cid) {
           # ids can either be a vector of character strings corresponding
           # to row / column ids in the gct object, or integer vectors
@@ -246,17 +246,17 @@ setMethod("subset.gct", signature("GCT"),
 #' @examples
 #' # take the first 10 and last 10 rows of an object
 #' # and merge them back together
-#' (a <- subset.gct(ds, rid=1:10))
-#' (b <- subset.gct(ds, rid=969:978))
-#' (merged <- merge.gct(a, b, dim="row"))
+#' (a <- subset_gct(ds, rid=1:10))
+#' (b <- subset_gct(ds, rid=969:978))
+#' (merged <- merge_gct(a, b, dim="row"))
 #' 
 #' @family GCT utilities
 #' @export
-setGeneric("merge.gct", function(g1, g2, dim="row", matrix_only=FALSE) {
-  standardGeneric("merge.gct")
+setGeneric("merge_gct", function(g1, g2, dim="row", matrix_only=FALSE) {
+  standardGeneric("merge_gct")
 })
-#' @rdname merge.gct
-setMethod("merge.gct", signature("GCT", "GCT"),
+#' @rdname merge_gct
+setMethod("merge_gct", signature("GCT", "GCT"),
           function(g1, g2, dim, matrix_only) {
           # helper function to add new rows to a data.table
           add_new_records <- function(df1, df2, id_col="id") {

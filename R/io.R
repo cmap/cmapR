@@ -799,14 +799,14 @@ write.gctx <- function(ds, ofile, appenddim=TRUE, compression_level=0,
 #' \dontrun{
 #' m <- matrix(rnorm(20), nrow=10)
 #' # update by integer indices
-#' update.gctx(m, ofile="my.gctx", rid=1:10, cid=1:2)
+#' update_gctx(m, ofile="my.gctx", rid=1:10, cid=1:2)
 #' # update by character ids
 #' row_ids <- letters[1:10]
 #' col_ids <- LETTERS[1:2]
-#' update.gctx(m, ofile="my.gctx", rid=row_ids, cid=col_ids)
+#' update_gctx(m, ofile="my.gctx", rid=row_ids, cid=col_ids)
 #' }
 #' @export
-update.gctx <- function(x, ofile, rid=NULL, cid=NULL) {
+update_gctx <- function(x, ofile, rid=NULL, cid=NULL) {
   # x must be numeric
   stopifnot(is.numeric(x))
   # must give us at least one of rid or cid

@@ -43,8 +43,8 @@ g <- annotate.gct(g, cdesc, dim="col", keyfield="id")
 \seealso{
 Other GCT utilities: 
 \code{\link{melt.gct}()},
-\code{\link{merge.gct}()},
+\code{\link{merge_gct}()},
 \code{\link{rank.gct}()},
-\code{\link{subset.gct}()}
+\code{\link{subset_gct}()}
 }
 \concept{GCT utilities}

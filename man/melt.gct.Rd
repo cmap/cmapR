@@ -66,8 +66,8 @@ head(melt.gct(ds, keep_rdesc = FALSE, keep_cdesc = FALSE))
 \seealso{
 Other GCT utilities: 
 \code{\link{annotate.gct}()},
-\code{\link{merge.gct}()},
+\code{\link{merge_gct}()},
 \code{\link{rank.gct}()},
-\code{\link{subset.gct}()}
+\code{\link{subset_gct}()}
 }
 \concept{GCT utilities}

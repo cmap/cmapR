@@ -114,7 +114,7 @@ test_that("various built-in functions have been correctly adatped to GCT", {
   expect_equal(diag(ds), diag(ds@mat))
 })
 
-test_that("update.gctx works correctly", {
+test_that("update_gctx works correctly", {
   # make a copy of the example dataset
   fpath <- "test_copy_n5x10.gctx"
   if (file.exists(fpath)) file.remove(fpath)
@@ -122,7 +122,7 @@ test_that("update.gctx works correctly", {
   # modify rows 3-7, columns 2-4 to contain all zeros
   m <- matrix(0, nrow=5, ncol=3)
   # update using integer indices
-  update.gctx(m, ofile=fpath, rid=3:7, cid=2:4)
+  update_gctx(m, ofile=fpath, rid=3:7, cid=2:4)
   tmp <- parse.gctx(fpath)
   tmp_m <- tmp@mat[3:7, 2:4]
   dimnames(tmp_m) <- NULL
@@ -131,7 +131,7 @@ test_that("update.gctx works correctly", {
   m2 <- matrix(1, nrow=5, ncol=3)
   rid <- read.gctx.ids("test_n5x10.gctx", dim="row")
   cid <- read.gctx.ids("test_n5x10.gctx", dim="col")
-  update.gctx(m2, ofile=fpath, rid=rid[3:7], cid=cid[2:4])
+  update_gctx(m2, ofile=fpath, rid=rid[3:7], cid=cid[2:4])
   tmp2 <- parse.gctx(fpath)
   tmp_m2 <- tmp2@mat[3:7, 2:4]
   dimnames(tmp_m2) <- NULL

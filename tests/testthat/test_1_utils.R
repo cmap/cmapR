@@ -18,7 +18,7 @@ test_that("melt.gct works properly", {
   expect_equal(ncol(mlt), 3)
 })
 
-test_that("merge.gct works properly", {
+test_that("merge_gct works properly", {
   # set up some test data
   ds1 <- parse.gctx("test_n5x10.gctx")
   ds2 <- ds1
@@ -47,7 +47,7 @@ test_that("merge.gct works properly", {
     rownames(ds2@mat) <-
     ds2@rdesc$id <-
     paste("ds2", ds2@rid, sep=":")
-  mrg <- merge.gct(ds1, ds2, dim="row")
+  mrg <- merge_gct(ds1, ds2, dim="row")
   
   # check the matrix
   # should have sum of 2 matrix rows
@@ -87,7 +87,7 @@ test_that("merge.gct works properly", {
     colnames(ds2@mat) <-
     ds2@cdesc$id <-
     paste("ds2", ds2@cid, sep=":")
-  mrg <- merge.gct(ds1, ds2, dim="col")
+  mrg <- merge_gct(ds1, ds2, dim="col")
   
   # check the matrix
   # should have sum of 2 matrix columns
@@ -146,10 +146,10 @@ test_that("merge.gct works properly", {
   
 })
 
-test_that("subset.gct works properly", {
+test_that("subset_gct works properly", {
   # ds <- cmapR::ds
-  a <- subset.gct(ds, rid=1:10, cid=1:10)
-  b <- subset.gct(ds, rid=ds@rid[1:10], cid=ds@cid[1:10])
+  a <- subset_gct(ds, rid=1:10, cid=1:10)
+  b <- subset_gct(ds, rid=ds@rid[1:10], cid=ds@cid[1:10])
   expect_identical(a, b)
 })
 

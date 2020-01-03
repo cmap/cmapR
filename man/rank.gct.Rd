@@ -39,7 +39,7 @@ plot(mat[, 1:3], mat_ranked[, 1:3],
 Other GCT utilities: 
 \code{\link{annotate.gct}()},
 \code{\link{melt.gct}()},
-\code{\link{merge.gct}()},
-\code{\link{subset.gct}()}
+\code{\link{merge_gct}()},
+\code{\link{subset_gct}()}
 }
 \concept{GCT utilities}
