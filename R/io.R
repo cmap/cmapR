@@ -73,25 +73,25 @@ suppressMessages({
 
   # dim, nrow and ncol to display the # of rows and columns
   # for a GCT object's matrix
-  setMethod("ncol", methods::signature("GCT"), function(x) {
+  methods::setMethod("ncol", methods::signature("GCT"), function(x) {
     ncol(x@mat)
   })
-  setMethod("nrow", methods::signature("GCT"), function(x) {
+  methods::setMethod("nrow", methods::signature("GCT"), function(x) {
     nrow(x@mat)
   })
-  setMethod("dim", methods::signature("GCT"), function(x) {
+  methods::setMethod("dim", methods::signature("GCT"), function(x) {
     dim(x@mat)
   })
-  setMethod("range", methods::signature("GCT"), function(x, na.rm=F, finite=F) {
+  methods::setMethod("range", methods::signature("GCT"), function(x, na.rm=F, finite=F) {
     range(x@mat, na.rm=na.rm, finite=finite)
   })
-  setMethod("max", methods::signature("GCT"), function(x, na.rm=F) {
+  methods::setMethod("max", methods::signature("GCT"), function(x, na.rm=F) {
     max(x@mat, na.rm=na.rm)
   })
-  setMethod("min", methods::signature("GCT"), function(x, na.rm=F) {
+  methods::setMethod("min", methods::signature("GCT"), function(x, na.rm=F) {
     min(x@mat, na.rm=na.rm)
   })
-  setMethod("diag", methods::signature("GCT"), function(x) {
+  methods::setMethod("diag", methods::signature("GCT"), function(x) {
     diag(x@mat)
   })
 })
@@ -922,20 +922,52 @@ write.gctx.meta <- function(ofile, df, dimension="row") {
 ### accessor functions for GCT objects  ###
 ###########################################
 
-setGeneric("mat", function(x) standardGeneric("mat"))
-setMethod("mat", "GCT", function(x) x@mat)
 
-setGeneric("rid", function(x) standardGeneric("rid"))
-setMethod("rid", "GCT", function(x) x@rid)
+#' Extract the matrix from a GCT object
+#' @param g the GCT object
+#' @return a matrix
+#' @examples 
+#' m <- get_gct_matrix(ds)
+#' @family GCT accessor methods
+#' @export
+methods::setGeneric("get_gct_matrix", function(g) {
+  standardGeneric("get_gct_matrix")
+})
+methods::setMethod("get_gct_matrix", "GCT", function(g) g@mat)
 
-setGeneric("cid", function(x) standardGeneric("cid"))
-setMethod("cid", "GCT", function(x) x@cid)
+#' Extract the ids from a GCT object
+#' @param g the GCT object
+#' @param dim which dimension to extract
+#' @return a vector of ids
+#' @examples 
+#' m <- get_gct_ids(ds)
+#' @family GCT accessor methods
+#' @export
+methods::setGeneric("get_gct_ids", function(g, dim="row")  {
+  standardGeneric("get_gct_ids")
+})
+methods::setMethod("get_gct_ids", "GCT", function(g, dim) {
+  if (dim == "row") return(g@rid)
+  if (dim %in% c("col", "column")) return(g@cid)
+  stop("dim must be either row or column")
+})
 
-setGeneric("rdesc", function(x) standardGeneric("rdesc"))
-setMethod("rdesc", "GCT", function(x) x@rdesc)
-
-setGeneric("cdesc", function(x) standardGeneric("cdesc"))
-setMethod("cdesc", "GCT", function(x) x@cdesc)
+#' Extract the metadata from a GCT object
+#' @param g the GCT object
+#' @param dim which dimension to extract
+#' @return a data.frame of metadata
+#' @examples 
+#' m <- get_gct_meta(ds)
+#' @family GCT accessor methods
+#' @export
+methods::setGeneric("get_gct_meta", function(g, dim="row") {
+  standardGeneric("get_gct_meta")
+})
+methods::setMethod("get_gct_meta", "GCT", function(g, dim) {
+  if (dim == "row") return(g@rdesc)
+  if (dim %in% c("col", "column")) return(g@cdesc)
+  stop("dim must be either row or column")
+})
 
 
 

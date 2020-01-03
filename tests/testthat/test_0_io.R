@@ -145,3 +145,13 @@ test_that("update.gctx works correctly", {
   expect_error(update.gctx(rep(0, 10), ofile=fpath, rid=3:7, cid=1:2))
   if (file.exists(fpath)) file.remove(fpath)
 })
+
+test_that("GCT accessor methods work properly", {
+  expect_equal(ds@mat, get_gct_matrix(ds))
+  expect_equal(ds@rid, get_gct_ids(ds))
+  expect_equal(ds@cid, get_gct_ids(ds, dim="col"))
+  expect_error(get_gct_ids(ds, dim="foo"))
+  expect_equal(ds@rdesc, get_gct_meta(ds))
+  expect_equal(ds@cdesc, get_gct_meta(ds, dim="col"))
+  expect_error(get_gct_meta(ds, dim="foo"))
+})

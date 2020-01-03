@@ -160,7 +160,10 @@ subset_to_ids <- function(df, ids) {
 #' (a <- subset.gct(ds, rid=1:10, cid=1:10))
 #' 
 #' # first 10 rows and columns using character ids
-#' (b <- subset.gct(ds, rid=rid(ds)[1:10], cid=cid(ds)[1:10]))
+#' # use \code{get_gct_ids} to extract the ids
+#' rid <- get_gct_ids(ds, dim="row")
+#' cid <- get_gct_ids(ds, dim="col")
+#' (b <- subset.gct(ds, rid=rid[1:10], cid=cid[1:10]))
 #' 
 #' identical(a, b) # TRUE
 #' 
@@ -169,6 +172,7 @@ subset_to_ids <- function(df, ids) {
 setGeneric("subset.gct", function(g, rid=NULL, cid=NULL) {
   standardGeneric("subset.gct")
 })
+#' @aliases subset.gct
 setMethod("subset.gct", signature("GCT"),
           function(g, rid, cid) {
           # ids can either be a vector of character strings corresponding
@@ -324,7 +328,8 @@ setMethod("merge.gct", signature("GCT", "GCT"),
 #'   for repeated values in either table to merge with each other
 #'   over and over again.
 #' @param as_data_frame boolean indicating whether to ensure
-#'   the returned object is a \code{\link{data.frame}} instead of a \code{\link{data.table}}.
+#'   the returned object is a \code{\link{data.frame}} instead of a
+#'   \code{\link{data.table}}.
 #'   This ensures compatibility with GCT object conventions,
 #'   that is, the \code{\link{rdesc}} and \code{\link{cdesc}} slots must be strictly
 #'   \code{\link{data.frame}} objects.
@@ -332,8 +337,9 @@ setMethod("merge.gct", signature("GCT", "GCT"),
 #' @return a \code{\link{data.frame}} or \code{\link{data.table}} object
 #' 
 #' @examples 
-#' (x <- data.table(foo=letters[1:10], bar=1:10))
-#' (y <- data.table(foo=letters[1:10], bar=11:20, baz=LETTERS[1:10]))
+#' (x <- data.table::data.table(foo=letters[1:10], bar=1:10))
+#' (y <- data.table::data.table(foo=letters[1:10], bar=11:20,
+#'   baz=LETTERS[1:10]))
 #' # the 'bar' column from y will be dropped on merge
 #' cmapR:::merge_with_precedence(x, y, by="foo")
 #'
@@ -484,8 +490,10 @@ setMethod("transpose.gct", signature("GCT"), function(g) {
 #' @examples 
 #' (ranked <- rank.gct(ds, dim="column"))
 #' # scatter rank vs. score for a few columns
-#' # use `mat` function to access matrix of GCT objects
-#' plot(mat(ds)[, 1:3], mat(ranked)[, 1:3],
+#' # use \code{get_gct_matrix} function to access matrix of GCT objects
+#' mat <- get_gct_matrix(ds)
+#' mat_ranked <- get_gct_matrix(ranked)
+#' plot(mat[, 1:3], mat_ranked[, 1:3],
 #'   xlab="score", ylab="rank")
 #' 
 #' @family GCT utilities
@@ -520,7 +528,11 @@ setMethod("rank.gct", signature("GCT"), function(g, dim, decreasing=TRUE) {
 #'   in an error message if duplicates are found
 #' @return silently returns NULL
 #' @examples 
-#' check_dups(c("a", "b", "c", "a", "d"))
+#' # this will throw an erorr, let's catch it
+#' tryCatch(
+#'   check_dups(c("a", "b", "c", "a", "d")),
+#'   error=function(e) print(e)
+#'   )
 #' @export
 check_dups <- function(x, name="") {
   if (anyDuplicated(x)) {
