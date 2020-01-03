@@ -915,6 +915,19 @@ write.gctx.meta <- function(ofile, df, dimension="row") {
 setGeneric("mat", function(x) standardGeneric("mat"))
 setMethod("mat", "GCT", function(x) x@mat)
 
+setGeneric("rid", function(x) standardGeneric("rid"))
+setMethod("rid", "GCT", function(x) x@rid)
+
+setGeneric("cid", function(x) standardGeneric("cid"))
+setMethod("cid", "GCT", function(x) x@cid)
+
+setGeneric("rdesc", function(x) standardGeneric("rdesc"))
+setMethod("rdesc", "GCT", function(x) x@rdesc)
+
+setGeneric("cdesc", function(x) standardGeneric("cdesc"))
+setMethod("cdesc", "GCT", function(x) x@cdesc)
+
+
 
 ###########################################
 ### functions for other CMap file types ###

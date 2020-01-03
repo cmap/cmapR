@@ -159,7 +159,7 @@ subset_to_ids <- function(df, ids) {
 #' (a <- subset.gct(ds, rid=1:10, cid=1:10))
 #' 
 #' # first 10 rows and columns using character ids
-#' (b <- subset.gct(ds, rid=ds@rid[1:10], cid=ds@cid[1:10]))
+#' (b <- subset.gct(ds, rid=rid(ds)[1:10], cid=cid(ds)[1:10]))
 #' 
 #' identical(a, b) # TRUE
 #' 
@@ -478,7 +478,8 @@ setMethod("transpose.gct", signature("GCT"), function(g) {
 #' @examples 
 #' (ranked <- rank.gct(ds, dim="column"))
 #' # scatter rank vs. score for a few columns
-#' plot(ds@mat[, 1:3], ranked@mat[, 1:3],
+#' # use `mat` function to access matrix of GCT objects
+#' plot(mat(ds)[, 1:3], mat(ranked)[, 1:3],
 #'   xlab="score", ylab="rank")
 #' 
 #' @family GCT utilities

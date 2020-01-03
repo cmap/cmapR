@@ -21,7 +21,7 @@ Subset a gct object using the provided row and column ids
 (a <- subset.gct(ds, rid=1:10, cid=1:10))
 
 # first 10 rows and columns using character ids
-(b <- subset.gct(ds, rid=ds@rid[1:10], cid=ds@cid[1:10]))
+(b <- subset.gct(ds, rid=rid(ds)[1:10], cid=cid(ds)[1:10]))
 
 identical(a, b) # TRUE
 
