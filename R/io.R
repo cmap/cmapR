@@ -1011,7 +1011,7 @@ parse.gmt <- function(fname) {
         L <- list()
         L[["head"]] <- x[1]
         L[["desc"]] <- x[2]
-        l.entry <- x[-c(1:2)]
+        l.entry <- x[-c(1, 2)]
         idx <- l.entry != ""
         L[["entry"]] <- l.entry[idx]
         L[["len"]] <- length(L[["entry"]])
