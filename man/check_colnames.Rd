@@ -4,7 +4,7 @@
 \alias{check_colnames}
 \title{Check whether \code{test_names} are columns in the \code{\link{data.frame}} df}
 \usage{
-check_colnames(test_names, df, throw_error = T)
+check_colnames(test_names, df, throw_error = TRUE)
 }
 \arguments{
 \item{test_names}{a vector of column names to test}

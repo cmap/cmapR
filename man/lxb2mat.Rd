@@ -4,8 +4,7 @@
 \alias{lxb2mat}
 \title{Read an LXB file and return a matrix}
 \usage{
-lxb2mat(lxb_path, columns = c("RID", "RP1"), newnames = c("barcode_id",
-  "FI"))
+lxb2mat(lxb_path, columns = c("RID", "RP1"), newnames = c("barcode_id", "FI"))
 }
 \arguments{
 \item{lxb_path}{the path to the lxb file}
@@ -24,8 +23,11 @@ str(lxb_data)
 
 }
 \seealso{
-Other CMap parsing functions: \code{\link{parse.gmt}},
-  \code{\link{parse.gmx}}, \code{\link{parse.grp}},
-  \code{\link{write.gmt}}, \code{\link{write.grp}}
+Other CMap parsing functions: 
+\code{\link{parse.gmt}()},
+\code{\link{parse.gmx}()},
+\code{\link{parse.grp}()},
+\code{\link{write.gmt}()},
+\code{\link{write.grp}()}
 }
 \concept{CMap parsing functions}

@@ -23,8 +23,11 @@ write.grp(letters, "letter.grp")
 \seealso{
 \link{http://clue.io/help} for details on the GRP file format
 
-Other CMap parsing functions: \code{\link{lxb2mat}},
-  \code{\link{parse.gmt}}, \code{\link{parse.gmx}},
-  \code{\link{parse.grp}}, \code{\link{write.gmt}}
+Other CMap parsing functions: 
+\code{\link{lxb2mat}()},
+\code{\link{parse.gmt}()},
+\code{\link{parse.gmx}()},
+\code{\link{parse.grp}()},
+\code{\link{write.gmt}()}
 }
 \concept{CMap parsing functions}

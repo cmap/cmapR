@@ -4,7 +4,7 @@
 \alias{merge.gct}
 \title{Merge two GCT objects together}
 \usage{
-merge.gct(g1, g2, dimension = "row", matrix_only = F)
+merge.gct(g1, g2, dimension = "row", matrix_only = FALSE)
 }
 \arguments{
 \item{g1}{the first GCT object}
@@ -29,8 +29,10 @@ Merge two GCT objects together
 
 }
 \seealso{
-Other GCT utilities: \code{\link{annotate.gct}},
-  \code{\link{melt.gct}}, \code{\link{rank.gct}},
-  \code{\link{subset.gct}}
+Other GCT utilities: 
+\code{\link{annotate.gct}()},
+\code{\link{melt.gct}()},
+\code{\link{rank.gct}()},
+\code{\link{subset.gct}()}
 }
 \concept{GCT utilities}

@@ -4,8 +4,14 @@
 \alias{write.gctx}
 \title{Write a GCT object to disk in GCTX format}
 \usage{
-write.gctx(ds, ofile, appenddim = T, compression_level = 0,
-  matrix_only = F, max_chunk_kb = 1024)
+write.gctx(
+  ds,
+  ofile,
+  appenddim = TRUE,
+  compression_level = 0,
+  matrix_only = FALSE,
+  max_chunk_kb = 1024
+)
 }
 \arguments{
 \item{ds}{a GCT object}
@@ -36,10 +42,14 @@ write.gctx(ds, "my/desired/outpath/and/filename")
 }
 }
 \seealso{
-Other GCTX parsing functions: \code{\link{append.dim}},
-  \code{\link{fix.datatypes}}, \code{\link{parse.gctx}},
-  \code{\link{process_ids}}, \code{\link{read.gctx.ids}},
-  \code{\link{read.gctx.meta}},
-  \code{\link{write.gctx.meta}}, \code{\link{write.gct}}
+Other GCTX parsing functions: 
+\code{\link{append.dim}()},
+\code{\link{fix.datatypes}()},
+\code{\link{parse.gctx}()},
+\code{\link{process_ids}()},
+\code{\link{read.gctx.ids}()},
+\code{\link{read.gctx.meta}()},
+\code{\link{write.gctx.meta}()},
+\code{\link{write.gct}()}
 }
 \concept{GCTX parsing functions}

@@ -24,11 +24,15 @@ cmapR:::write.gctx.meta("/my/file/path", cdesc_char, dimension="col")
 }
 }
 \seealso{
-Other GCTX parsing functions: \code{\link{append.dim}},
-  \code{\link{fix.datatypes}}, \code{\link{parse.gctx}},
-  \code{\link{process_ids}}, \code{\link{read.gctx.ids}},
-  \code{\link{read.gctx.meta}}, \code{\link{write.gctx}},
-  \code{\link{write.gct}}
+Other GCTX parsing functions: 
+\code{\link{append.dim}()},
+\code{\link{fix.datatypes}()},
+\code{\link{parse.gctx}()},
+\code{\link{process_ids}()},
+\code{\link{read.gctx.ids}()},
+\code{\link{read.gctx.meta}()},
+\code{\link{write.gctx}()},
+\code{\link{write.gct}()}
 }
 \concept{GCTX parsing functions}
 \keyword{internal}

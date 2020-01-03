@@ -4,7 +4,7 @@
 \alias{write.gct}
 \title{Write a GCT object to disk in GCT format}
 \usage{
-write.gct(ds, ofile, precision = 4, appenddim = T, ver = 3)
+write.gct(ds, ofile, precision = 4, appenddim = TRUE, ver = 3)
 }
 \arguments{
 \item{ds}{the GCT object}
@@ -36,10 +36,14 @@ write.gct(ds, "dataset", precision=2)
 }
 }
 \seealso{
-Other GCTX parsing functions: \code{\link{append.dim}},
-  \code{\link{fix.datatypes}}, \code{\link{parse.gctx}},
-  \code{\link{process_ids}}, \code{\link{read.gctx.ids}},
-  \code{\link{read.gctx.meta}},
-  \code{\link{write.gctx.meta}}, \code{\link{write.gctx}}
+Other GCTX parsing functions: 
+\code{\link{append.dim}()},
+\code{\link{fix.datatypes}()},
+\code{\link{parse.gctx}()},
+\code{\link{process_ids}()},
+\code{\link{read.gctx.ids}()},
+\code{\link{read.gctx.meta}()},
+\code{\link{write.gctx.meta}()},
+\code{\link{write.gctx}()}
 }
 \concept{GCTX parsing functions}

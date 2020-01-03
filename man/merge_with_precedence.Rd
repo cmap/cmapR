@@ -5,7 +5,7 @@
 \title{Merge two \code{\link{data.frame}}s, but where there are common fields
 those in \code{x} are retained and those in \code{y} are dropped.}
 \usage{
-merge_with_precedence(x, y, by, allow.cartesian = T, as_data_frame = T)
+merge_with_precedence(x, y, by, allow.cartesian = TRUE, as_data_frame = TRUE)
 }
 \arguments{
 \item{x}{the \code{\link{data.frame}} whose columns take precedence}

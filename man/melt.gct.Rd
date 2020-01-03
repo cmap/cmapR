@@ -4,8 +4,14 @@
 \alias{melt.gct}
 \title{Transform a GCT object in to a long form \code{\link{data.table}} (aka 'melt')}
 \usage{
-melt.gct(g, suffixes = NULL, remove_symmetries = F, keep_rdesc = T,
-  keep_cdesc = T, ...)
+melt.gct(
+  g,
+  suffixes = NULL,
+  remove_symmetries = FALSE,
+  keep_rdesc = TRUE,
+  keep_cdesc = TRUE,
+  ...
+)
 }
 \arguments{
 \item{g}{the GCT object}
@@ -45,8 +51,10 @@ head(melt.gct(ds, keep_rdesc = FALSE, keep_cdesc = FALSE))
 
 }
 \seealso{
-Other GCT utilities: \code{\link{annotate.gct}},
-  \code{\link{merge.gct}}, \code{\link{rank.gct}},
-  \code{\link{subset.gct}}
+Other GCT utilities: 
+\code{\link{annotate.gct}()},
+\code{\link{merge.gct}()},
+\code{\link{rank.gct}()},
+\code{\link{subset.gct}()}
 }
 \concept{GCT utilities}

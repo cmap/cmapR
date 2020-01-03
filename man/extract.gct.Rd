@@ -4,8 +4,15 @@
 \alias{extract.gct}
 \title{Exract elements from a GCT matrix}
 \usage{
-extract.gct(g, row_field, col_field, rdesc = NULL, cdesc = NULL,
-  row_keyfield = "id", col_keyfield = "id")
+extract.gct(
+  g,
+  row_field,
+  col_field,
+  rdesc = NULL,
+  cdesc = NULL,
+  row_keyfield = "id",
+  col_keyfield = "id"
+)
 }
 \arguments{
 \item{g}{the GCT object}

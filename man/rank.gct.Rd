@@ -4,7 +4,7 @@
 \alias{rank.gct}
 \title{Convert a GCT object's matrix to ranks}
 \usage{
-rank.gct(g, dim = "col", decreasing = T)
+rank.gct(g, dim = "col", decreasing = TRUE)
 }
 \arguments{
 \item{g}{the \code{GCT} object to rank}
@@ -30,8 +30,10 @@ plot(ds@mat[, 1:3], ranked@mat[, 1:3],
 
 }
 \seealso{
-Other GCT utilities: \code{\link{annotate.gct}},
-  \code{\link{melt.gct}}, \code{\link{merge.gct}},
-  \code{\link{subset.gct}}
+Other GCT utilities: 
+\code{\link{annotate.gct}()},
+\code{\link{melt.gct}()},
+\code{\link{merge.gct}()},
+\code{\link{subset.gct}()}
 }
 \concept{GCT utilities}

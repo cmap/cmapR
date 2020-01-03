@@ -33,8 +33,11 @@ str(gmx)
 \seealso{
 \link{http://clue.io/help} for details on the GMX file format
 
-Other CMap parsing functions: \code{\link{lxb2mat}},
-  \code{\link{parse.gmt}}, \code{\link{parse.grp}},
-  \code{\link{write.gmt}}, \code{\link{write.grp}}
+Other CMap parsing functions: 
+\code{\link{lxb2mat}()},
+\code{\link{parse.gmt}()},
+\code{\link{parse.grp}()},
+\code{\link{write.gmt}()},
+\code{\link{write.grp}()}
 }
 \concept{CMap parsing functions}
