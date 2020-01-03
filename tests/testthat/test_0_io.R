@@ -104,7 +104,7 @@ test_that("fix.datatypes correctly handles variety of data types", {
 })
 
 test_that("various built-in functions have been correctly adatped to GCT", {
-  ds <- cmapR::ds
+  # ds <- cmapR::ds
   expect_equal(nrow(ds), nrow(ds@mat))
   expect_equal(ncol(ds), ncol(ds@mat))
   expect_equal(dim(ds), dim(ds@mat))

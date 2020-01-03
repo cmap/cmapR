@@ -2,7 +2,7 @@ context("Testing utility functions")
 
 test_that("melt.gct works properly", {
   # standard
-  ds <- cmapR::ds
+  # ds <- cmapR::ds
   mlt <- melt.gct(ds)
   expect_equal(nrow(mlt), nrow(ds@mat) * ncol(ds@mat))
   expect_equal(ncol(mlt), ncol(ds@rdesc) + ncol(ds@cdesc) + 1)
@@ -147,14 +147,14 @@ test_that("merge.gct works properly", {
 })
 
 test_that("subset.gct works properly", {
-  ds <- cmapR::ds
+  # ds <- cmapR::ds
   a <- subset.gct(ds, rid=1:10, cid=1:10)
   b <- subset.gct(ds, rid=ds@rid[1:10], cid=ds@cid[1:10])
   expect_identical(a, b)
 })
 
 test_that("annotate.gct works properly", {
-  ds <- cmapR::ds
+  # ds <- cmapR::ds
   newds <- ds
   col_meta <- ds@cdesc
   newds@cdesc <- data.frame(id=ds@cid)
@@ -168,7 +168,7 @@ test_that("annotate.gct works properly", {
 })
 
 test_that("transpose.gct works properly", {
-  ds <- cmapR::ds
+  # ds <- cmapR::ds
   dst <- transpose.gct(ds)
   expect_identical(ds@mat, t(dst@mat))
   expect_identical(ds@cdesc, dst@rdesc)
@@ -178,7 +178,7 @@ test_that("transpose.gct works properly", {
 })
 
 test_that("rank.gct works properly", {
-  ds <- cmapR::ds
+  # ds <- cmapR::ds
   ranked_row <- rank.gct(ds, dim="row")
   expect_identical(range(ranked_row@mat), c(1, ncol(ds@mat)))
   ranked_col <- rank.gct(ds, dim="column")

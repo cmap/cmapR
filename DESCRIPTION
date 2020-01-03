@@ -12,10 +12,11 @@ Imports:
   methods,
   rhdf5,
   data.table,
-  prada
-Suggests: knitr
+  prada,
+Suggests: knitr, testthat
 VignetteBuilder: knitr
 biocViews: DataImport, DataRepresentation
 URL: https://github.com/cmap/cmapR
 BugReports: https://github.com/cmap/cmapR/issues
+LazyData: true
 RoxygenNote: 7.0.2
