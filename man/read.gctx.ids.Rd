@@ -4,12 +4,12 @@
 \alias{read.gctx.ids}
 \title{Read GCTX row or column ids}
 \usage{
-read.gctx.ids(gctx_path, dimension = "row")
+read.gctx.ids(gctx_path, dim = "row")
 }
 \arguments{
 \item{gctx_path}{path to the GCTX file}
 
-\item{dimension}{which ids to read (row or column)}
+\item{dim}{which ids to read (row or column)}
 }
 \value{
 a character vector of row or column ids from the provided file
@@ -23,7 +23,7 @@ gct_file <- system.file("extdata", "modzs_n25x50.gctx", package="cmapR")
 rid <- read.gctx.ids(gct_file)
 head(rid)
 # column ids
-cid <- read.gctx.ids(gct_file, dimension="column")
+cid <- read.gctx.ids(gct_file, dim="column")
 head(cid)
 
 }

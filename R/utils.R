@@ -285,9 +285,9 @@ setMethod("merge.gct", signature("GCT", "GCT"),
               cdesc <- add_new_records(g1@cdesc, g2@cdesc)
               idx <- match(colnames(mat), cdesc$id)
               cdesc <- cdesc[idx, ]
-              newg <- new("GCT", mat=mat, rdesc=rdesc, cdesc=cdesc)
+              newg <- methods::new("GCT", mat=mat, rdesc=rdesc, cdesc=cdesc)
             } else {
-              newg <- new("GCT", mat=mat)
+              newg <- methods::new("GCT", mat=mat)
             }
           }
           else if (dimension == "col") {
@@ -385,7 +385,7 @@ merge_with_precedence <- function(x, y, by, allow.cartesian=TRUE,
 #' 
 #' @param g a GCT object
 #' @param annot a \code{\link{data.frame}} or path to text table of annotations
-#' @param dimension either 'row' or 'column' indicating which dimension
+#' @param dim either 'row' or 'column' indicating which dimension
 #'   of \code{g} to annotate
 #' @param keyfield the character name of the column in \code{annot} that 
 #'   matches the row or column identifiers in \code{g}
@@ -405,15 +405,15 @@ merge_with_precedence <- function(x, y, by, allow.cartesian=TRUE,
 #' 
 #' @family GCT utilities
 #' @export
-setGeneric("annotate.gct", function(g, annot, dimension="row", keyfield="id") {
+setGeneric("annotate.gct", function(g, annot, dim="row", keyfield="id") {
   standardGeneric("annotate.gct")
 })
 #' @rdname annotate.gct
 setMethod("annotate.gct", signature("GCT"),
-          function(g, annot, dimension, keyfield) {
+          function(g, annot, dim, keyfield) {
           if (is.character(annot)) {
             # given a file path, try to read it in
-            annot <- fread(annot)
+            annot <- data.table::fread(annot)
           } else {
             # convert to data.table
             annot <- data.table::data.table(annot)
@@ -425,8 +425,8 @@ setMethod("annotate.gct", signature("GCT"),
           } 
           # rename the column to id so we can do the merge
           annot$id <- annot[[keyfield]]
-          if (dimension == "column") dimension <- "col"
-          if (dimension == "row") {
+          if (dim == "column") dim <- "col"
+          if (dim == "row") {
             orig_id <- g@rdesc$id
             merged <- merge_with_precedence(g@rdesc, annot, by="id",
                                             allow.cartesian=T,
@@ -434,7 +434,7 @@ setMethod("annotate.gct", signature("GCT"),
             idx <- match(orig_id, merged$id)
             merged <- merged[idx, ]
             g@rdesc <- merged
-          } else if (dimension == "col") {
+          } else if (dim == "col") {
             orig_id <- g@cdesc$id
             merged <- merge_with_precedence(g@cdesc, annot, by="id",
                                             allow.cartesian=T,
@@ -443,7 +443,7 @@ setMethod("annotate.gct", signature("GCT"),
             merged <- merged[idx, ]
             g@cdesc <- merged
           } else {
-            stop("dimension must be either row or column")
+            stop("dim must be either row or column")
           }
           return(g)
 })

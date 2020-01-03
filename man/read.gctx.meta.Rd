@@ -4,12 +4,12 @@
 \alias{read.gctx.meta}
 \title{Parse row or column metadata from GCTX files}
 \usage{
-read.gctx.meta(gctx_path, dimension = "row", ids = NULL)
+read.gctx.meta(gctx_path, dim = "row", ids = NULL)
 }
 \arguments{
 \item{gctx_path}{the path to the GCTX file}
 
-\item{dimension}{which metadata to read (row or column)}
+\item{dim}{which metadata to read (row or column)}
 
 \item{ids}{a character vector of a subset of row/column ids
 for which to read the metadata}
@@ -26,10 +26,10 @@ gct_file <- system.file("extdata", "modzs_n25x50.gctx", package="cmapR")
 row_meta <- read.gctx.meta(gct_file)
 str(row_meta)
 # column meta
-col_meta <- read.gctx.meta(gct_file, dimension="column")
+col_meta <- read.gctx.meta(gct_file, dim="column")
 str(col_meta)
 # now for only the first 10 ids
-col_meta_first10 <- read.gctx.meta(gct_file, dimension="column",
+col_meta_first10 <- read.gctx.meta(gct_file, dim="column",
 ids=col_meta$id[1:10])
 str(col_meta_first10)
 

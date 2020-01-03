@@ -5,16 +5,16 @@
 \alias{annotate.gct,GCT-method}
 \title{Add annotations to a GCT object}
 \usage{
-annotate.gct(g, annot, dimension = "row", keyfield = "id")
+annotate.gct(g, annot, dim = "row", keyfield = "id")
 
-\S4method{annotate.gct}{GCT}(g, annot, dimension = "row", keyfield = "id")
+\S4method{annotate.gct}{GCT}(g, annot, dim = "row", keyfield = "id")
 }
 \arguments{
 \item{g}{a GCT object}
 
 \item{annot}{a \code{\link{data.frame}} or path to text table of annotations}
 
-\item{dimension}{either 'row' or 'column' indicating which dimension
+\item{dim}{either 'row' or 'column' indicating which dimension
 of \code{g} to annotate}
 
 \item{keyfield}{the character name of the column in \code{annot} that 
