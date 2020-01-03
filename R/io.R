@@ -200,7 +200,7 @@ read.gctx.meta <- function(gctx_path, dimension="row", ids=NULL) {
   annots <-  data.frame(matrix(nrow=length(raw_annots[[fields[1]]]), ncol=length(fields)))
   names(annots) <-  fields
   # loop through each field and fill the annots data.frame
-  for (i in 1:length(fields)) {
+  for (i in seq_along(fields)) {
     field <- fields[i]
     # remove any trailing spaces
     # and cast as vector
@@ -632,7 +632,7 @@ write.gct <- function(ds, ofile, precision=4, appenddim=T, ver=3) {
     # line 4 + ncdesc: sample desc
     filler = 'na'
     if (ncdesc > 0) {
-      for (ii in 1:ncdesc) {
+      for (ii in seq_along(ncdesc)) {
         if (is.numeric(ds@cdesc[,ii])) {
           cat(paste(c(colkeys[ii],rep(filler,nrdesc),
                       round(ds@cdesc[,ii],precision)),
@@ -647,7 +647,7 @@ write.gct <- function(ds, ofile, precision=4, appenddim=T, ver=3) {
       }
     }
 
-    for (ii in 1:nr) {    
+    for (ii in seq_len(nr)) {    
       # print rows
       cat(paste(c(ds@rid[ii],
                   ds@rdesc[ii,],
@@ -663,7 +663,7 @@ write.gct <- function(ds, ofile, precision=4, appenddim=T, ver=3) {
     cat(paste(c('id','Description',ds@cid),collapse='\t'),
         file=ofile,sep='\n',append=T)
 
-    for (ii in 1:nr) {    
+    for (ii in seq_len(nr)) {    
       # print rows
       cat(paste(c(ds@rid[ii],
                   ds@rdesc[ii, 2],
@@ -883,7 +883,7 @@ write.gctx.meta <- function(ofile, df, dimension="row") {
   # loop through all columns
   fields <- names(df)
   if (length(fields) > 0) {
-    for (i in 1:length(fields)) {
+    for (i in seq_along(fields)) {
       field <- fields[i]
       # if this is the id field, skip b/c that field is special
       # and is written as part of write.gctx
@@ -1050,7 +1050,7 @@ write.gmt <- function(lst, fname) {
     message(paste(fname, "exists, deleting..."))
     file.remove(fname)
   }
-  for (i in 1:length(lst)) {
+  for (i in seq_along(lst)) {
     el <- lst[[i]]
     ncolumns <- 2 + length(el$entry)
     write(c(el$head, el$desc, el$entry), file=fname, sep="\t", append=T, ncolumns=ncolumns)

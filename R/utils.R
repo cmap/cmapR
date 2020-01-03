@@ -616,7 +616,7 @@ align_matrices <- function(m1, m2, ..., L=NULL, na.pad=TRUE, as.3D=TRUE) {
   }
   n_matrices <- length(matrices)
   # make sure row/col names are assigned and unique
-  lapply(1:n_matrices, function(i) {
+  lapply(seq_len(n_matrices), function(i) {
     if (is.null(colnames(matrices[[i]])) ||
         is.null(rownames(matrices[[i]]))) {
       stop(paste("matrix", i, "must have unique row and column names"))
@@ -660,7 +660,7 @@ align_matrices <- function(m1, m2, ..., L=NULL, na.pad=TRUE, as.3D=TRUE) {
                               colnames(matrices[[1]]),
                               names(matrices)))
     # and fill with the aligned matrices
-    for (i in 1:length(matrices)) {
+    for (i in seq_along(matrices)) {
       arr3d[, , i] <- matrices[[i]]
     }
     return(arr3d)
