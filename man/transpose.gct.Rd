@@ -2,9 +2,12 @@
 % Please edit documentation in R/utils.R
 \name{transpose.gct}
 \alias{transpose.gct}
+\alias{transpose.gct,GCT-method}
 \title{Transpose a GCT object}
 \usage{
 transpose.gct(g)
+
+\S4method{transpose.gct}{GCT}(g)
 }
 \arguments{
 \item{g}{the \code{GCT} object}

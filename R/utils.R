@@ -34,6 +34,7 @@ setGeneric("melt.gct", function(g, suffixes=NULL, remove_symmetries=FALSE,
                                 keep_rdesc=TRUE, keep_cdesc=TRUE, ...) {
   standardGeneric("melt.gct")
 })
+#' @rdname melt.gct
 setMethod("melt.gct", signature("GCT"),
           function(g, suffixes, remove_symmetries=FALSE,
                    keep_rdesc=TRUE, keep_cdesc=TRUE, ...) {
@@ -172,7 +173,7 @@ subset_to_ids <- function(df, ids) {
 setGeneric("subset.gct", function(g, rid=NULL, cid=NULL) {
   standardGeneric("subset.gct")
 })
-#' @aliases subset.gct
+#' @rdname subset.gct
 setMethod("subset.gct", signature("GCT"),
           function(g, rid, cid) {
           # ids can either be a vector of character strings corresponding
@@ -250,6 +251,7 @@ setMethod("subset.gct", signature("GCT"),
 setGeneric("merge.gct", function(g1, g2, dimension="row", matrix_only=FALSE) {
   standardGeneric("merge.gct")
 })
+#' @rdname merge.gct
 setMethod("merge.gct", signature("GCT", "GCT"),
           function(g1, g2, dimension, matrix_only) {
           # helper function to add new rows to a data.table
@@ -405,6 +407,7 @@ merge_with_precedence <- function(x, y, by, allow.cartesian=TRUE,
 setGeneric("annotate.gct", function(g, annot, dimension="row", keyfield="id") {
   standardGeneric("annotate.gct")
 })
+#' @rdname annotate.gct
 setMethod("annotate.gct", signature("GCT"),
           function(g, annot, dimension, keyfield) {
           if (is.character(annot)) {
@@ -459,6 +462,7 @@ setMethod("annotate.gct", signature("GCT"),
 setGeneric("transpose.gct", function(g) {
   standardGeneric("transpose.gct")
 })
+#' @rdname transpose.gct
 setMethod("transpose.gct", signature("GCT"), function(g) {
   # transpose matrix
   g@mat <- t(g@mat)
@@ -501,6 +505,7 @@ setMethod("transpose.gct", signature("GCT"), function(g) {
 setGeneric("rank.gct", function(g, dim="col", decreasing=TRUE) {
   standardGeneric("rank.gct")
 })
+#' @rdname rank.gct
 setMethod("rank.gct", signature("GCT"), function(g, dim, decreasing=TRUE) {
   # check to make sure dim is allowed
   if (dim=="column") dim <- "col"
@@ -689,6 +694,7 @@ align_matrices <- function(m1, m2, ..., L=NULL, na.pad=TRUE, as.3D=TRUE) {
   }
 }
 
+# TODO: update to act as an S4 method for GCT class
 #' Exract elements from a GCT matrix
 #' 
 #' @param g the GCT object
@@ -720,7 +726,8 @@ align_matrices <- function(m1, m2, ..., L=NULL, na.pad=TRUE, as.3D=TRUE) {
 #' @examples
 #' # get the values for all targeted genes from a 
 #' # dataset of knockdown experiments 
-#' res <- extract.gct(kd_gct, row_field="pr_gene_symbol", col_field="pert_mfc_desc")
+#' res <- extract.gct(kd_gct, row_field="pr_gene_symbol",
+#'   col_field="pert_mfc_desc")
 #' str(res)
 #' stats::quantile(res$vals)
 #' 

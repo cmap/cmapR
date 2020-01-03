@@ -2,9 +2,19 @@
 % Please edit documentation in R/utils.R
 \name{melt.gct}
 \alias{melt.gct}
+\alias{melt.gct,GCT-method}
 \title{Transform a GCT object in to a long form \code{\link{data.table}} (aka 'melt')}
 \usage{
 melt.gct(
+  g,
+  suffixes = NULL,
+  remove_symmetries = FALSE,
+  keep_rdesc = TRUE,
+  keep_cdesc = TRUE,
+  ...
+)
+
+\S4method{melt.gct}{GCT}(
   g,
   suffixes = NULL,
   remove_symmetries = FALSE,

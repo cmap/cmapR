@@ -2,9 +2,12 @@
 % Please edit documentation in R/utils.R
 \name{rank.gct}
 \alias{rank.gct}
+\alias{rank.gct,GCT-method}
 \title{Convert a GCT object's matrix to ranks}
 \usage{
 rank.gct(g, dim = "col", decreasing = TRUE)
+
+\S4method{rank.gct}{GCT}(g, dim = "col", decreasing = TRUE)
 }
 \arguments{
 \item{g}{the \code{GCT} object to rank}

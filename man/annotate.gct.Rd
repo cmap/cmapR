@@ -2,9 +2,12 @@
 % Please edit documentation in R/utils.R
 \name{annotate.gct}
 \alias{annotate.gct}
+\alias{annotate.gct,GCT-method}
 \title{Add annotations to a GCT object}
 \usage{
 annotate.gct(g, annot, dimension = "row", keyfield = "id")
+
+\S4method{annotate.gct}{GCT}(g, annot, dimension = "row", keyfield = "id")
 }
 \arguments{
 \item{g}{a GCT object}

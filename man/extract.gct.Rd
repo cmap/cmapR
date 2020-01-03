@@ -52,7 +52,8 @@ extract the elements from a \code{GCT} object
 \examples{
 # get the values for all targeted genes from a 
 # dataset of knockdown experiments 
-res <- extract.gct(kd_gct, row_field="pr_gene_symbol", col_field="pert_mfc_desc")
+res <- extract.gct(kd_gct, row_field="pr_gene_symbol",
+  col_field="pert_mfc_desc")
 str(res)
 stats::quantile(res$vals)
 

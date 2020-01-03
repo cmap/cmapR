@@ -2,9 +2,12 @@
 % Please edit documentation in R/utils.R
 \name{merge.gct}
 \alias{merge.gct}
+\alias{merge.gct,GCT,GCT-method}
 \title{Merge two GCT objects together}
 \usage{
 merge.gct(g1, g2, dimension = "row", matrix_only = FALSE)
+
+\S4method{merge.gct}{GCT,GCT}(g1, g2, dimension = "row", matrix_only = FALSE)
 }
 \arguments{
 \item{g1}{the first GCT object}

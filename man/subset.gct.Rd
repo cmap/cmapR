@@ -2,9 +2,12 @@
 % Please edit documentation in R/utils.R
 \name{subset.gct}
 \alias{subset.gct}
+\alias{subset.gct,GCT-method}
 \title{Subset a gct object using the provided row and column ids}
 \usage{
 subset.gct(g, rid = NULL, cid = NULL)
+
+\S4method{subset.gct}{GCT}(g, rid = NULL, cid = NULL)
 }
 \arguments{
 \item{g}{a gct object}
