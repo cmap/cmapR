@@ -41,3 +41,4 @@ vignettes/*.pdf
 contests/*
 
 .idea
+*.Renviron
