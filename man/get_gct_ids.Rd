@@ -2,9 +2,12 @@
 % Please edit documentation in R/io.R
 \name{get_gct_ids}
 \alias{get_gct_ids}
+\alias{get_gct_ids,GCT-method}
 \title{Extract the ids from a GCT object}
 \usage{
 get_gct_ids(g, dim = "row")
+
+\S4method{get_gct_ids}{GCT}(g, dim = "row")
 }
 \arguments{
 \item{g}{the GCT object}

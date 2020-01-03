@@ -2,9 +2,12 @@
 % Please edit documentation in R/io.R
 \name{get_gct_meta}
 \alias{get_gct_meta}
+\alias{get_gct_meta,GCT-method}
 \title{Extract the metadata from a GCT object}
 \usage{
 get_gct_meta(g, dim = "row")
+
+\S4method{get_gct_meta}{GCT}(g, dim = "row")
 }
 \arguments{
 \item{g}{the GCT object}

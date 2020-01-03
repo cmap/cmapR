@@ -70,9 +70,7 @@ suppressMessages({
   setMethod("show", methods::signature("GCT"), function(object) {
     utils::str(object)
   })
-
-  # dim, nrow and ncol to display the # of rows and columns
-  # for a GCT object's matrix
+  # other common functions adapted for GCT
   methods::setMethod("ncol", methods::signature("GCT"), function(x) {
     ncol(x@mat)
   })
@@ -82,7 +80,8 @@ suppressMessages({
   methods::setMethod("dim", methods::signature("GCT"), function(x) {
     dim(x@mat)
   })
-  methods::setMethod("range", methods::signature("GCT"), function(x, na.rm=F, finite=F) {
+  methods::setMethod("range", methods::signature("GCT"),
+                     function(x, na.rm=FALSE, finite=FALSE) {
     range(x@mat, na.rm=na.rm, finite=finite)
   })
   methods::setMethod("max", methods::signature("GCT"), function(x, na.rm=F) {
@@ -933,6 +932,7 @@ write.gctx.meta <- function(ofile, df, dimension="row") {
 methods::setGeneric("get_gct_matrix", function(g) {
   standardGeneric("get_gct_matrix")
 })
+#' @rdname get_gct_matrix
 methods::setMethod("get_gct_matrix", "GCT", function(g) g@mat)
 
 #' Extract the ids from a GCT object
@@ -946,6 +946,7 @@ methods::setMethod("get_gct_matrix", "GCT", function(g) g@mat)
 methods::setGeneric("get_gct_ids", function(g, dim="row")  {
   standardGeneric("get_gct_ids")
 })
+#' @rdname get_gct_ids
 methods::setMethod("get_gct_ids", "GCT", function(g, dim) {
   if (dim == "row") return(g@rid)
   if (dim %in% c("col", "column")) return(g@cid)
@@ -963,6 +964,7 @@ methods::setMethod("get_gct_ids", "GCT", function(g, dim) {
 methods::setGeneric("get_gct_meta", function(g, dim="row") {
   standardGeneric("get_gct_meta")
 })
+#' @rdname get_gct_meta
 methods::setMethod("get_gct_meta", "GCT", function(g, dim) {
   if (dim == "row") return(g@rdesc)
   if (dim %in% c("col", "column")) return(g@cdesc)

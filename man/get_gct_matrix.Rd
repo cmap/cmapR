@@ -2,9 +2,12 @@
 % Please edit documentation in R/io.R
 \name{get_gct_matrix}
 \alias{get_gct_matrix}
+\alias{get_gct_matrix,GCT-method}
 \title{Extract the matrix from a GCT object}
 \usage{
 get_gct_matrix(g)
+
+\S4method{get_gct_matrix}{GCT}(g)
 }
 \arguments{
 \item{g}{the GCT object}
