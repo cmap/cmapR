@@ -16,7 +16,9 @@
 #'   \code{rdesc} and \code{cdesc} slots contain data frames with
 #'   annotations about the rows and columns, respectively
 #'   
-#' @seealso \code{\link{parse.gctx}}, \code{\link{write.gctx}}, \code{\link{read.gctx.meta}}, \code{\link{read.gctx.ids}}
+#' @seealso \code{\link{parse.gctx}},
+#' \code{\link{write.gctx}}, \code{\link{read.gctx.meta}},
+#' \code{\link{read.gctx.ids}}
 #' @seealso \link{http://clue.io/help} for more information on the GCT format
 methods::setClass("GCT",
          methods::representation(
@@ -197,14 +199,15 @@ read.gctx.meta <- function(gctx_path, dimension="row", ids=NULL) {
   raw_annots <- rhdf5::h5read(gctx_path, name=name) # returns a list
   fields <- names(raw_annots)
   # define an empty data frame of the correct dimensions
-  annots <-  data.frame(matrix(nrow=length(raw_annots[[fields[1]]]), ncol=length(fields)))
+  annots <-  data.frame(matrix(nrow=length(raw_annots[[fields[1]]]),
+                               ncol=length(fields)))
   names(annots) <-  fields
   # loop through each field and fill the annots data.frame
   for (i in seq_along(fields)) {
     field <- fields[i]
     # remove any trailing spaces
     # and cast as vector
-    annots[,i] <- as.vector(gsub("\\s*$", "", raw_annots[[field]], perl=T))
+    annots[,i] <- as.vector(gsub("\\s*$", "", raw_annots[[field]], perl=TRUE))
   } 
   annots <- fix.datatypes(annots)
   # subset to the provided set of ids, if given
@@ -252,7 +255,7 @@ read.gctx.ids <- function(gctx_path, dimension="row") {
     name <- "0/META/COL/id"
   }
   # remove any spaces
-  ids <- gsub("\\s*$", "", rhdf5::h5read(gctx_path, name=name), perl=T)
+  ids <- gsub("\\s*$", "", rhdf5::h5read(gctx_path, name=name), perl=TRUE)
   # cast as character
   ids <- as.character(ids)
   return(ids)
@@ -484,8 +487,10 @@ methods::setMethod("initialize",
                   .Object@cdesc <- read.gctx.meta(src, dimension="col", ids=processed_cids$ids)
                 }
                 else {
-                  .Object@rdesc <- data.frame(id=.Object@rid, stringsAsFactors = F)
-                  .Object@cdesc <- data.frame(id=.Object@cid, stringsAsFactors = F)
+                  .Object@rdesc <- data.frame(id=.Object@rid,
+                                              stringsAsFactors = FALSE)
+                  .Object@cdesc <- data.frame(id=.Object@cid,
+                                              stringsAsFactors = FALSE)
                 }
                 # close any open handles and return the object
                 if(utils::packageVersion('rhdf5') < "2.23.0") {
@@ -598,7 +603,7 @@ append.dim <- function(ofile, mat, extension="gct") {
 #' }
 #' @family GCTX parsing functions
 #' @export
-write.gct <- function(ds, ofile, precision=4, appenddim=T, ver=3) {
+write.gct <- function(ds, ofile, precision=4, appenddim=TRUE, ver=3) {
   if (!class(ds)=="GCT") {
     stop("ds must be a GCT object")
   }
@@ -628,7 +633,7 @@ write.gct <- function(ds, ofile, precision=4, appenddim=T, ver=3) {
         file=ofile,sep='\n')      
     # line 3: sample row desc keys and sample names
     cat(paste(c('id',colnames(ds@rdesc),ds@cid),collapse='\t'),
-        file=ofile,sep='\n',append=T)
+        file=ofile,sep='\n',append=TRUE)
     # line 4 + ncdesc: sample desc
     filler = 'na'
     if (ncdesc > 0) {
@@ -637,12 +642,12 @@ write.gct <- function(ds, ofile, precision=4, appenddim=T, ver=3) {
           cat(paste(c(colkeys[ii],rep(filler,nrdesc),
                       round(ds@cdesc[,ii],precision)),
                     collapse='\t'),
-              file=ofile,sep='\n',append=T)  
+              file=ofile, sep='\n', append=TRUE)  
         } else {
-          cat(paste(c(colkeys[ii],rep(filler,nrdesc),
+          cat(paste(c(colkeys[ii],rep(filler, nrdesc),
                       ds@cdesc[,ii]),
                     collapse='\t'),
-              file=ofile,sep='\n',append=T)
+              file=ofile, sep='\n', append=TRUE)
         }
       }
     }
@@ -652,7 +657,7 @@ write.gct <- function(ds, ofile, precision=4, appenddim=T, ver=3) {
       cat(paste(c(ds@rid[ii],
                   ds@rdesc[ii,],
                   round(ds@mat[ii,],precision)),collapse='\t'),
-          sep='\n',file=ofile,append=T)
+          sep='\n',file=ofile,append=TRUE)
     }
   } else {
     # assume ver 1.2 and below, ignore descriptors
@@ -661,14 +666,14 @@ write.gct <- function(ds, ofile, precision=4, appenddim=T, ver=3) {
         file=ofile,sep='\n')      
     # line 3: sample row desc keys and sample names
     cat(paste(c('id','Description',ds@cid),collapse='\t'),
-        file=ofile,sep='\n',append=T)
+        file=ofile,sep='\n',append=TRUE)
 
     for (ii in seq_len(nr)) {    
       # print rows
       cat(paste(c(ds@rid[ii],
                   ds@rdesc[ii, 2],
                   round(ds@mat[ii,],precision)),collapse='\t'),
-          sep='\n',file=ofile,append=T)
+          sep='\n',file=ofile,append=TRUE)
     }
   }
 
@@ -698,7 +703,8 @@ write.gct <- function(ds, ofile, precision=4, appenddim=T, ver=3) {
 #' }
 #' @family GCTX parsing functions
 #' @export
-write.gctx <- function(ds, ofile, appenddim=T, compression_level=0, matrix_only=F,
+write.gctx <- function(ds, ofile, appenddim=TRUE, compression_level=0,
+                       matrix_only=FALSE,
                        max_chunk_kb=1024) {
   if (!class(ds)=="GCT") {
     stop("ds must be a GCT object")
@@ -738,7 +744,8 @@ write.gctx <- function(ds, ofile, appenddim=T, compression_level=0, matrix_only=
   col_chunk_size <- min(((max_chunk_kb * elem_per_kb) %/% row_chunk_size), col_dim)
   chunking <- c(row_chunk_size, col_chunk_size) 
   message(paste(c("chunk sizes:", chunking), collapse="\t"))
-  rhdf5::h5createDataset(ofile, "0/DATA/0/matrix", dim(ds@mat), chunk=chunking, level=compression_level)
+  rhdf5::h5createDataset(ofile, "0/DATA/0/matrix", dim(ds@mat), chunk=chunking,
+                         level=compression_level)
   rhdf5::h5write.default(ds@mat, ofile, "0/DATA/0/matrix")
   
   # write annotations
@@ -815,8 +822,10 @@ update.gctx <- function(x, ofile, rid=NULL, cid=NULL) {
     }
   }
   # get the dimensions of the file in question
-  info <- rhdf5::h5dump(ofile, load=F)
-  dims <- as.numeric(unlist(strsplit(info[["0"]][["DATA"]][["0"]][["matrix"]][["dim"]], " x ")))
+  info <- rhdf5::h5dump(ofile, load=FALSE)
+  dims <-
+    as.numeric(unlist(strsplit(
+      info[["0"]][["DATA"]][["0"]][["matrix"]][["dim"]], " x ")))
   # get the full space of row and column ids
   all_rid <- cmapR::read.gctx.ids(ofile, dim="row")
   all_cid <- cmapR::read.gctx.ids(ofile, dim="col")
@@ -832,7 +841,8 @@ update.gctx <- function(x, ofile, rid=NULL, cid=NULL) {
   validate_character_ids <- function(ids, all_ids, which_dim) {
     out_of_range <- setdiff(ids, all_ids)
     if (length(out_of_range) > 0) {
-      stop(paste("the following", which_dim, "ids do not exist in the dataset\n",
+      stop(paste("the following", which_dim,
+                 "ids do not exist in the dataset\n",
                  paste(out_of_range, collapse="\n")))
     }
   }
@@ -1053,7 +1063,8 @@ write.gmt <- function(lst, fname) {
   for (i in seq_along(lst)) {
     el <- lst[[i]]
     ncolumns <- 2 + length(el$entry)
-    write(c(el$head, el$desc, el$entry), file=fname, sep="\t", append=T, ncolumns=ncolumns)
+    write(c(el$head, el$desc, el$entry), file=fname, sep="\t",
+          append=TRUE, ncolumns=ncolumns)
   }
 }
 
@@ -1108,6 +1119,6 @@ lxb2mat <- function(lxb_path, columns=c("RID", "RP1"),
 #' @seealso \code{\link{write.table}}
 #' @export
 write.tbl <- function(tbl, ofile, ...) {
-    utils::write.table(tbl, file = ofile, sep="\t", quote=F,
-      col.names=T, row.names=F, ...)
+    utils::write.table(tbl, file = ofile, sep="\t", quote=FALSE,
+      col.names=TRUE, row.names=FALSE, ...)
 }

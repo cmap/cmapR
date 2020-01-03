@@ -30,12 +30,13 @@
 #' 
 #' @family GCT utilities
 #' @export
-setGeneric("melt.gct", function(g, suffixes=NULL, remove_symmetries=F,
-                                keep_rdesc=T, keep_cdesc=T, ...) {
+setGeneric("melt.gct", function(g, suffixes=NULL, remove_symmetries=FALSE,
+                                keep_rdesc=TRUE, keep_cdesc=TRUE, ...) {
   standardGeneric("melt.gct")
 })
 setMethod("melt.gct", signature("GCT"),
-          function(g, suffixes, remove_symmetries=F, keep_rdesc=T, keep_cdesc=T, ...) {
+          function(g, suffixes, remove_symmetries=FALSE,
+                   keep_rdesc=TRUE, keep_cdesc=TRUE, ...) {
           # melt a gct object's matrix into a data.frame and merge row and column
           # annotations back in, using the provided suffixes
           # assumes rdesc and cdesc data.frames both have an 'id' field.
@@ -52,7 +53,7 @@ setMethod("melt.gct", signature("GCT"),
           message("melting GCT object...")
           mat <- g@mat
           if (remove_symmetries & isSymmetric(mat)) {
-            mat[upper.tri(mat, diag=F)] <- NA
+            mat[upper.tri(mat, diag=FALSE)] <- NA
           }
           mat <- data.table::data.table(mat)
           mat$rid <- g@rid
@@ -65,21 +66,23 @@ setMethod("melt.gct", signature("GCT"),
           if (keep_rdesc && keep_cdesc) {
             # merge back in both row and column descriptors
             data.table::setattr(d, "names", c("id", "id.y", "value"))
-            d <- merge(d, data.table::data.table(g@rdesc), by="id", all.x=T, ...)
+            d <- merge(d, data.table::data.table(g@rdesc), by="id",
+                       all.x=TRUE, ...)
             data.table::setnames(d, "id", "id.x")
             data.table::setnames(d, "id.y", "id")
-            d <- merge(d, data.table::data.table(g@cdesc), by="id", all.x=T, ...)
+            d <- merge(d, data.table::data.table(g@cdesc), by="id",
+                       all.x=TRUE, ...)
             data.table::setnames(d, "id", "id.y")
           } else if (keep_rdesc) {
             # keep only row descriptors
             rdesc <- data.table::data.table(g@rdesc)
             data.table::setnames(rdesc, "id", "id.x")
-            d <- merge(d, rdesc, by="id.x", all.x=T, ...)
+            d <- merge(d, rdesc, by="id.x", all.x=TRUE, ...)
           } else if (keep_cdesc) {
             # keep only column descriptors
             cdesc <- data.table::data.table(g@cdesc)
             data.table::setnames(cdesc, "id", "id.y")
-            d <- merge(d, cdesc, by="id.y", all.x=T, ...)
+            d <- merge(d, cdesc, by="id.y", all.x=TRUE, ...)
           }
           # use suffixes if provided
           if (!is.null(suffixes) & length(suffixes) == 2) {
@@ -116,7 +119,7 @@ is.wholenumber <- function(x, tol = .Machine$double.eps^0.5)  {
 #' check_colnames(c("pert_id", "pert_iname"), cdesc_char)            # TRUE
 #' check_colnames(c("pert_id", "foobar"), cdesc_char, throw_error=FALSE) # FALSE, suppress error
 #' @export
-check_colnames <- function(test_names, df, throw_error=T) {
+check_colnames <- function(test_names, df, throw_error=TRUE) {
   # check whether test_names are valid names in df
   # throw error if specified
   diffs <- setdiff(test_names, names(df))
@@ -125,10 +128,10 @@ check_colnames <- function(test_names, df, throw_error=T) {
       stop(paste("the following column names are not found in", deparse(substitute(df)), ":",
                  paste(diffs, collapse=" "), "\n"))
     } else {
-      return(F)
+      return(FALSE)
     }
   } else {
-    return(T)
+    return(TRUE)
   }
 }
 
@@ -238,7 +241,7 @@ setMethod("subset.gct", signature("GCT"),
 #' 
 #' @family GCT utilities
 #' @export
-setGeneric("merge.gct", function(g1, g2, dimension="row", matrix_only=F) {
+setGeneric("merge.gct", function(g1, g2, dimension="row", matrix_only=FALSE) {
   standardGeneric("merge.gct")
 })
 setMethod("merge.gct", signature("GCT", "GCT"),
@@ -248,7 +251,7 @@ setMethod("merge.gct", signature("GCT", "GCT"),
             df1 <- data.table::data.table(df1)
             df2 <- data.table::data.table(df2)
             data.frame(rbind(df1, df2[ !df2[[id_col]] %in% df1[[id_col]], ],
-                             use.names=T, fill=T))
+                             use.names=TRUE, fill=TRUE))
           }
           # given two gcts objects g1 and g2, merge them
           # on the specified dimension
@@ -267,7 +270,8 @@ setMethod("merge.gct", signature("GCT", "GCT"),
               # we're just appending rows so don't need to do anything
               # special with the rid or rdesc. just cat them
               rdesc <- data.frame(rbind(data.table::data.table(g1@rdesc),
-                                        data.table::data.table(g2@rdesc), fill=T))
+                                        data.table::data.table(g2@rdesc),
+                                        fill=TRUE))
               # update cdesc to include any new records
               cdesc <- add_new_records(g1@cdesc, g2@cdesc)
               idx <- match(colnames(mat), cdesc$id)
@@ -291,7 +295,8 @@ setMethod("merge.gct", signature("GCT", "GCT"),
               # we're just appending rows so don't need to do anything
               # special with the rid or rdesc. just cat them
               cdesc <- data.frame(rbind(data.table::data.table(g1@cdesc),
-                                        data.table::data.table(g2@cdesc), fill=T))
+                                        data.table::data.table(g2@cdesc),
+                                        fill=TRUE))
               # update rdesc to include any new records
               rdesc <- add_new_records(g1@rdesc, g2@rdesc)
               idx <- match(rownames(mat), rdesc$id)
@@ -332,8 +337,8 @@ setMethod("merge.gct", signature("GCT", "GCT"),
 #'
 #' @keywords internal
 #' @seealso data.table::merge
-merge_with_precedence <- function(x, y, by, allow.cartesian=T,
-                                  as_data_frame = T) {
+merge_with_precedence <- function(x, y, by, allow.cartesian=TRUE,
+                                  as_data_frame = TRUE) {
   trash <- check_colnames(by, x)
   trash <- check_colnames(by, y)
   # cast as data.tables
@@ -344,7 +349,7 @@ merge_with_precedence <- function(x, y, by, allow.cartesian=T,
   data.table::setattr(y, "rownames", NULL)
   common_cols <- intersect(names(x), names(y))
   y_keepcols <- unique(c(by, setdiff(names(y), common_cols)))
-  y <- y[, y_keepcols, with=F]
+  y <- y[, y_keepcols, with=FALSE]
   # if not all ids match, issue a warning
   if (!all(x[[by]] %in% y[[by]])) {
     warning("not all rows of x had a match in y. some columns may contain NA")
@@ -352,7 +357,7 @@ merge_with_precedence <- function(x, y, by, allow.cartesian=T,
   # merge keeping all the values in x, making sure that the
   # resulting data.table is sorted in the same order as the 
   # original object x
-  merged <- merge(x, y, by=by, allow.cartesian=allow.cartesian, all.x=T)
+  merged <- merge(x, y, by=by, allow.cartesian=allow.cartesian, all.x=TRUE)
   if (as_data_frame) {
     # cast back to a data.frame if requested
     merged <- data.frame(merged)
@@ -478,10 +483,10 @@ setMethod("transpose.gct", signature("GCT"), function(g) {
 #' 
 #' @family GCT utilities
 #' @export
-setGeneric("rank.gct", function(g, dim="col", decreasing=T) {
+setGeneric("rank.gct", function(g, dim="col", decreasing=TRUE) {
   standardGeneric("rank.gct")
 })
-setMethod("rank.gct", signature("GCT"), function(g, dim, decreasing=T) {
+setMethod("rank.gct", signature("GCT"), function(g, dim, decreasing=TRUE) {
   # check to make sure dim is allowed
   if (dim=="column") dim <- "col"
   if (!(dim %in% c("row","col"))){
@@ -719,13 +724,13 @@ extract.gct <- function(g, row_field, col_field,
   cdesc <- data.table::data.table(g@cdesc)
   # what are the common values
   common_vals <- intersect(rdesc[[row_field]], cdesc[[col_field]])
-  mask <- matrix(F, nrow=nrow(g), ncol=ncol(g))
+  mask <- matrix(FALSE, nrow=nrow(g), ncol=ncol(g))
   for (v in common_vals) {
     ridx <- which(rdesc[[row_field]] == v)
     cidx <- which(cdesc[[col_field]] == v)
-    mask[ridx, cidx] <- T
+    mask[ridx, cidx] <- TRUE
   }
-  idx <- which(mask, arr.ind=T)
+  idx <- which(mask, arr.ind=TRUE)
   vals <- g@mat[mask]
   # data.frame containing the extracted values
   # alongside their row and column annotations

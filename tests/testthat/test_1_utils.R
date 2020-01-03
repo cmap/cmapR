@@ -43,7 +43,10 @@ test_that("merge.gct works properly", {
   expect_false(identical(ds1@cid, ds2@cid))
   
   ## CHECK ROW MERGING ##
-  ds2@rid <- rownames(ds2@mat) <- ds2@rdesc$id <- paste("ds2", ds2@rid, sep=":")
+  ds2@rid <-
+    rownames(ds2@mat) <-
+    ds2@rdesc$id <-
+    paste("ds2", ds2@rid, sep=":")
   mrg <- merge.gct(ds1, ds2, dimension="row")
   
   # check the matrix
@@ -76,8 +79,14 @@ test_that("merge.gct works properly", {
   expect_identical(mrg@cdesc, ds1@cdesc)
   
   ## CHECK COLUMN MERGING ##
-  ds2@rid <- rownames(ds2@mat) <- ds2@rdesc$id <- gsub("ds2:", "", ds2@rid)
-  ds2@cid <- colnames(ds2@mat) <- ds2@cdesc$id <- paste("ds2", ds2@cid, sep=":")
+  ds2@rid <-
+    rownames(ds2@mat) <-
+    ds2@rdesc$id <-
+    gsub("ds2:", "", ds2@rid)
+  ds2@cid <-
+    colnames(ds2@mat) <-
+    ds2@cdesc$id <-
+    paste("ds2", ds2@cid, sep=":")
   mrg <- merge.gct(ds1, ds2, dimension="col")
   
   # check the matrix
@@ -178,7 +187,7 @@ test_that("rank.gct works properly", {
   # scores if we use spearman. all correlations should be -1
   expect_equal(unname(diag(cor(ds@mat, ranked_col@mat, method="spearman"))),
                rep(-1, ncol(ds@mat)))
-  ranked_col_inc <- rank.gct(ds, dim="column", decreasing=F)
+  ranked_col_inc <- rank.gct(ds, dim="column", decreasing=FALSE)
   # ranked increasing data should be completely correlated with
   # scores if we use spearman. all correlations should be -1
   expect_equal(unname(diag(cor(ds@mat, ranked_col_inc@mat, method="spearman"))),

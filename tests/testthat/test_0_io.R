@@ -33,9 +33,11 @@ test_that("GCT parsing ignores rid, cid flags with warning", {
 
 test_that("GCTX parsing correctly handles rid or cid that do not exist in dataset", {
   # handle the case when a subset of requested rid / cid are bogus
-  expect_warning(ds <- parse.gctx("test_n5x10.gctx",
-                                  rid = c("foo", "200814_at"),
-                                  cid = c("foo", "CPC001_HA1E_24H:BRD-A95445494-001-02-9:10")))
+  expect_warning(
+    ds <- parse.gctx("test_n5x10.gctx",
+                      rid = c("foo", "200814_at"),
+                      cid = c("foo",
+                              "CPC001_HA1E_24H:BRD-A95445494-001-02-9:10")))
   expect_equal(nrow(ds@mat), 1)
   expect_equal(ncol(ds@mat), 1)
   expect_true(is.data.frame(ds@cdesc))
@@ -65,7 +67,7 @@ test_that("Writing GCTX works when row or column descriptors have just one colum
   # set rdesc and cdesc to single-column data.frames
   ds@rdesc <- data.frame("id"=ds@rdesc[, 1])
   ds@cdesc <- data.frame("id"=ds@cdesc[, 1])
-  write.gctx(ds, "foo.gctx", appenddim = F)
+  write.gctx(ds, "foo.gctx", appenddim = FALSE)
   # remove the file
   file.remove("foo.gctx")
 })
@@ -75,7 +77,7 @@ test_that("Writing GCT works when row or column descriptors have just one column
   # set rdesc and cdesc to single-column data.frames
   ds@rdesc <- data.frame("id"=ds@rdesc[, 1])
   ds@cdesc <- data.frame("id"=ds@cdesc[, 1])
-  write.gct(ds, "foo.gct", appenddim = F)
+  write.gct(ds, "foo.gct", appenddim = FALSE)
   # remove the file
   file.remove("foo.gct")
 })
