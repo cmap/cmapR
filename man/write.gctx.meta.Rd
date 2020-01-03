@@ -14,6 +14,9 @@ write.gctx.meta(ofile, df, dimension = "row")
 \item{dimension}{the dimension to annotate
 (row or column)}
 }
+\value{
+silently returns NULL
+}
 \description{
 Write a \code{data.frame} of meta data to GCTX file
 }

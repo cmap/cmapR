@@ -12,6 +12,9 @@ check_dups(x, name = "")
 \item{name}{the name of the object to print
 in an error message if duplicates are found}
 }
+\value{
+silently returns NULL
+}
 \description{
 Check for duplicates in a vector
 }

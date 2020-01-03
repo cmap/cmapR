@@ -13,6 +13,9 @@ lxb2mat(lxb_path, columns = c("RID", "RP1"), newnames = c("barcode_id", "FI"))
 
 \item{newnames}{what to name these columns in the returned matrix}
 }
+\value{
+a matrix
+}
 \description{
 Read an LXB file and return a matrix
 }

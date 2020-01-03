@@ -11,6 +11,9 @@ write.gmt(lst, fname)
 
 \item{fname}{the desired file name}
 }
+\value{
+silently returns NULL
+}
 \description{
 Write a nested list to a GMT file
 }

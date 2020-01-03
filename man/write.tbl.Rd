@@ -13,6 +13,9 @@ write.tbl(tbl, ofile, ...)
 
 \item{...}{additional arguments passed on to \code{write.table}}
 }
+\value{
+silently returns NULL
+}
 \description{
 Write a \code{data.frame} to a tab-delimited text file
 }

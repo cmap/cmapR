@@ -11,6 +11,9 @@ write.grp(vals, fname)
 
 \item{fname}{the desired file name}
 }
+\value{
+silently returns NULL
+}
 \description{
 Write a vector to a GRP file
 }

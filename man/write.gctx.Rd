@@ -32,14 +32,16 @@ only the matrix data (and skip row, column annotations)}
 \item{max_chunk_kb}{for chunking, the maximum number of KB
 a given chunk will occupy}
 }
+\value{
+silently returns NULL
+}
 \description{
 Write a GCT object to disk in GCTX format
 }
 \examples{
-\dontrun{
-# assume ds is a GCT object
-write.gctx(ds, "my/desired/outpath/and/filename")
-}
+# note this will create a GCT file in your current directory
+write.gctx(ds, "dataset")
+
 }
 \seealso{
 Other GCTX parsing functions: 

@@ -13,6 +13,9 @@ subset.gct(g, rid = NULL, cid = NULL)
 
 \item{cid}{a vector of character ids or integer indices for COLUMNS}
 }
+\value{
+a GCT object
+}
 \description{
 Subset a gct object using the provided row and column ids
 }

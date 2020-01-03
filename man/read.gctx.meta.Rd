@@ -29,7 +29,8 @@ str(row_meta)
 col_meta <- read.gctx.meta(gct_file, dimension="column")
 str(col_meta)
 # now for only the first 10 ids
-col_meta_first10 <- read.gctx.meta(gct_file, dimension="column", ids=col_meta$id[1:10])
+col_meta_first10 <- read.gctx.meta(gct_file, dimension="column",
+ids=col_meta$id[1:10])
 str(col_meta_first10)
 
 }

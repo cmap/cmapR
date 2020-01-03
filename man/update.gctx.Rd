@@ -17,6 +17,9 @@ to update}
 \item{cid}{integer indices or character ids of the columns
 to update}
 }
+\value{
+silently returns NULL
+}
 \description{
 Update the matrix of an existing GCTX file
 }

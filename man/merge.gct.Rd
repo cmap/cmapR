@@ -17,6 +17,9 @@ merge.gct(g1, g2, dimension = "row", matrix_only = FALSE)
 data matrices from \code{g1} and \code{g2} and ignore their
 row and column meta data}
 }
+\value{
+a GCT object
+}
 \description{
 Merge two GCT objects together
 }

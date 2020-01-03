@@ -19,6 +19,9 @@ matrix dimensions to filename}
 
 \item{ver}{the GCT version to write. See \code{details}.}
 }
+\value{
+silently returns NULL
+}
 \description{
 Write a GCT object to disk in GCT format
 }
@@ -31,9 +34,9 @@ Since GCT is text format, the higher \code{precision}
   contains only the matrix data and no annotations.
 }
 \examples{
-\dontrun{
+# note this will create a GCT file in your current directory
 write.gct(ds, "dataset", precision=2)
-}
+
 }
 \seealso{
 Other GCTX parsing functions: 

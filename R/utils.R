@@ -154,6 +154,7 @@ subset_to_ids <- function(df, ids) {
 #' @param g a gct object
 #' @param rid a vector of character ids or integer indices for ROWS
 #' @param cid a vector of character ids or integer indices for COLUMNS
+#' @return a GCT object
 #' @examples
 #' # first 10 rows and columns by index
 #' (a <- subset.gct(ds, rid=1:10, cid=1:10))
@@ -232,6 +233,7 @@ setMethod("subset.gct", signature("GCT"),
 #' @param matrix_only boolean idicating whether to keep only the
 #'   data matrices from \code{g1} and \code{g2} and ignore their
 #'   row and column meta data
+#' @return a GCT object
 #' @examples
 #' # take the first 10 and last 10 rows of an object
 #' # and merge them back together
@@ -383,10 +385,14 @@ merge_with_precedence <- function(x, y, by, allow.cartesian=TRUE,
 #'   dimension
 #'   
 #' @examples 
-#' \dontrun{
-#'  g <- parse.gctx('/path/to/gct/file')
-#'  g <- annotate.gct(g, '/path/to/annot')
-#' }
+#' gct_path <- system.file("extdata", "modzs_n272x978.gctx", package="cmapR")
+#' # read the GCT file, getting the matrix only
+#' g <- parse.gctx(gct_path, matrix_only=TRUE)
+#' # separately, read the column annotations and then apply them using
+#' # annotate.gct
+#' cdesc <- read.gctx.meta(gct_path, dim="col")
+#' g <- annotate.gct(g, cdesc, dim="col", keyfield="id")
+#' 
 #' 
 #' @family GCT utilities
 #' @export
@@ -512,7 +518,7 @@ setMethod("rank.gct", signature("GCT"), function(g, dim, decreasing=TRUE) {
 #' @param x the vector
 #' @param name the name of the object to print
 #'   in an error message if duplicates are found
-#' @return NULL
+#' @return silently returns NULL
 #' @examples 
 #' check_dups(c("a", "b", "c", "a", "d"))
 #' @export
@@ -656,14 +662,12 @@ align_matrices <- function(m1, m2, ..., L=NULL, na.pad=TRUE, as.3D=TRUE) {
     return(matrices)
   } else {
     # initialize an empty 3D array
-    arr3d <- array(NA, dim=c(length(row_universe),
-                             length(col_universe),
-                             length(matrices)),
-                   # set the dimnames using the first matrix
-                   # b/c we assume they're the same for all
-                   # matrices
-                   dimnames=list(rownames(matrices[[1]]),
-                              colnames(matrices[[1]]),
+    arr3d <-
+      array(NA,
+            dim=c(length(row_universe), length(col_universe), length(matrices)),
+            # set the dimnames using the first matrix b/c we assume they're the
+            # same for all matrices
+            dimnames=list(rownames(matrices[[1]]), colnames(matrices[[1]]),
                               names(matrices)))
     # and fill with the aligned matrices
     for (i in seq_along(matrices)) {

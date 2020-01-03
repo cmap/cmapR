@@ -22,6 +22,9 @@ file.}
 \item{matrix_only}{boolean indicating whether to parse only
 the matrix (ignoring row and column annotations)}
 }
+\value{
+a GCT object
+}
 \description{
 Parse a GCTX file into the workspace as a GCT object
 }
