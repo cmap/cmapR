@@ -1,6 +1,7 @@
 #' Transform a GCT object in to a long form \code{\link{data.table}} (aka 'melt')
 #' 
-#' @description Utilizes the \code{\link{data.table::melt}} function to transform the
+#' @description Utilizes the \code{\link{melt.data.table}} function to
+#'   transform the
 #'   matrix into long form. Optionally can include the row and column
 #'   annotations in the transformed \code{\link{data.table}}.
 #'   
@@ -10,12 +11,14 @@
 #' @param keep_cdesc boolean indicating whether to keep the column
 #'   descriptors in the final result
 #' @param remove_symmetries boolean indicating whether to remove
-#'   the lower triangle of the matrix (only applies if \code{g@mat} is symmetric)
+#'   the lower triangle of the matrix (only applies if \code{g@mat}
+#'   is symmetric)
 #' @param suffixes the character suffixes to be applied if there are
 #'   collisions between the names of the row and column descriptors
 #' @param ... further arguments passed along to \code{data.table::merge}
 #'   
-#' @return a \code{\link{data.table}} object with the row and column ids and the matrix
+#' @return a \code{\link{data.table}} object with the row and column ids and
+#'   the matrix
 #'   values and (optinally) the row and column descriptors
 #'   
 #' @examples 
@@ -235,7 +238,7 @@ setMethod("subset.gct", signature("GCT"),
 #'
 #' @param g1 the first GCT object
 #' @param g2 the second GCT object
-#' @param dimension the dimension on which to merge (row or column)
+#' @param dim the dimension on which to merge (row or column)
 #' @param matrix_only boolean idicating whether to keep only the
 #'   data matrices from \code{g1} and \code{g2} and ignore their
 #'   row and column meta data
@@ -245,16 +248,16 @@ setMethod("subset.gct", signature("GCT"),
 #' # and merge them back together
 #' (a <- subset.gct(ds, rid=1:10))
 #' (b <- subset.gct(ds, rid=969:978))
-#' (merged <- merge.gct(a, b, dimension="row"))
+#' (merged <- merge.gct(a, b, dim="row"))
 #' 
 #' @family GCT utilities
 #' @export
-setGeneric("merge.gct", function(g1, g2, dimension="row", matrix_only=FALSE) {
+setGeneric("merge.gct", function(g1, g2, dim="row", matrix_only=FALSE) {
   standardGeneric("merge.gct")
 })
 #' @rdname merge.gct
 setMethod("merge.gct", signature("GCT", "GCT"),
-          function(g1, g2, dimension, matrix_only) {
+          function(g1, g2, dim, matrix_only) {
           # helper function to add new rows to a data.table
           add_new_records <- function(df1, df2, id_col="id") {
             df1 <- data.table::data.table(df1)
@@ -264,8 +267,8 @@ setMethod("merge.gct", signature("GCT", "GCT"),
           }
           # given two gcts objects g1 and g2, merge them
           # on the specified dimension
-          if (dimension == "column") dimension <- "col"
-          if (dimension == "row") {
+          if (dim == "column") dim <- "col"
+          if (dim == "row") {
             message("appending rows...")
             # need figure out the index for how to sort the columns of
             # g2@mat so that they are in sync with g1@mat
@@ -290,7 +293,7 @@ setMethod("merge.gct", signature("GCT", "GCT"),
               newg <- methods::new("GCT", mat=mat)
             }
           }
-          else if (dimension == "col") {
+          else if (dim == "col") {
             message("appending columns...")
             # need figure out the index for how to sort the rows of
             # g2@mat so that they are in sync with g1@mat
@@ -310,9 +313,9 @@ setMethod("merge.gct", signature("GCT", "GCT"),
               rdesc <- add_new_records(g1@rdesc, g2@rdesc)
               idx <- match(rownames(mat), rdesc$id)
               rdesc <- rdesc[idx, ]
-              newg <- new("GCT", mat=mat, rdesc=rdesc, cdesc=cdesc)
+              newg <- methods::new("GCT", mat=mat, rdesc=rdesc, cdesc=cdesc)
             } else {
-              newg <- new("GCT", mat=mat)
+              newg <- methods::new("GCT", mat=mat)
             }
           } else {
             stop("dimension must be either row or col")
@@ -334,7 +337,7 @@ setMethod("merge.gct", signature("GCT", "GCT"),
 #'   the returned object is a \code{\link{data.frame}} instead of a
 #'   \code{\link{data.table}}.
 #'   This ensures compatibility with GCT object conventions,
-#'   that is, the \code{\link{rdesc}} and \code{\link{cdesc}} slots must be strictly
+#'   that is, the \code{rdesc} and \code{cdesc} slots must be strictly
 #'   \code{\link{data.frame}} objects.
 #'   
 #' @return a \code{\link{data.frame}} or \code{\link{data.table}} object

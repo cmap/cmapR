@@ -31,5 +31,5 @@ The GCT class serves to represent annotated
 \code{\link{write.gctx}}, \code{\link{read.gctx.meta}},
 \code{\link{read.gctx.ids}}
 
-\link{http://clue.io/help} for more information on the GCT format
+visit \url{http://clue.io/help} for more information on the GCT format
 }

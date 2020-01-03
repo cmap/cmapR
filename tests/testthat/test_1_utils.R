@@ -47,7 +47,7 @@ test_that("merge.gct works properly", {
     rownames(ds2@mat) <-
     ds2@rdesc$id <-
     paste("ds2", ds2@rid, sep=":")
-  mrg <- merge.gct(ds1, ds2, dimension="row")
+  mrg <- merge.gct(ds1, ds2, dim="row")
   
   # check the matrix
   # should have sum of 2 matrix rows
@@ -87,7 +87,7 @@ test_that("merge.gct works properly", {
     colnames(ds2@mat) <-
     ds2@cdesc$id <-
     paste("ds2", ds2@cid, sep=":")
-  mrg <- merge.gct(ds1, ds2, dimension="col")
+  mrg <- merge.gct(ds1, ds2, dim="col")
   
   # check the matrix
   # should have sum of 2 matrix columns

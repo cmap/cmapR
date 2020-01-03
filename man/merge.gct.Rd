@@ -5,16 +5,16 @@
 \alias{merge.gct,GCT,GCT-method}
 \title{Merge two GCT objects together}
 \usage{
-merge.gct(g1, g2, dimension = "row", matrix_only = FALSE)
+merge.gct(g1, g2, dim = "row", matrix_only = FALSE)
 
-\S4method{merge.gct}{GCT,GCT}(g1, g2, dimension = "row", matrix_only = FALSE)
+\S4method{merge.gct}{GCT,GCT}(g1, g2, dim = "row", matrix_only = FALSE)
 }
 \arguments{
 \item{g1}{the first GCT object}
 
 \item{g2}{the second GCT object}
 
-\item{dimension}{the dimension on which to merge (row or column)}
+\item{dim}{the dimension on which to merge (row or column)}
 
 \item{matrix_only}{boolean idicating whether to keep only the
 data matrices from \code{g1} and \code{g2} and ignore their
@@ -31,7 +31,7 @@ Merge two GCT objects together
 # and merge them back together
 (a <- subset.gct(ds, rid=1:10))
 (b <- subset.gct(ds, rid=969:978))
-(merged <- merge.gct(a, b, dimension="row"))
+(merged <- merge.gct(a, b, dim="row"))
 
 }
 \seealso{

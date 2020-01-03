@@ -19,7 +19,7 @@
 #' @seealso \code{\link{parse.gctx}},
 #' \code{\link{write.gctx}}, \code{\link{read.gctx.meta}},
 #' \code{\link{read.gctx.ids}}
-#' @seealso \link{http://clue.io/help} for more information on the GCT format
+#' @seealso visit \url{http://clue.io/help} for more information on the GCT format
 methods::setClass("GCT",
          methods::representation(
              mat = "matrix",
@@ -162,7 +162,7 @@ fix.datatypes <- function(meta) {
 #' Parse row or column metadata from GCTX files
 #' 
 #' @param gctx_path the path to the GCTX file
-#' @param dimension which metadata to read (row or column)
+#' @param dim which metadata to read (row or column)
 #' @param ids a character vector of a subset of row/column ids
 #'   for which to read the metadata
 #'  
@@ -174,24 +174,24 @@ fix.datatypes <- function(meta) {
 #' row_meta <- read.gctx.meta(gct_file)
 #' str(row_meta)
 #' # column meta
-#' col_meta <- read.gctx.meta(gct_file, dimension="column")
+#' col_meta <- read.gctx.meta(gct_file, dim="column")
 #' str(col_meta)
 #' # now for only the first 10 ids
-#' col_meta_first10 <- read.gctx.meta(gct_file, dimension="column",
+#' col_meta_first10 <- read.gctx.meta(gct_file, dim="column",
 #' ids=col_meta$id[1:10])
 #' str(col_meta_first10)
 #' 
 #' @family GCTX parsing functions
 #' @export
-read.gctx.meta <- function(gctx_path, dimension="row", ids=NULL) {
+read.gctx.meta <- function(gctx_path, dim="row", ids=NULL) {
   if (!file.exists(gctx_path)) {
     stop(paste(gctx_path, "does not exist"))
   }
-  if (dimension=="column") dimension <- "col"
-  if (!(dimension %in% c("row", "col"))) {
-    stop("dimension can be either row or col")
+  if (dim=="column") dim <- "col"
+  if (!(dim %in% c("row", "col"))) {
+    stop("dim can be either row or col")
   }
-  if (dimension == "row") {
+  if (dim == "row") {
     name <- "0/META/ROW"
   } else {
     name <- "0/META/COL"
@@ -226,7 +226,7 @@ read.gctx.meta <- function(gctx_path, dimension="row", ids=NULL) {
 #' Read GCTX row or column ids
 #' 
 #' @param gctx_path path to the GCTX file
-#' @param dimension which ids to read (row or column)
+#' @param dim which ids to read (row or column)
 #' 
 #' @return a character vector of row or column ids from the provided file
 #' 
@@ -236,20 +236,20 @@ read.gctx.meta <- function(gctx_path, dimension="row", ids=NULL) {
 #' rid <- read.gctx.ids(gct_file)
 #' head(rid)
 #' # column ids
-#' cid <- read.gctx.ids(gct_file, dimension="column")
+#' cid <- read.gctx.ids(gct_file, dim="column")
 #' head(cid)
 #' 
 #' @family GCTX parsing functions
 #' @export
-read.gctx.ids <- function(gctx_path, dimension="row") {
+read.gctx.ids <- function(gctx_path, dim="row") {
   if (!file.exists(gctx_path)) {
     stop(paste(gctx_path, "does not exist"))
   }
-  if (dimension=="column") dimension <- "col"
-  if (!(dimension %in% c("row", "col"))) {
+  if (dim == "column") dim <- "col"
+  if (!(dim %in% c("row", "col"))) {
     stop("dimension can be either row or col")
   }
-  if (dimension == "row") {
+  if (dim == "row") {
     name <- "0/META/ROW/id"
   } else {
     name <- "0/META/COL/id"
@@ -476,8 +476,8 @@ methods::setMethod("initialize",
                 if ( length(cid) == 1 && grepl(".grp$", cid) )
                   cid <- parse.grp(cid)
                 # get all the row and column ids
-                all_rid <- read.gctx.ids(src, dimension="row")
-                all_cid <- read.gctx.ids(src, dimension="col")
+                all_rid <- read.gctx.ids(src, dim="row")
+                all_cid <- read.gctx.ids(src, dim="col")
                 # if rid or cid specified, read only those rows/columns
                 # if already numeric, use as is
                 # else convert to numeric indices
@@ -494,9 +494,9 @@ methods::setMethod("initialize",
                 colnames(.Object@mat) <- processed_cids$ids
                 # get the meta data
                 if (!matrix_only) {
-                  .Object@rdesc <- read.gctx.meta(src, dimension="row",
+                  .Object@rdesc <- read.gctx.meta(src, dim="row",
                                                   ids=processed_rids$ids)
-                  .Object@cdesc <- read.gctx.meta(src, dimension="col",
+                  .Object@cdesc <- read.gctx.meta(src, dim="col",
                                                   ids=processed_cids$ids)
                 }
                 else {
@@ -987,7 +987,7 @@ methods::setMethod("get_gct_meta", "GCT", function(g, dim) {
 #' values <- parse.grp(grp_path)
 #' str(values)
 #' @family CMap parsing functions
-#' @seealso \link{http://clue.io/help} for details on the GRP file format
+#' @seealso Visit \url{http://clue.io/help} for details on the GRP file format
 #' @export
 parse.grp <- function(fname) {
   grp <- scan(fname, what = "", quote = NULL, quiet = TRUE, sep="\n")
@@ -1008,7 +1008,7 @@ parse.grp <- function(fname) {
 #' }
 #' 
 #' @family CMap parsing functions
-#' @seealso \link{http://clue.io/help} for details on the GRP file format
+#' @seealso Visit \url{http://clue.io/help} for details on the GRP file format
 #' @export
 write.grp <- function(vals, fname) {
   if (is.list(vals)) vals <- unlist(vals)
@@ -1037,7 +1037,7 @@ write.grp <- function(vals, fname) {
 #' str(gmx)
 #' 
 #' @family CMap parsing functions
-#' @seealso \link{http://clue.io/help} for details on the GMX file format
+#' @seealso Visit \url{http://clue.io/help} for details on the GMX file format
 #' @export
 parse.gmx <- function(fname) {
     tmp <- utils::read.table(fname, sep = "\t", 
@@ -1079,7 +1079,7 @@ parse.gmx <- function(fname) {
 #' str(gmt)
 #' 
 #' @family CMap parsing functions
-#' @seealso \link{http://clue.io/help} for details on the GMT file format
+#' @seealso Visit \url{http://clue.io/help} for details on the GMT file format
 #' @export
 parse.gmt <- function(fname) {
     gmt.lines <- scan(fname, what = "", sep = "\n",
@@ -1121,7 +1121,7 @@ parse.gmt <- function(fname) {
 #' }
 #' 
 #' @family CMap parsing functions
-#' @seealso \link{http://clue.io/help} for details on the GMT file format
+#' @seealso Visit \url{http://clue.io/help} for details on the GMT file format
 #' @export
 write.gmt <- function(lst, fname) {
   # assumes that each element of the list will have the fields

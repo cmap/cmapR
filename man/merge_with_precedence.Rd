@@ -22,7 +22,7 @@ over and over again.}
 the returned object is a \code{\link{data.frame}} instead of a
 \code{\link{data.table}}.
 This ensures compatibility with GCT object conventions,
-that is, the \code{\link{rdesc}} and \code{\link{cdesc}} slots must be strictly
+that is, the \code{rdesc} and \code{cdesc} slots must be strictly
 \code{\link{data.frame}} objects.}
 }
 \value{

@@ -31,7 +31,7 @@ str(gmx)
 
 }
 \seealso{
-\link{http://clue.io/help} for details on the GMX file format
+Visit \url{http://clue.io/help} for details on the GMX file format
 
 Other CMap parsing functions: 
 \code{\link{lxb2mat}()},

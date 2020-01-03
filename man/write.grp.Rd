@@ -24,7 +24,7 @@ write.grp(letters, "letter.grp")
 
 }
 \seealso{
-\link{http://clue.io/help} for details on the GRP file format
+Visit \url{http://clue.io/help} for details on the GRP file format
 
 Other CMap parsing functions: 
 \code{\link{lxb2mat}()},

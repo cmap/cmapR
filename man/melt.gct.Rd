@@ -30,7 +30,8 @@ melt.gct(
 collisions between the names of the row and column descriptors}
 
 \item{remove_symmetries}{boolean indicating whether to remove
-the lower triangle of the matrix (only applies if \code{g@mat} is symmetric)}
+the lower triangle of the matrix (only applies if \code{g@mat}
+is symmetric)}
 
 \item{keep_rdesc}{boolean indicating whether to keep the row
 descriptors in the final result}
@@ -41,11 +42,13 @@ descriptors in the final result}
 \item{...}{further arguments passed along to \code{data.table::merge}}
 }
 \value{
-a \code{\link{data.table}} object with the row and column ids and the matrix
+a \code{\link{data.table}} object with the row and column ids and
+  the matrix
   values and (optinally) the row and column descriptors
 }
 \description{
-Utilizes the \code{\link{data.table::melt}} function to transform the
+Utilizes the \code{\link{melt.data.table}} function to
+  transform the
   matrix into long form. Optionally can include the row and column
   annotations in the transformed \code{\link{data.table}}.
 }
