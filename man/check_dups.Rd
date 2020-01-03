@@ -19,5 +19,9 @@ silently returns NULL
 Check for duplicates in a vector
 }
 \examples{
-check_dups(c("a", "b", "c", "a", "d"))
+# this will throw an erorr, let's catch it
+tryCatch(
+  check_dups(c("a", "b", "c", "a", "d")),
+  error=function(e) print(e)
+  )
 }

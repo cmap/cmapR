@@ -25,8 +25,10 @@ Convert a GCT object's matrix to ranks
 \examples{
 (ranked <- rank.gct(ds, dim="column"))
 # scatter rank vs. score for a few columns
-# use `mat` function to access matrix of GCT objects
-plot(mat(ds)[, 1:3], mat(ranked)[, 1:3],
+# use \code{get_gct_matrix} function to access matrix of GCT objects
+mat <- get_gct_matrix(ds)
+mat_ranked <- get_gct_matrix(ranked)
+plot(mat[, 1:3], mat_ranked[, 1:3],
   xlab="score", ylab="rank")
 
 }
