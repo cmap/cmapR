@@ -66,7 +66,8 @@ setMethod("melt.gct", signature("GCT"),
           d$id.x <- as.character(d$id.x)
           d$id.y <- as.character(d$id.y)
           # standard data.frame subset here to comply with testthat
-          d <- subset(d, !is.na(value))
+          # d <- subset(d, !is.na(value))
+          d <- d[!is.na(d$value), ]
           if (keep_rdesc && keep_cdesc) {
             # merge back in both row and column descriptors
             data.table::setattr(d, "names", c("id", "id.y", "value"))
@@ -754,7 +755,7 @@ extract.gct <- function(g, row_field, col_field,
   cdesc <- data.table::data.table(g@cdesc)
   # what are the common values
   common_vals <- intersect(rdesc[[row_field]], cdesc[[col_field]])
-  mask <- matrix(FALSE, nrow=nrow(g), ncol=ncol(g))
+  mask <- matrix(FALSE, nrow=nrow(g@mat), ncol=ncol(g@mat))
   for (v in common_vals) {
     ridx <- which(rdesc[[row_field]] == v)
     cidx <- which(cdesc[[col_field]] == v)

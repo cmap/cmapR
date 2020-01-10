@@ -103,16 +103,16 @@ test_that("fix.datatypes correctly handles variety of data types", {
   expect_true(is.numeric(fixed$sci_note))
 })
 
-test_that("various built-in functions have been correctly adatped to GCT", {
-  # ds <- cmapR::ds
-  expect_equal(nrow(ds), nrow(ds@mat))
-  expect_equal(ncol(ds), ncol(ds@mat))
-  expect_equal(dim(ds), dim(ds@mat))
-  expect_equal(range(ds), range(ds@mat))
-  expect_equal(min(ds), min(ds@mat))
-  expect_equal(max(ds), max(ds@mat))
-  expect_equal(diag(ds), diag(ds@mat))
-})
+# test_that("various built-in functions have been correctly adatped to GCT", {
+#   # ds <- cmapR::ds
+#   expect_equal(nrow(ds), nrow(ds@mat))
+#   expect_equal(ncol(ds), ncol(ds@mat))
+#   expect_equal(dim(ds), dim(ds@mat))
+#   expect_equal(range(ds), range(ds@mat))
+#   expect_equal(min(ds), min(ds@mat))
+#   expect_equal(max(ds), max(ds@mat))
+#   expect_equal(diag(ds), diag(ds@mat))
+# })
 
 test_that("update_gctx works correctly", {
   # make a copy of the example dataset

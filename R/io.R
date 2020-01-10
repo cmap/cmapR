@@ -64,36 +64,41 @@ methods::setValidity("GCT",
   }
 )
 
-suppressMessages({
-  # set method for displaying a GCT object
-  # just use the 'str' function to show its structure
-  setMethod("show", methods::signature("GCT"), function(object) {
-    utils::str(object)
-  })
-  # other common functions adapted for GCT
-  methods::setMethod("ncol", methods::signature("GCT"), function(x) {
-    ncol(x@mat)
-  })
-  methods::setMethod("nrow", methods::signature("GCT"), function(x) {
-    nrow(x@mat)
-  })
-  methods::setMethod("dim", methods::signature("GCT"), function(x) {
-    dim(x@mat)
-  })
-  methods::setMethod("range", methods::signature("GCT"),
-                     function(x, na.rm=FALSE, finite=FALSE) {
-    range(x@mat, na.rm=na.rm, finite=finite)
-  })
-  methods::setMethod("max", methods::signature("GCT"), function(x, na.rm=F) {
-    max(x@mat, na.rm=na.rm)
-  })
-  methods::setMethod("min", methods::signature("GCT"), function(x, na.rm=F) {
-    min(x@mat, na.rm=na.rm)
-  })
-  methods::setMethod("diag", methods::signature("GCT"), function(x) {
-    diag(x@mat)
-  })
+
+# set method for displaying a GCT object
+# just use the 'str' function to show its structure
+setMethod("show", methods::signature("GCT"), function(object) {
+  utils::str(object)
 })
+
+# methods::setMethod("ncol", methods::signature("GCT"), function(x) {
+#   ncol(x@mat)
+# })
+# methods::setMethod("nrow", methods::signature("GCT"), function(x) {
+#   nrow(x@mat)
+# })
+# 
+# #' @rdname dim
+# #' @method dim GCT 
+# #' @S3method dim GCT
+# #' @export
+# dim.GCT <- function(x) dim(x@mat)
+# methods::setMethod("dim", methods::signature("GCT"), dim.GCT)
+# 
+# methods::setMethod("range", methods::signature("GCT"),
+#                    function(x, na.rm=FALSE, finite=FALSE) {
+#   range(x@mat, na.rm=na.rm, finite=finite)
+# })
+# methods::setMethod("max", methods::signature("GCT"), function(x, na.rm=F) {
+#   max(x@mat, na.rm=na.rm)
+# })
+# methods::setMethod("min", methods::signature("GCT"), function(x, na.rm=F) {
+#   min(x@mat, na.rm=na.rm)
+# })
+# methods::setMethod("diag", methods::signature("GCT"), function(x) {
+#   diag(x@mat)
+# })
+
 
 
 #### define some helper methods for parsing gctx files ###
@@ -748,8 +753,8 @@ write.gctx <- function(ds, ofile, appenddim=TRUE, compression_level=0,
                              "integer" = 32)
   elem_per_kb <- max_chunk_kb * 8 / bits_per_element
   # assume matrix is of dimensions row_dim x col_dim 
-  row_dim <- nrow(ds)
-  col_dim <- ncol(ds)
+  row_dim <- nrow(ds@mat)
+  col_dim <- ncol(ds@mat)
   row_chunk_size <- min(row_dim, 1000)
   # column chunk, such that row * col <= max_chunk_kb
   col_chunk_size <- min(((max_chunk_kb * elem_per_kb) %/% row_chunk_size),
