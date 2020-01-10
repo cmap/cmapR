@@ -29,10 +29,18 @@ library(cmapR)
 
 # GCT objects in R
 
-The main class of objects in `cmapR` is the `GCT` class. The `GCT` object contains a data `matrix` and (optionally) row and column annotations as `data.frame` objects. We can get more information about the class by viewing its help documentation.
+The main class of objects in `cmapR` is the `GCT` class. The `GCT` object contains a data `matrix` and (optionally) row and column annotations as `data.frame` objects. cmapR has comes with an example GCT object called `ds` (short for dataset). We can view its structure by simply typing its name.
 ```{r}
-?`GCT-class`
+ds
 ```
+`GCT` objects contain the following components, or `slots`.
+
+* `mat` - the data matrix
+* `rdesc` - a `data.frame` of row annotations, with one row per matrix row
+* `cdesc` - a `data.frame` of column annotations, with one row per matrix column
+* `rid` - a character vector of unique row identifiers
+* `cid` - a character vector of unique column identifiers
+* `src` - a character string indicating the source (usually a file path) of the data
 
 
 # Parsing GCTX files
@@ -55,14 +63,67 @@ You can view the structure of this newly-created GCT object just by typing its n
 my_ds
 ```
 
+And get the dimensions of the matrix as you would any other matrix.
+```{r}
+dim(my_ds@mat)
+```
+This small dataset has 50 rows and 25 columns.
 
 ## Parsing a susbset of the file
 
 **Note:** only GCTX files (not GCT) support parsing subsets.
 
-When working with large GCTX files, it is usually not possible to read the entire file into memory all at once. In these cases, it's helpful to identify a subset of the data that is of particular interest and read only those rows or columns. In this example, we'll use the level 5 signature metadata to find all the signatures (columns) pertaining to the compound *vorinostat*.
+When working with large GCTX files, it is usually not possible to read the entire file into memory all at once. In these cases, it's helpful to read subsets of the data. These subsets can be defined by numeric row or column index, as shown below.
+```{r}
+# read just the first 10 columns, using numeric indices
+my_ds_10_columns <- parse.gctx(ds_path, cid=1:10)
+dim(my_ds_10_columns@mat)
+```
+As expected, we see that we've now got a 10-column dataset.
 
+More commonly, we'll want to identify a subset of the data that is of particular interest and read only those rows and/or columns. In either case, we'll use the `rid` and/or `cid` arguments to `parse.gctx` to extract only the data we want. In this example, we'll use the GCTX file's embedded column annotations to identify the columns corresponding to the compound *vemurafenib* and then read only those columns. We can extract these annotations using the `read.gctx.meta` function.
+```{r}
+# read the column metadata
+col_meta <- read.gctx.meta(ds_path, dim="col")
 
+# figure out which signatures correspond to vorinostat by searching the 'pert_iname' column
+idx <- which(col_meta$pert_iname=="vemurafenib")
+
+# read only those columns from the GCTX file by using the 'cid' parameter
+vemurafenib_ds <- parse.gctx(ds_path, cid=idx)
+```
+
+In the example above we used numeric column indices, but the `rid` and `cid` arguments also accept character vectors of ids. The following is equally valid.
+```{r}
+# get a vector of character ids, using the id column in col_meta
+col_ids <- col_meta$id[idx]
+vemurafenib_ds2 <- parse.gctx(ds_path, cid=col_ids)
+identical(vemurafenib_ds, vemurafenib_ds2)
+```
+
+## Creating a GCT object from existing workspace objects
+
+It's also possible to create a `GCT` object from existing objects in your R workspace. You will minimally need to have a matrix object, but can also optionally include `data.frame`s of row and column annotations. This is done using the `new` constructor function.
+```{r}
+# initialize a matrix object
+# note that you either must assign values to the rownames and colnames
+# of the matrix, or pass them,
+# as the 'rid' and 'cid' arguments to GCT"
+mat <- matrix(stats::rnorm(100), ncol=10)
+rownames(mat) <- letters[1:10]
+colnames(mat) <- LETTERS[1:10]
+(my_new_ds <- new("GCT", mat=mat))
+```
+
+```{r}
+# we can also include the row/column annotations as data.frames
+# note these are just arbitrary annotations used to illustrate the function call
+rdesc <- data.frame(id=letters[1:10], type=rep(c(1, 2), each=5))
+cdesc <- data.frame(id=LETTERS[1:10], type=rep(c(3, 4), each=5))
+(my_new_ds <- new("GCT", mat=mat, rdesc=rdesc, cdesc=cdesc))
+```
+
+## Adding annotations to a GCT object
 
 # Session Info
 ```{r}
