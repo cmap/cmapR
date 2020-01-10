@@ -1,0 +1,32 @@
+---
+title: "cmapR Tutorial"
+author: "Ted Natoli"
+date: "1/10/2020"
+output: html_document
+  toc: true
+  toc_float: true
+---
+
+# Introduction
+
+This notebook will walk through some of the basic functionality in the cmapR package, which is largely centered around working with matrix data in [GCT and GCTX format](https://doi.org/10.1093/bioinformatics/bty784), commonly used by the [Connectivity Map (CMap) project](https://clue.io). We'll be using data from one of CMap's GEO series, [GSE70138](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE70138), but the steps below are applicable to any GCT or GCTX file.
+
+
+# Installation
+
+The cmapR package can be installed from Bioconductor by running the following commands in an R session.
+
+```{r}
+# TODO: fill in once package has been accepted on bioconductor
+```
+
+cmapR source code can be also obtained from [github](https://github.com/cmap/cmapR). 
+
+
+
+# Session Info
+```{r}
+sessionInfo()
+```
+
+
