@@ -123,7 +123,60 @@ cdesc <- data.frame(id=LETTERS[1:10], type=rep(c(3, 4), each=5))
 (my_new_ds <- new("GCT", mat=mat, rdesc=rdesc, cdesc=cdesc))
 ```
 
+
 ## Adding annotations to a GCT object
+
+When working with `GCT` objects, it's often convenient to have the row and column annotations embedded as the `rdesc` and `cdesc` slots, respectively. If these metadata are stored separatly from the GCTX file itself, you can read them in separately and then apply them to the `GCT` object using the `annotate.gct` function. Let's parse the dataset again, only this time reading only the matrix. We'll then apply the column annotations we read in previously.
+```{r}
+# we'll use the matrix_only argument to extract just the matrix
+(my_ds_no_meta <- parse.gctx(ds_path, matrix_only = TRUE))
+```
+Note in this case that cmapR still populates 1-column `data.frames` containing the row and column ids, but the rest of the annotations have been omitted.
+
+Now we'll apply the column annotations using `annotate.gct`.
+```{r}
+# note we need to specifiy which dimension to annotate (dim)
+# and which column in the annotations corresponds to the column
+# ids in the matrix (keyfield)
+(my_ds_no_meta <- annotate.gct(my_ds_no_meta, col_meta, dim="col",
+                               keyfield="id"))
+```
+Note how now the `cdesc` slot is populated after annotating.
+
+
+## Slicing a GCT object
+
+Just as it's possible to read a subset of rows or columns from a GCTX file, it is also possible to extract a subset of rows or columns from a `GCT` object in memory. This is done with the `subset_gct` function. Just like `parse.gctx`, this function uses `rid` and `cid` parameters to determine which rows and columns to extract. Let's extract the *vemurafenib* columns from the `my_ds` object in memory.
+```{r}
+# in memory slice using the cid parameter
+vorinostat_ds3 <- subset_gct(my_ds,
+                             cid=which(my_ds@cdesc$pert_iname=="vemurafenib"))
+identical(vorinostat_ds, vorinostat_ds3)
+```
+
+
+## Melting GCT objects
+
+It's often useful to have data stored in long form `data.frame` objects, especially for compatibility with plotting libraries like [`ggplot2`](http://docs.ggplot2.org/current/). It's possible to convert a `GCT` object into this long form by using the `melt.gct` function, which relies on the `melt` function in the [`data.table`](https://cran.r-project.org/web/packages/data.table/) package.
+```{r}
+# melt to long form
+vorinostat_ds3_melted <- melt.gct(vorinostat_ds3)
+```
+
+```{r}
+# plot the matrix values grouped by gene
+library(ggplot2)
+ggplot(vorinostat_ds3_melted, aes(x=pr_gene_symbol, y=value)) +
+  geom_boxplot() +
+  theme(axis.text.x = element_text(angle=45, hjust=1, vjust=1))
+```
+
+
+## Merging two GCT objects
+
+You can combine two independent `GCT` objects using the `merge.gct` function. Note that it is important to specify which dimension (row or column) you wish to merge on and that the two `GCT` objects in question share one common dimension.
+
+
 
 # Session Info
 ```{r}
