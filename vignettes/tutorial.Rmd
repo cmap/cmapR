@@ -3,24 +3,64 @@ title: "cmapR Tutorial"
 author: "Ted Natoli"
 date: "1/10/2020"
 output: html_document
-  toc: true
-  toc_float: true
 ---
 
 # Introduction
 
-This notebook will walk through some of the basic functionality in the cmapR package, which is largely centered around working with matrix data in [GCT and GCTX format](https://doi.org/10.1093/bioinformatics/bty784), commonly used by the [Connectivity Map (CMap) project](https://clue.io). We'll be using data from one of CMap's GEO series, [GSE70138](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE70138), but the steps below are applicable to any GCT or GCTX file.
+This notebook will walk through some of the basic functionality in the cmapR package, which is largely centered around working with matrix data in [GCT and GCTX format](https://doi.org/10.1093/bioinformatics/bty784), commonly used by the [Connectivity Map (CMap) project](https://clue.io). 
 
 
 # Installation
 
 The cmapR package can be installed from Bioconductor by running the following commands in an R session.
-
 ```{r}
 # TODO: fill in once package has been accepted on bioconductor
 ```
-
 cmapR source code can be also obtained from [github](https://github.com/cmap/cmapR). 
+
+
+# Loading the cmapR package
+
+cmapR can be loaded within an R session or script just like any other package.
+```{r}
+library(cmapR)
+```
+
+
+# GCT objects in R
+
+The main class of objects in `cmapR` is the `GCT` class. The `GCT` object contains a data `matrix` and (optionally) row and column annotations as `data.frame` objects. We can get more information about the class by viewing its help documentation.
+```{r}
+?`GCT-class`
+```
+
+
+# Parsing GCTX files
+
+You can parse both GCT and GCTX files using the `parse.gctx` method. This method will read the corresponding GCT or GCTX file and return an object of class `GCT` into your R session.
+
+## Parsing the entire file
+
+If the file is small enough to fit in memory, you can parse the entire file at once.
+```{r}
+# create a variable to store the path to the GCTX file
+# here we'll use a file that's internal to the cmapR package, but
+# in practice this could be any valid path to a GCT or GCTX file
+ds_path <- system.file("extdata", "modzs_n25x50.gctx", package="cmapR")
+my_ds <- parse.gctx(ds_path)
+```
+
+You can view the structure of this newly-created GCT object just by typing its name.
+```{r}
+my_ds
+```
+
+
+## Parsing a susbset of the file
+
+**Note:** only GCTX files (not GCT) support parsing subsets.
+
+When working with large GCTX files, it is usually not possible to read the entire file into memory all at once. In these cases, it's helpful to identify a subset of the data that is of particular interest and read only those rows or columns. In this example, we'll use the level 5 signature metadata to find all the signatures (columns) pertaining to the compound *vorinostat*.
 
 
 
