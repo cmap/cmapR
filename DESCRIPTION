@@ -6,7 +6,7 @@ Date: 2018-01-30
 Author: Ted Natoli <tnatoli@broadinstitute.org>
 Maintainer: Ted Natoli <ted.e.natoli@gmail.com>
 Description: Parse, manipulate, and write common CMap data objects.
-License: file LICENSE.txt
+License: file LICENSE
 Depends: R (>= 3.6.0)
 Imports:
   methods,
