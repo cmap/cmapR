@@ -3,8 +3,13 @@ title: "cmapR Tutorial"
 author: "Ted Natoli"
 date: "1/10/2020"
 output:
-  html_document:
+  rmarkdown::html_vignette:
     toc: true
+vignette: >
+  %\VignetteIndexEntry{cmapR Tutorial}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}    
+
 ---
 
 # Introduction
@@ -64,12 +69,7 @@ You can view the structure of this newly-created GCT object just by typing its n
 ```{r}
 my_ds
 ```
-
-And get the dimensions of the matrix as you would any other matrix.
-```{r}
-dim(my_ds@mat)
-```
-This small dataset has 50 rows and 25 columns.
+As you can see from looking at the `@mat` slot, this small dataset has 50 rows and 25 columns.
 
 ### Parsing a susbset of the file
 
@@ -78,8 +78,7 @@ This small dataset has 50 rows and 25 columns.
 When working with large GCTX files, it is usually not possible to read the entire file into memory all at once. In these cases, it's helpful to read subsets of the data. These subsets can be defined by numeric row or column index, as shown below.
 ```{r}
 # read just the first 10 columns, using numeric indices
-my_ds_10_columns <- parse.gctx(ds_path, cid=1:10)
-dim(my_ds_10_columns@mat)
+(my_ds_10_columns <- parse.gctx(ds_path, cid=1:10))
 ```
 As expected, we see that we've now got a 10-column dataset.
 
@@ -152,7 +151,7 @@ Just as it's possible to read a subset of rows or columns from a GCTX file, it i
 ```{r}
 # in memory slice using the cid parameter
 vemurafenib_ds3 <- subset_gct(my_ds,
-                             cid=which(my_ds@cdesc$pert_iname=="vemurafenib"))
+                             cid=which(col_meta$pert_iname=="vemurafenib"))
 identical(vemurafenib_ds, vemurafenib_ds3)
 ```
 
@@ -217,10 +216,11 @@ head(col_max)
 my_ds_rank_by_column <- rank.gct(my_ds, dim="col")
 
 # plot z-score vs rank for the first 25 genes (rows)
-plot(my_ds_rank_by_column@mat[1:25, ],
-     my_ds@mat[1:25, ],
-     xlab="differential expression score",
-     ylab="rank",
+ranked_mat <- get_gct_matrix(my_ds_rank_by_column)
+plot(ranked_mat[1:25, ],
+     mat[1:25, ],
+     xlab="rank",
+     ylab="differential expression score",
      main="score vs. rank")
 ```
 
