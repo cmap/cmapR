@@ -36,9 +36,9 @@ Merge two GCT objects together
 }
 \seealso{
 Other GCT utilities: 
-\code{\link{annotate.gct}()},
-\code{\link{melt.gct}()},
-\code{\link{rank.gct}()},
+\code{\link{annotate_gct}()},
+\code{\link{melt_gct}()},
+\code{\link{rank_gct}()},
 \code{\link{subset_gct}()}
 }
 \concept{GCT utilities}

@@ -27,10 +27,10 @@ str(lxb_data)
 }
 \seealso{
 Other CMap parsing functions: 
-\code{\link{parse.gmt}()},
-\code{\link{parse.gmx}()},
-\code{\link{parse.grp}()},
-\code{\link{write.gmt}()},
-\code{\link{write.grp}()}
+\code{\link{parse_gmt}()},
+\code{\link{parse_gmx}()},
+\code{\link{parse_grp}()},
+\code{\link{write_gmt}()},
+\code{\link{write_grp}()}
 }
 \concept{CMap parsing functions}

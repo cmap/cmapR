@@ -37,9 +37,9 @@ identical(a, b) # TRUE
 }
 \seealso{
 Other GCT utilities: 
-\code{\link{annotate.gct}()},
-\code{\link{melt.gct}()},
+\code{\link{annotate_gct}()},
+\code{\link{melt_gct}()},
 \code{\link{merge_gct}()},
-\code{\link{rank.gct}()}
+\code{\link{rank_gct}()}
 }
 \concept{GCT utilities}

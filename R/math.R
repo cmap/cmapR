@@ -16,13 +16,13 @@
 #' 
 #' @examples 
 #' (x <- rnorm(25))
-#' (robust.zscore(x))
+#' (robust_zscore(x))
 #' 
 #' # with min_mad
-#' (robust.zscore(x, min_mad=1e-4))
+#' (robust_zscore(x, min_mad=1e-4))
 #' 
 #' @export
-robust.zscore <- function(x, min_mad=1e-6, ...) {
+robust_zscore <- function(x, min_mad=1e-6, ...) {
   med <- stats::median(x, ...)        # median
   abs_dev <- abs(x - med) # absolute deviation
   mad <- stats::median(abs_dev, ...)  # median absolute deviation

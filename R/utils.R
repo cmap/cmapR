@@ -1,4 +1,5 @@
-#' Transform a GCT object in to a long form \code{\link{data.table}} (aka 'melt')
+#' Transform a GCT object in to a long form \code{\link{data.table}}
+#' (aka 'melt')
 #' 
 #' @description Utilizes the \code{\link{melt.data.table}} function to
 #'   transform the
@@ -23,28 +24,30 @@
 #'   
 #' @examples 
 #' # simple melt, keeping both row and column meta
-#' head(melt.gct(ds))
+#' head(melt_gct(ds))
 #' 
 #' # update row/colum suffixes to indicate rows are genes, columns experiments
-#' head(melt.gct(ds, suffixes = c("_gene", "_experiment")))
+#' head(melt_gct(ds, suffixes = c("_gene", "_experiment")))
 #' 
 #' # ignore row/column meta
-#' head(melt.gct(ds, keep_rdesc = FALSE, keep_cdesc = FALSE))
+#' head(melt_gct(ds, keep_rdesc = FALSE, keep_cdesc = FALSE))
 #' 
 #' @family GCT utilities
 #' @export
-setGeneric("melt.gct", function(g, suffixes=NULL, remove_symmetries=FALSE,
+setGeneric("melt_gct", function(g, suffixes=NULL, remove_symmetries=FALSE,
                                 keep_rdesc=TRUE, keep_cdesc=TRUE, ...) {
-  standardGeneric("melt.gct")
+  standardGeneric("melt_gct")
 })
-#' @rdname melt.gct
-setMethod("melt.gct", signature("GCT"),
+#' @rdname melt_gct
+setMethod("melt_gct", signature("GCT"),
           function(g, suffixes, remove_symmetries=FALSE,
                    keep_rdesc=TRUE, keep_cdesc=TRUE, ...) {
-          # melt a gct object's matrix into a data.frame and merge row and column
+          # melt a gct object's matrix into a data.frame and merge
+          # row and column
           # annotations back in, using the provided suffixes
           # assumes rdesc and cdesc data.frames both have an 'id' field.
-          # merges row and/or column annotations into the melted matrix as indicated by
+          # merges row and/or column annotations into the melted
+          # matrix as indicated by
           # keep_rdesc and keep_cdesc, respectively.
           # if remove_symmetries, will check whether matrix is symmetric
           # and return only values corresponding to the upper triangle
@@ -113,7 +116,8 @@ is.wholenumber <- function(x, tol = .Machine$double.eps^0.5)  {
   return(abs(x - round(x)) < tol)
 }
 
-#' Check whether \code{test_names} are columns in the \code{\link{data.frame}} df
+#' Check whether \code{test_names} are columns in the \code{\link{data.frame}}
+#' df
 #' @param test_names a vector of column names to test
 #' @param df the \code{\link{data.frame}} to test against
 #' @param throw_error boolean indicating whether to throw an error if
@@ -121,8 +125,9 @@ is.wholenumber <- function(x, tol = .Machine$double.eps^0.5)  {
 #' @return boolean indicating whether or not all \code{test_names} are
 #'   columns of \code{df}
 #' @examples 
-#' check_colnames(c("pert_id", "pert_iname"), cdesc_char)            # TRUE
-#' check_colnames(c("pert_id", "foobar"), cdesc_char, throw_error=FALSE) # FALSE, suppress error
+#' check_colnames(c("pert_id", "pert_iname"), cdesc_char) # TRUE
+#' check_colnames(c("pert_id", "foobar"),
+#'   cdesc_char, throw_error=FALSE)# FALSE, suppress error
 #' @export
 check_colnames <- function(test_names, df, throw_error=TRUE) {
   # check whether test_names are valid names in df
@@ -210,13 +215,20 @@ setMethod("subset_gct", signature("GCT"),
           cidx <- processed_cid$idx
           sdrow <- setdiff(rid, g@rid)
           sdcol <- setdiff(cid, g@cid)
-          if (length(sdrow) > 0) warning("the following rids were not found:\n", paste(sdrow, collapse="\n"))
-          if (length(sdcol) > 0) warning("the following cids were not found:\n", paste(sdcol, collapse="\n"))
+          if (length(sdrow) > 0) {
+            warning("the following rids were not found:\n",
+                    paste(sdrow, collapse="\n"))
+          }
+          if (length(sdcol) > 0) {
+            warning("the following cids were not found:\n",
+                    paste(sdcol, collapse="\n"))
+          }
           newg <- g
           # make sure ordering is right
           rid <- g@rid[ridx]
           cid <- g@cid[cidx]
-          newg@mat <- matrix(g@mat[ridx, cidx], nrow=length(rid), ncol=length(cid))
+          newg@mat <- matrix(g@mat[ridx, cidx], nrow=length(rid),
+                             ncol=length(cid))
           colnames(newg@mat) <- cid
           rownames(newg@mat) <- rid
           # cdesc <- data.frame(g@cdesc)
@@ -402,18 +414,18 @@ merge_with_precedence <- function(x, y, by, allow.cartesian=TRUE,
 #' # read the GCT file, getting the matrix only
 #' g <- parse.gctx(gct_path, matrix_only=TRUE)
 #' # separately, read the column annotations and then apply them using
-#' # annotate.gct
+#' # annotate_gct
 #' cdesc <- read.gctx.meta(gct_path, dim="col")
-#' g <- annotate.gct(g, cdesc, dim="col", keyfield="id")
+#' g <- annotate_gct(g, cdesc, dim="col", keyfield="id")
 #' 
 #' 
 #' @family GCT utilities
 #' @export
-setGeneric("annotate.gct", function(g, annot, dim="row", keyfield="id") {
-  standardGeneric("annotate.gct")
+setGeneric("annotate_gct", function(g, annot, dim="row", keyfield="id") {
+  standardGeneric("annotate_gct")
 })
-#' @rdname annotate.gct
-setMethod("annotate.gct", signature("GCT"),
+#' @rdname annotate_gct
+setMethod("annotate_gct", signature("GCT"),
           function(g, annot, dim, keyfield) {
           if (is.character(annot)) {
             # given a file path, try to read it in
@@ -462,15 +474,15 @@ setMethod("annotate.gct", signature("GCT"),
 #'   ids and annotations have been swapped.
 #'   
 #' @examples 
-#' transpose.gct(ds)
+#' transpose_gct(ds)
 #' 
 #' @family GCT utilties
 #' @export
-setGeneric("transpose.gct", function(g) {
-  standardGeneric("transpose.gct")
+setGeneric("transpose_gct", function(g) {
+  standardGeneric("transpose_gct")
 })
-#' @rdname transpose.gct
-setMethod("transpose.gct", signature("GCT"), function(g) {
+#' @rdname transpose_gct
+setMethod("transpose_gct", signature("GCT"), function(g) {
   # transpose matrix
   g@mat <- t(g@mat)
   # create new data
@@ -499,7 +511,7 @@ setMethod("transpose.gct", signature("GCT"), function(g) {
 #'   values in the matrix converted to ranks
 #'   
 #' @examples 
-#' (ranked <- rank.gct(ds, dim="column"))
+#' (ranked <- rank_gct(ds, dim="column"))
 #' # scatter rank vs. score for a few columns
 #' # use \code{get_gct_matrix} function to access matrix of GCT objects
 #' mat <- get_gct_matrix(ds)
@@ -509,11 +521,11 @@ setMethod("transpose.gct", signature("GCT"), function(g) {
 #' 
 #' @family GCT utilities
 #' @export
-setGeneric("rank.gct", function(g, dim="col", decreasing=TRUE) {
-  standardGeneric("rank.gct")
+setGeneric("rank_gct", function(g, dim="col", decreasing=TRUE) {
+  standardGeneric("rank_gct")
 })
-#' @rdname rank.gct
-setMethod("rank.gct", signature("GCT"), function(g, dim, decreasing=TRUE) {
+#' @rdname rank_gct
+setMethod("rank_gct", signature("GCT"), function(g, dim, decreasing=TRUE) {
   # check to make sure dim is allowed
   if (dim=="column") dim <- "col"
   if (!(dim %in% c("row","col"))){
@@ -733,22 +745,22 @@ align_matrices <- function(m1, m2, ..., L=NULL, na.pad=TRUE, as.3D=TRUE) {
 #' @examples
 #' # get the values for all targeted genes from a 
 #' # dataset of knockdown experiments 
-#' res <- extract.gct(kd_gct, row_field="pr_gene_symbol",
+#' res <- extract_gct(kd_gct, row_field="pr_gene_symbol",
 #'   col_field="pert_mfc_desc")
 #' str(res)
 #' stats::quantile(res$vals)
 #' 
 #' @export
-extract.gct <- function(g, row_field, col_field,
+extract_gct <- function(g, row_field, col_field,
                         rdesc=NULL, cdesc=NULL,
                         row_keyfield="id", col_keyfield="id") {
   # annotate the gct object if external annotations have been provided
   if (!is.null(rdesc)) {
-    g <- annotate.gct(g, rdesc, dim="row", keyfield=row_keyfield)
+    g <- annotate_gct(g, rdesc, dim="row", keyfield=row_keyfield)
     rdesc <- g@rdesc
   }
   if (!is.null(cdesc)) {
-    g <- annotate.gct(g, cdesc, dim="col", keyfield=col_keyfield)
+    g <- annotate_gct(g, cdesc, dim="col", keyfield=col_keyfield)
     cdesc <- g@cdesc
   }
   rdesc <- data.table::data.table(g@rdesc)
