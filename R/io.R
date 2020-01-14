@@ -16,8 +16,11 @@
 #'   \code{rdesc} and \code{cdesc} slots contain data frames with
 #'   annotations about the rows and columns, respectively
 #'   
-#' @seealso \code{\link{parse.gctx}}, \code{\link{write.gctx}}, \code{\link{read.gctx.meta}}, \code{\link{read.gctx.ids}}
-#' @seealso \link{http://clue.io/help} for more information on the GCT format
+#' @seealso \code{\link{parse_gctx}},
+#' \code{\link{write_gctx}}, \code{\link{read_gctx_meta}},
+#' \code{\link{read_gctx_ids}}
+#' @seealso visit \url{http://clue.io/help} for more information on the
+#'   GCT format
 methods::setClass("GCT",
          methods::representation(
              mat = "matrix",
@@ -51,10 +54,12 @@ methods::setValidity("GCT",
       return("rid must be unique")
     }
     if (nrow(object@cdesc) != ncols & nrow(object@cdesc) != 0) {
-      return("cdesc must either have 0 rows or the same number of rows as matrix has columns")
+      return(
+        "cdesc must either have 0 rows or the same number of rows as matrix has columns")
     }
     if (nrow(object@rdesc) != nrows & nrow(object@rdesc) != 0) {
-      return("rdesc must either have 0 rows or the same number of rows as matrix has rows")
+      return(
+        "rdesc must either have 0 rows or the same number of rows as matrix has rows")
     }
     else {
       return(T)
@@ -62,37 +67,41 @@ methods::setValidity("GCT",
   }
 )
 
-suppressMessages({
-  # set method for displaying a GCT object
-  # just use the 'str' function to show its structure
-  setMethod("show", methods::signature("GCT"), function(object) {
-    utils::str(object)
-  })
 
-  # dim, nrow and ncol to display the # of rows and columns
-  # for a GCT object's matrix
-  setMethod("ncol", methods::signature("GCT"), function(x) {
-    ncol(x@mat)
-  })
-  setMethod("nrow", methods::signature("GCT"), function(x) {
-    nrow(x@mat)
-  })
-  setMethod("dim", methods::signature("GCT"), function(x) {
-    dim(x@mat)
-  })
-  setMethod("range", methods::signature("GCT"), function(x, na.rm=F, finite=F) {
-    range(x@mat, na.rm=na.rm, finite=finite)
-  })
-  setMethod("max", methods::signature("GCT"), function(x, na.rm=F) {
-    max(x@mat, na.rm=na.rm)
-  })
-  setMethod("min", methods::signature("GCT"), function(x, na.rm=F) {
-    min(x@mat, na.rm=na.rm)
-  })
-  setMethod("diag", methods::signature("GCT"), function(x) {
-    diag(x@mat)
-  })
+# set method for displaying a GCT object
+# just use the 'str' function to show its structure
+setMethod("show", methods::signature("GCT"), function(object) {
+  utils::str(object)
 })
+
+# methods::setMethod("ncol", methods::signature("GCT"), function(x) {
+#   ncol(x@mat)
+# })
+# methods::setMethod("nrow", methods::signature("GCT"), function(x) {
+#   nrow(x@mat)
+# })
+# 
+# #' @rdname dim
+# #' @method dim GCT 
+# #' @S3method dim GCT
+# #' @export
+# dim.GCT <- function(x) dim(x@mat)
+# methods::setMethod("dim", methods::signature("GCT"), dim.GCT)
+# 
+# methods::setMethod("range", methods::signature("GCT"),
+#                    function(x, na.rm=FALSE, finite=FALSE) {
+#   range(x@mat, na.rm=na.rm, finite=finite)
+# })
+# methods::setMethod("max", methods::signature("GCT"), function(x, na.rm=F) {
+#   max(x@mat, na.rm=na.rm)
+# })
+# methods::setMethod("min", methods::signature("GCT"), function(x, na.rm=F) {
+#   min(x@mat, na.rm=na.rm)
+# })
+# methods::setMethod("diag", methods::signature("GCT"), function(x) {
+#   diag(x@mat)
+# })
+
 
 
 #### define some helper methods for parsing gctx files ###
@@ -116,13 +125,13 @@ suppressMessages({
 #' @examples 
 #' # meta data table with all character types
 #' str(cdesc_char)
-#' fixed <- cmapR:::fix.datatypes(cdesc_char)
+#' fixed <- cmapR:::fix_datatypes(cdesc_char)
 #' # note how some column classes have changed
 #' str(fixed)
 #' 
 #' @family GCTX parsing functions
 #' @keywords internal
-fix.datatypes <- function(meta) {
+fix_datatypes <- function(meta) {
     for (field.name in names(meta)) {
         # get the field values
         field <- meta[[field.name]]
@@ -161,35 +170,36 @@ fix.datatypes <- function(meta) {
 #' Parse row or column metadata from GCTX files
 #' 
 #' @param gctx_path the path to the GCTX file
-#' @param dimension which metadata to read (row or column)
+#' @param dim which metadata to read (row or column)
 #' @param ids a character vector of a subset of row/column ids
 #'   for which to read the metadata
 #'  
 #' @return a \code{data.frame} of metadata
 #' 
 #' @examples
-#' gct_file <- system.file("extdata", "modzs_n272x978.gctx", package="cmapR") 
+#' gct_file <- system.file("extdata", "modzs_n25x50.gctx", package="cmapR") 
 #' # row meta
-#' row_meta <- read.gctx.meta(gct_file)
+#' row_meta <- read_gctx_meta(gct_file)
 #' str(row_meta)
 #' # column meta
-#' col_meta <- read.gctx.meta(gct_file, dimension="column")
+#' col_meta <- read_gctx_meta(gct_file, dim="column")
 #' str(col_meta)
 #' # now for only the first 10 ids
-#' col_meta_first10 <- read.gctx.meta(gct_file, dimension="column", ids=col_meta$id[1:10])
+#' col_meta_first10 <- read_gctx_meta(gct_file, dim="column",
+#' ids=col_meta$id[1:10])
 #' str(col_meta_first10)
 #' 
 #' @family GCTX parsing functions
 #' @export
-read.gctx.meta <- function(gctx_path, dimension="row", ids=NULL) {
+read_gctx_meta <- function(gctx_path, dim="row", ids=NULL) {
   if (!file.exists(gctx_path)) {
     stop(paste(gctx_path, "does not exist"))
   }
-  if (dimension=="column") dimension <- "col"
-  if (!(dimension %in% c("row", "col"))) {
-    stop("dimension can be either row or col")
+  if (dim=="column") dim <- "col"
+  if (!(dim %in% c("row", "col"))) {
+    stop("dim can be either row or col")
   }
-  if (dimension == "row") {
+  if (dim == "row") {
     name <- "0/META/ROW"
   } else {
     name <- "0/META/COL"
@@ -197,16 +207,17 @@ read.gctx.meta <- function(gctx_path, dimension="row", ids=NULL) {
   raw_annots <- rhdf5::h5read(gctx_path, name=name) # returns a list
   fields <- names(raw_annots)
   # define an empty data frame of the correct dimensions
-  annots <-  data.frame(matrix(nrow=length(raw_annots[[fields[1]]]), ncol=length(fields)))
+  annots <-  data.frame(matrix(nrow=length(raw_annots[[fields[1]]]),
+                               ncol=length(fields)))
   names(annots) <-  fields
   # loop through each field and fill the annots data.frame
-  for (i in 1:length(fields)) {
+  for (i in seq_along(fields)) {
     field <- fields[i]
     # remove any trailing spaces
     # and cast as vector
-    annots[,i] <- as.vector(gsub("\\s*$", "", raw_annots[[field]], perl=T))
+    annots[,i] <- as.vector(gsub("\\s*$", "", raw_annots[[field]], perl=TRUE))
   } 
-  annots <- fix.datatypes(annots)
+  annots <- fix_datatypes(annots)
   # subset to the provided set of ids, if given
   if (is.null(ids)) {
     ids <- as.character(annots$id)
@@ -223,36 +234,36 @@ read.gctx.meta <- function(gctx_path, dimension="row", ids=NULL) {
 #' Read GCTX row or column ids
 #' 
 #' @param gctx_path path to the GCTX file
-#' @param dimension which ids to read (row or column)
+#' @param dim which ids to read (row or column)
 #' 
 #' @return a character vector of row or column ids from the provided file
 #' 
 #' @examples 
-#' gct_file <- system.file("extdata", "modzs_n272x978.gctx", package="cmapR")
+#' gct_file <- system.file("extdata", "modzs_n25x50.gctx", package="cmapR")
 #' # row ids
-#' rid <- read.gctx.ids(gct_file)
+#' rid <- read_gctx_ids(gct_file)
 #' head(rid)
 #' # column ids
-#' cid <- read.gctx.ids(gct_file, dimension="column")
+#' cid <- read_gctx_ids(gct_file, dim="column")
 #' head(cid)
 #' 
 #' @family GCTX parsing functions
 #' @export
-read.gctx.ids <- function(gctx_path, dimension="row") {
+read_gctx_ids <- function(gctx_path, dim="row") {
   if (!file.exists(gctx_path)) {
     stop(paste(gctx_path, "does not exist"))
   }
-  if (dimension=="column") dimension <- "col"
-  if (!(dimension %in% c("row", "col"))) {
+  if (dim == "column") dim <- "col"
+  if (!(dim %in% c("row", "col"))) {
     stop("dimension can be either row or col")
   }
-  if (dimension == "row") {
+  if (dim == "row") {
     name <- "0/META/ROW/id"
   } else {
     name <- "0/META/COL/id"
   }
   # remove any spaces
-  ids <- gsub("\\s*$", "", rhdf5::h5read(gctx_path, name=name), perl=T)
+  ids <- gsub("\\s*$", "", rhdf5::h5read(gctx_path, name=name), perl=TRUE)
   # cast as character
   ids <- as.character(ids)
   return(ids)
@@ -274,8 +285,8 @@ read.gctx.ids <- function(gctx_path, dimension="row") {
 #'  \code{idx}: an integer list of their corresponding indices in \code{all_ids}
 #' 
 #' @examples 
-#' gct_file <- system.file("extdata", "modzs_n272x978.gctx", package="cmapR")
-#' ids <- read.gctx.ids(gct_file)
+#' gct_file <- system.file("extdata", "modzs_n25x50.gctx", package="cmapR")
+#' ids <- read_gctx_ids(gct_file)
 #' processed_ids <- cmapR:::process_ids(ids[1:10], ids)
 #' str(processed_ids)
 #' 
@@ -289,11 +300,13 @@ process_ids <- function(ids, all_ids, type="rid") {
       is_invalid_idx <- (idx > length(all_ids)) | (idx <= 0)
       invalid_idx <- idx[is_invalid_idx]
       if (all(is_invalid_idx)) {
-        stop(paste("none of the requested", type, "indices were found in the dataset"))
+        stop(paste("none of the requested", type,
+                   "indices were found in the dataset"))
       }
       if (any(is_invalid_idx)) {
         # requested indices are outside of the possible range
-        warning(paste("the following ", type, " were are outside possible range and will be ignored:\n",
+        warning(paste("the following ", type,
+                      " were are outside possible range and will be ignored:\n",
                       paste(invalid_idx, collapse="\n"), sep="")) 
       }
       idx <- idx[!is_invalid_idx]
@@ -305,7 +318,8 @@ process_ids <- function(ids, all_ids, type="rid") {
       }
       if (any(is.na(idx))) {
         ids_not_found <- ids[is.na(idx)]
-        warning(paste("the following ", type, " were not found and will be ignored:\n",
+        warning(paste("the following ", type, 
+                      " were not found and will be ignored:\n",
                       paste(ids_not_found, collapse="\n"), sep=""))
       }
       idx <- idx[!is.na(idx)]
@@ -324,7 +338,8 @@ process_ids <- function(ids, all_ids, type="rid") {
 # define the initialization method for the GCT class
 methods::setMethod("initialize",
           signature = "GCT",
-          definition = function(.Object, mat=NULL, rdesc=NULL, cdesc=NULL, src=NULL, rid=NULL, cid=NULL,
+          definition = function(.Object, mat=NULL, rdesc=NULL, cdesc=NULL,
+                                src=NULL, rid=NULL, cid=NULL,
                                 matrix_only=FALSE) {
             # if we were supplied a matrix and annotations, use them
             if (!is.null(mat)) {
@@ -353,14 +368,18 @@ methods::setMethod("initialize",
                 stop("Either a .gct or .gctx file must be given")
               if (grepl(".gct$", src)) {
                 if ( ! is.null(rid) || !is.null(cid) )
-                  warning(paste("rid and cid values may only be given for .gctx files, not .gct files\n",
+                  warning(
+                    paste(
+                      "rid and cid values may only be given for .gctx files\n",
                                 "ignoring"))
                 # parse the .gct
                 .Object@src <- src
                 # get the .gct version by reading first line
-                .Object@version <- scan(src, what = "", nlines = 1, sep = "\t", quiet = TRUE)[1]
+                .Object@version <- scan(src, what = "", nlines = 1,
+                                        sep = "\t", quiet = TRUE)[1]
                 # get matrix dimensions by reading second line
-                dimensions <- scan(src, what = double(0), nlines = 1, skip = 1, sep = "\t", quiet = TRUE)
+                dimensions <- scan(src, what = double(0), nlines = 1,
+                                   skip = 1, sep = "\t", quiet = TRUE)
                 nrmat <- dimensions[1]
                 ncmat <- dimensions[2]
                 if (length(dimensions)==4) {
@@ -374,9 +393,11 @@ methods::setMethod("initialize",
                   nrhd <- 0
                   nchd <- 0
                 }
-                message(paste(src, nrmat, "rows,", ncmat, "cols,", nrhd, "row descriptors,", nchd, "col descriptors"))
+                message(paste(src, nrmat, "rows,", ncmat, "cols,", nrhd,
+                              "row descriptors,", nchd, "col descriptors"))
                 # read in header line
-                header <- scan(src, what = "", nlines = 1, skip = 2, sep = "\t", quote = NULL, quiet = TRUE)
+                header <- scan(src, what = "", nlines = 1, skip = 2,
+                               sep = "\t", quote = NULL, quiet = TRUE)
                 # construct row header and column id's from the header line
                 if ( nrhd > 0 ) {
                   rhd <- header[2:(nrhd+1)]
@@ -393,16 +414,18 @@ methods::setMethod("initialize",
                   rhd <- NULL
                   cid <- header[(1+col_offset):length(header)]
                 }
-                # read in the next set of headers (column annotations) and shape into a matrix
+                # read in the next set of headers (column annotations)
+                # and shape into a matrix
                 if ( nchd > 0 ) {
-                  header <- scan(src, what = "", nlines = nchd, skip = 3, sep = "\t", 
-                                quote = NULL, quiet = TRUE)		
+                  header <- scan(src, what = "", nlines = nchd, skip = 3,
+                                 sep = "\t", quote = NULL, quiet = TRUE)		
                   header <- matrix(header, nrow = nchd, 
                                   ncol = ncmat + nrhd + 1, byrow = TRUE)
                   # extract the column header and column descriptions
                   chd <- header[,1]
                   cdesc <- header[,-(nrhd+1):-1]
-                  # need to transpose in the case where there's only one column annotation
+                  # need to transpose in the case where there's only one
+                  # column annotation
                   if ( nchd == 1 )
                     cdesc <- t(cdesc)
                 }
@@ -410,26 +433,31 @@ methods::setMethod("initialize",
                   chd = NULL
                   cdesc <- data.frame(id=cid)
                 }
-                # read in the data matrix and row descriptions, shape into a matrix
+                # read in the data matrix and row descriptions
+                # shape into a matrix
                 mat <- scan(src, what = "", nlines = nrmat, 
-                           skip = 3 + nchd, sep = "\t", quote = NULL, quiet = TRUE)
-                mat <- matrix(mat, nrow = nrmat, ncol = ncmat + nrhd + col_offset, 
+                           skip = 3 + nchd, sep = "\t", quote = NULL,
+                           quiet = TRUE)
+                mat <- matrix(mat, nrow = nrmat,
+                              ncol = ncmat + nrhd + col_offset, 
                              byrow = TRUE)
                 # message(paste(dim(mat), collapse="\t"))
                 # Extract the row id's row descriptions, and the data matrix
                 rid <- mat[,1]
                 if ( nrhd > 0 ) {
-                  # need as.matrix for the case where there's only one row annotation
+                  # need as.matrix for the case where there's
+                  # only one row annotation
                   rdesc <- as.matrix(mat[,2:(nrhd + 1)])
                   mat <- matrix(as.numeric(mat[,-(nrhd + 1):-1]),
                                nrow = nrmat, ncol = ncmat)
                 }
                 else {
                   rdesc <- data.frame(id=rid)
-                  mat <- matrix(as.numeric(mat[, (1+col_offset):ncol(mat)]), nrow = nrmat, ncol = ncmat)
+                  mat <- matrix(as.numeric(mat[, (1+col_offset):ncol(mat)]),
+                                nrow = nrmat, ncol = ncmat)
                 }
-                # assign names to the data matrix and the row and column descriptions
-                # message(paste(dim(mat), collapse="\t"))
+                # assign names to the data matrix and the
+                # row and column descriptions
                 dimnames(mat) <- list(rid, cid)
                 if ( nrhd > 0 ) {
                   dimnames(rdesc) <- list(rid, rhd)
@@ -446,8 +474,8 @@ methods::setMethod("initialize",
                 .Object@cid <- colnames(mat)
                 if (!matrix_only) {
                   # return annotations as well as matrix
-                  .Object@rdesc <- fix.datatypes(rdesc)
-                  .Object@cdesc <- fix.datatypes(cdesc)
+                  .Object@rdesc <- fix_datatypes(rdesc)
+                  .Object@cdesc <- fix_datatypes(cdesc)
                   # add id columns to rdesc and cdesc
                   .Object@rdesc$id <- rownames(.Object@rdesc)
                   .Object@cdesc$id <- rownames(.Object@cdesc)
@@ -459,20 +487,21 @@ methods::setMethod("initialize",
                 .Object@src <- src
                 # if the rid's or column id's are .grp files, read them in
                 if ( length(rid) == 1 && grepl(".grp$", rid) )
-                  rid <- parse.grp(rid)
+                  rid <- parse_grp(rid)
                 if ( length(cid) == 1 && grepl(".grp$", cid) )
-                  cid <- parse.grp(cid)
+                  cid <- parse_grp(cid)
                 # get all the row and column ids
-                all_rid <- read.gctx.ids(src, dimension="row")
-                all_cid <- read.gctx.ids(src, dimension="col")
+                all_rid <- read_gctx_ids(src, dim="row")
+                all_cid <- read_gctx_ids(src, dim="col")
                 # if rid or cid specified, read only those rows/columns
                 # if already numeric, use as is
                 # else convert to numeric indices
                 processed_rids <- process_ids(rid, all_rid, type="rid")
                 processed_cids <- process_ids(cid, all_cid, type="cid")
                 # read the data matrix
-                .Object@mat <- rhdf5::h5read(src, name="0/DATA/0/matrix",
-                                      index=list(processed_rids$idx, processed_cids$idx))
+                .Object@mat <-
+                  rhdf5::h5read(src, name="0/DATA/0/matrix",
+                            index=list(processed_rids$idx, processed_cids$idx))
                 # set the row and column ids, casting as characters
                 .Object@rid <- processed_rids$ids
                 .Object@cid <- processed_cids$ids
@@ -480,12 +509,16 @@ methods::setMethod("initialize",
                 colnames(.Object@mat) <- processed_cids$ids
                 # get the meta data
                 if (!matrix_only) {
-                  .Object@rdesc <- read.gctx.meta(src, dimension="row", ids=processed_rids$ids)
-                  .Object@cdesc <- read.gctx.meta(src, dimension="col", ids=processed_cids$ids)
+                  .Object@rdesc <- read_gctx_meta(src, dim="row",
+                                                  ids=processed_rids$ids)
+                  .Object@cdesc <- read_gctx_meta(src, dim="col",
+                                                  ids=processed_cids$ids)
                 }
                 else {
-                  .Object@rdesc <- data.frame(id=.Object@rid, stringsAsFactors = F)
-                  .Object@cdesc <- data.frame(id=.Object@cid, stringsAsFactors = F)
+                  .Object@rdesc <- data.frame(id=.Object@rid,
+                                              stringsAsFactors = FALSE)
+                  .Object@cdesc <- data.frame(id=.Object@cid,
+                                              stringsAsFactors = FALSE)
                 }
                 # close any open handles and return the object
                 if(utils::packageVersion('rhdf5') < "2.23.0") {
@@ -517,22 +550,24 @@ methods::setMethod("initialize",
 #' @param matrix_only boolean indicating whether to parse only
 #'   the matrix (ignoring row and column annotations)
 #'
-#' @details \code{parse.gctx} also supports parsing of plain text
+#' @details \code{parse_gctx} also supports parsing of plain text
 #'   GCT files, so this function can be used as a general GCT parser.
+#'   
+#' @return a GCT object
 #' 
 #' @examples 
-#' gct_file <- system.file("extdata", "modzs_n272x978.gctx", package="cmapR")
-#' (ds <- parse.gctx(gct_file))
+#' gct_file <- system.file("extdata", "modzs_n25x50.gctx", package="cmapR")
+#' (ds <- parse_gctx(gct_file))
 #' 
 #' # matrix only
-#' (ds <- parse.gctx(gct_file, matrix_only=TRUE))
+#' (ds <- parse_gctx(gct_file, matrix_only=TRUE))
 #' 
 #' # only the first 10 rows and columns
-#' (ds <- parse.gctx(gct_file, rid=1:10, cid=1:10))
+#' (ds <- parse_gctx(gct_file, rid=1:10, cid=1:10))
 #' 
 #' @family GCTX parsing functions
 #' @export
-parse.gctx <- function(fname, rid=NULL, cid=NULL, matrix_only=FALSE) {
+parse_gctx <- function(fname, rid=NULL, cid=NULL, matrix_only=FALSE) {
     ds <- methods::new("GCT",
               src = fname,
               rid = rid,
@@ -552,13 +587,15 @@ parse.gctx <- function(fname, rid=NULL, cid=NULL, matrix_only=FALSE) {
 #' 
 #' @details This is a helper function that most users
 #'   will not use directly
-#'   
+#' 
 #' @examples 
-#' (filename <- cmapR:::append.dim("my.gctx.filename", matrix(nrow=10, ncol=15)))
+#' (filename <- cmapR:::append_dim("my.gctx.filename",
+#'   matrix(nrow=10, ncol=15)))
+#'   
 #'   
 #' @keywords internal
 #' @family GCTX parsing functions
-append.dim <- function(ofile, mat, extension="gct") {
+append_dim <- function(ofile, mat, extension="gct") {
   nc <- ncol(mat)
   nr <- nrow(mat)
   filename <- basename(ofile)
@@ -590,22 +627,22 @@ append.dim <- function(ofile, mat, extension="gct") {
 #'   passed to \code{ver} will result in a GCT version 1.2 file which
 #'   contains only the matrix data and no annotations.
 #'
-#' @return NULL
+#' @return silently returns NULL
 #' 
 #' @examples 
-#' \dontrun{
-#' write.gct(ds, "dataset", precision=2)
-#' }
+#' # note this will create a GCT file in your current directory
+#' write_gct(ds, "dataset", precision=2)
+#' 
 #' @family GCTX parsing functions
 #' @export
-write.gct <- function(ds, ofile, precision=4, appenddim=T, ver=3) {
-  if (!class(ds)=="GCT") {
+write_gct <- function(ds, ofile, precision=4, appenddim=TRUE, ver=3) {
+  if (!methods::is(ds, "GCT")) {
     stop("ds must be a GCT object")
   }
   # make sure it's valid
   ok <- methods::validObject(ds)
   # append the dimensions of the data set, if desired
-  if (appenddim) ofile <- append.dim(ofile, ds@mat, extension="gct")
+  if (appenddim) ofile <- append_dim(ofile, ds@mat, extension="gct")
   
   precision = floor(precision)
   cat(sprintf('Saving file to %s\n',ofile))
@@ -613,7 +650,6 @@ write.gct <- function(ds, ofile, precision=4, appenddim=T, ver=3) {
   nc <- ncol(ds@mat)
   cat(sprintf('Dimensions of matrix: [%dx%d]\n',nr,nc))
   cat(sprintf('Setting precision to %d\n',precision))
-  
   # open file and write   
   if (ver==3) {
     # remove the 'id' columns
@@ -628,31 +664,30 @@ write.gct <- function(ds, ofile, precision=4, appenddim=T, ver=3) {
         file=ofile,sep='\n')      
     # line 3: sample row desc keys and sample names
     cat(paste(c('id',colnames(ds@rdesc),ds@cid),collapse='\t'),
-        file=ofile,sep='\n',append=T)
+        file=ofile,sep='\n',append=TRUE)
     # line 4 + ncdesc: sample desc
     filler = 'na'
     if (ncdesc > 0) {
-      for (ii in 1:ncdesc) {
+      for (ii in seq_along(ncdesc)) {
         if (is.numeric(ds@cdesc[,ii])) {
           cat(paste(c(colkeys[ii],rep(filler,nrdesc),
                       round(ds@cdesc[,ii],precision)),
                     collapse='\t'),
-              file=ofile,sep='\n',append=T)  
+              file=ofile, sep='\n', append=TRUE)  
         } else {
-          cat(paste(c(colkeys[ii],rep(filler,nrdesc),
+          cat(paste(c(colkeys[ii],rep(filler, nrdesc),
                       ds@cdesc[,ii]),
                     collapse='\t'),
-              file=ofile,sep='\n',append=T)
+              file=ofile, sep='\n', append=TRUE)
         }
       }
     }
-
-    for (ii in 1:nr) {    
+    for (ii in seq_len(nr)) {    
       # print rows
       cat(paste(c(ds@rid[ii],
                   ds@rdesc[ii,],
                   round(ds@mat[ii,],precision)),collapse='\t'),
-          sep='\n',file=ofile,append=T)
+          sep='\n',file=ofile,append=TRUE)
     }
   } else {
     # assume ver 1.2 and below, ignore descriptors
@@ -661,17 +696,15 @@ write.gct <- function(ds, ofile, precision=4, appenddim=T, ver=3) {
         file=ofile,sep='\n')      
     # line 3: sample row desc keys and sample names
     cat(paste(c('id','Description',ds@cid),collapse='\t'),
-        file=ofile,sep='\n',append=T)
-
-    for (ii in 1:nr) {    
+        file=ofile,sep='\n',append=TRUE)
+    for (ii in seq_len(nr)) {    
       # print rows
       cat(paste(c(ds@rid[ii],
                   ds@rdesc[ii, 2],
                   round(ds@mat[ii,],precision)),collapse='\t'),
-          sep='\n',file=ofile,append=T)
+          sep='\n',file=ofile,append=TRUE)
     }
   }
-
   cat(sprintf('Saved.\n'))  
 }
 
@@ -690,33 +723,33 @@ write.gct <- function(ds, ofile, precision=4, appenddim=T, ver=3) {
 #'   only the matrix data (and skip row, column annotations)
 #' @param max_chunk_kb for chunking, the maximum number of KB
 #'   a given chunk will occupy
+#'   
+#' @return silently returns NULL
 #' 
 #' @examples 
-#' \dontrun{
-#' # assume ds is a GCT object
-#' write.gctx(ds, "my/desired/outpath/and/filename")
-#' }
+#' # note this will create a GCT file in your current directory
+#' write_gctx(ds, "dataset")
+#' 
 #' @family GCTX parsing functions
 #' @export
-write.gctx <- function(ds, ofile, appenddim=T, compression_level=0, matrix_only=F,
+write_gctx <- function(ds, ofile, appenddim=TRUE, compression_level=0,
+                       matrix_only=FALSE,
                        max_chunk_kb=1024) {
-  if (!class(ds)=="GCT") {
+  if (!methods::is(ds, "GCT")) {
     stop("ds must be a GCT object")
   }
   # make sure it's valid
   ok <- methods::validObject(ds)
   # add dimensions to filename if desired
-  if (appenddim) ofile <- append.dim(ofile, ds@mat, extension="gctx")
+  if (appenddim) ofile <- append_dim(ofile, ds@mat, extension="gctx")
   # check if the file already exists
   if (file.exists(ofile)) {
     message(paste(ofile, "exists, removing"))
     file.remove(ofile)
   }
   message(paste("writing", ofile))
-  
   # start the file object
   rhdf5::h5createFile(ofile)
-  
   # create all the necessary groups
   rhdf5::h5createGroup(ofile, "0")
   rhdf5::h5createGroup(ofile, "0/DATA")
@@ -724,44 +757,40 @@ write.gctx <- function(ds, ofile, appenddim=T, compression_level=0, matrix_only=
   rhdf5::h5createGroup(ofile, "0/META")
   rhdf5::h5createGroup(ofile, "0/META/COL")
   rhdf5::h5createGroup(ofile, "0/META/ROW")
-  
   # create and write matrix data, using chunking
   bits_per_element <- switch(storage.mode(ds@mat),
                              "double" = 64,
                              "integer" = 32)
   elem_per_kb <- max_chunk_kb * 8 / bits_per_element
   # assume matrix is of dimensions row_dim x col_dim 
-  row_dim <- nrow(ds)
-  col_dim <- ncol(ds)
+  row_dim <- nrow(ds@mat)
+  col_dim <- ncol(ds@mat)
   row_chunk_size <- min(row_dim, 1000)
   # column chunk, such that row * col <= max_chunk_kb
-  col_chunk_size <- min(((max_chunk_kb * elem_per_kb) %/% row_chunk_size), col_dim)
+  col_chunk_size <- min(((max_chunk_kb * elem_per_kb) %/% row_chunk_size),
+                        col_dim)
   chunking <- c(row_chunk_size, col_chunk_size) 
   message(paste(c("chunk sizes:", chunking), collapse="\t"))
-  rhdf5::h5createDataset(ofile, "0/DATA/0/matrix", dim(ds@mat), chunk=chunking, level=compression_level)
+  rhdf5::h5createDataset(ofile, "0/DATA/0/matrix", dim(ds@mat), chunk=chunking,
+                         level=compression_level)
   rhdf5::h5write.default(ds@mat, ofile, "0/DATA/0/matrix")
-  
   # write annotations
   rhdf5::h5write.default(as.character(ds@rid), ofile, "0/META/ROW/id")
   rhdf5::h5write.default(as.character(ds@cid), ofile, "0/META/COL/id")
-  
   if (!matrix_only) {
-    write.gctx.meta(ofile, ds@cdesc, dimension="column")
-    write.gctx.meta(ofile, ds@rdesc, dimension="row")
+    write_gctx_meta(ofile, ds@cdesc, dimension="column")
+    write_gctx_meta(ofile, ds@rdesc, dimension="row")
   }
-
   # close any open handles
   if(utils::packageVersion('rhdf5') < "2.23.0") {
     rhdf5::H5close()
   } else {
     rhdf5::h5closeAll()
   }
-
   # add the version annotation and close
   fid <- rhdf5::H5Fopen(ofile)
   rhdf5::h5writeAttribute.character("GCTX1.0", fid, "version")
   rhdf5::H5Fclose(fid)
-
 }
 
 #' Update the matrix of an existing GCTX file
@@ -779,18 +808,20 @@ write.gctx <- function(ds, ofile, appenddim=T, compression_level=0, matrix_only=
 #' or character ids corresponding to the row and column ids
 #' in \code{ofile}.
 #' 
+#' @return silently returns NULL
+#' 
 #' @examples
 #' \dontrun{
 #' m <- matrix(rnorm(20), nrow=10)
 #' # update by integer indices
-#' update.gctx(m, ofile="my.gctx", rid=1:10, cid=1:2)
+#' update_gctx(m, ofile="my.gctx", rid=1:10, cid=1:2)
 #' # update by character ids
 #' row_ids <- letters[1:10]
 #' col_ids <- LETTERS[1:2]
-#' update.gctx(m, ofile="my.gctx", rid=row_ids, cid=col_ids)
+#' update_gctx(m, ofile="my.gctx", rid=row_ids, cid=col_ids)
 #' }
 #' @export
-update.gctx <- function(x, ofile, rid=NULL, cid=NULL) {
+update_gctx <- function(x, ofile, rid=NULL, cid=NULL) {
   # x must be numeric
   stopifnot(is.numeric(x))
   # must give us at least one of rid or cid
@@ -815,11 +846,13 @@ update.gctx <- function(x, ofile, rid=NULL, cid=NULL) {
     }
   }
   # get the dimensions of the file in question
-  info <- rhdf5::h5dump(ofile, load=F)
-  dims <- as.numeric(unlist(strsplit(info[["0"]][["DATA"]][["0"]][["matrix"]][["dim"]], " x ")))
+  info <- rhdf5::h5dump(ofile, load=FALSE)
+  dims <-
+    as.numeric(unlist(strsplit(
+      info[["0"]][["DATA"]][["0"]][["matrix"]][["dim"]], " x ")))
   # get the full space of row and column ids
-  all_rid <- cmapR::read.gctx.ids(ofile, dim="row")
-  all_cid <- cmapR::read.gctx.ids(ofile, dim="col")
+  all_rid <- read_gctx_ids(ofile, dim="row")
+  all_cid <- read_gctx_ids(ofile, dim="col")
   # helper functions to validate integer and character ids
   validate_integer_ids <- function(ids, maxdim, which_dim) {
     stopifnot(all(ids > 0))
@@ -832,7 +865,8 @@ update.gctx <- function(x, ofile, rid=NULL, cid=NULL) {
   validate_character_ids <- function(ids, all_ids, which_dim) {
     out_of_range <- setdiff(ids, all_ids)
     if (length(out_of_range) > 0) {
-      stop(paste("the following", which_dim, "ids do not exist in the dataset\n",
+      stop(paste("the following", which_dim,
+                 "ids do not exist in the dataset\n",
                  paste(out_of_range, collapse="\n")))
     }
   }
@@ -870,33 +904,90 @@ update.gctx <- function(x, ofile, rid=NULL, cid=NULL) {
 #' @param df the \code{data.frame} of annotations
 #' @param dimension the dimension to annotate
 #'   (row or column)
+#'   
+#' @return silently returns NULL
 #' 
 #' @examples 
 #' \dontrun{
 #' # assume ds is a GCT object
-#' cmapR:::write.gctx.meta("/my/file/path", cdesc_char, dimension="col")
+#' write_gctx_meta("/my/file/path", cdesc_char, dimension="col")
 #' }
 #' @family GCTX parsing functions
 #' @keywords internal
-write.gctx.meta <- function(ofile, df, dimension="row") {
+write_gctx_meta <- function(ofile, df, dimension="row") {
   path <- if ((dimension=="row")) "0/META/ROW/" else "0/META/COL/"
   # loop through all columns
   fields <- names(df)
   if (length(fields) > 0) {
-    for (i in 1:length(fields)) {
+    for (i in seq_along(fields)) {
       field <- fields[i]
       # if this is the id field, skip b/c that field is special
-      # and is written as part of write.gctx
+      # and is written as part of write_gctx
       if (field == "id") next
       v <- df[, i]
       # convert factors to character
-      if(class(v) == "factor" || class(v) == "AsIs") {
+      if(is.factor(v) || methods::is(v, "AsIs")) {
         v <- as.character(v)
       }
       rhdf5::h5write.default(v, ofile, paste(path, field, sep=""))
     }
   }
 }
+
+###########################################
+### accessor functions for GCT objects  ###
+###########################################
+
+
+#' Extract the matrix from a GCT object
+#' @param g the GCT object
+#' @return a matrix
+#' @examples 
+#' m <- get_gct_matrix(ds)
+#' @family GCT accessor methods
+#' @export
+methods::setGeneric("get_gct_matrix", function(g) {
+  standardGeneric("get_gct_matrix")
+})
+#' @rdname get_gct_matrix
+methods::setMethod("get_gct_matrix", "GCT", function(g) g@mat)
+
+#' Extract the ids from a GCT object
+#' @param g the GCT object
+#' @param dim which dimension to extract
+#' @return a vector of ids
+#' @examples 
+#' m <- get_gct_ids(ds)
+#' @family GCT accessor methods
+#' @export
+methods::setGeneric("get_gct_ids", function(g, dim="row")  {
+  standardGeneric("get_gct_ids")
+})
+#' @rdname get_gct_ids
+methods::setMethod("get_gct_ids", "GCT", function(g, dim) {
+  if (dim == "row") return(g@rid)
+  if (dim %in% c("col", "column")) return(g@cid)
+  stop("dim must be either row or column")
+})
+
+#' Extract the metadata from a GCT object
+#' @param g the GCT object
+#' @param dim which dimension to extract
+#' @return a data.frame of metadata
+#' @examples 
+#' m <- get_gct_meta(ds)
+#' @family GCT accessor methods
+#' @export
+methods::setGeneric("get_gct_meta", function(g, dim="row") {
+  standardGeneric("get_gct_meta")
+})
+#' @rdname get_gct_meta
+methods::setMethod("get_gct_meta", "GCT", function(g, dim) {
+  if (dim == "row") return(g@rdesc)
+  if (dim %in% c("col", "column")) return(g@cdesc)
+  stop("dim must be either row or column")
+})
+
 
 
 ###########################################
@@ -908,12 +999,12 @@ write.gctx.meta <- function(ofile, df, dimension="row") {
 #' @return a vector of the contents of \code{fname}
 #' @examples 
 #' grp_path <- system.file("extdata", "lm_epsilon_n978.grp", package="cmapR")
-#' values <- parse.grp(grp_path)
+#' values <- parse_grp(grp_path)
 #' str(values)
 #' @family CMap parsing functions
-#' @seealso \link{http://clue.io/help} for details on the GRP file format
+#' @seealso Visit \url{http://clue.io/help} for details on the GRP file format
 #' @export
-parse.grp <- function(fname) {
+parse_grp <- function(fname) {
   grp <- scan(fname, what = "", quote = NULL, quiet = TRUE, sep="\n")
   return(grp)
 }
@@ -924,15 +1015,17 @@ parse.grp <- function(fname) {
 #' @param vals the vector of values to be written
 #' @param fname the desired file name
 #' 
+#' @return silently returns NULL
+#' 
 #' @examples 
 #' \dontrun{
-#' write.grp(letters, "letter.grp")
+#' write_grp(letters, "letter.grp")
 #' }
 #' 
 #' @family CMap parsing functions
-#' @seealso \link{http://clue.io/help} for details on the GRP file format
+#' @seealso Visit \url{http://clue.io/help} for details on the GRP file format
 #' @export
-write.grp <- function(vals, fname) {
+write_grp <- function(vals, fname) {
   if (is.list(vals)) vals <- unlist(vals)
   if (!is.vector(vals)) vals <- as.vector(vals)
   write(vals, fname, ncolumns=1)
@@ -945,7 +1038,7 @@ write.grp <- function(vals, fname) {
 #' 
 #' @return a list of the contents of \code{fname}. See details.
 #' 
-#' @details \code{parse.gmx} returns a nested list object. The top
+#' @details \code{parse_gmx} returns a nested list object. The top
 #'   level contains one list per column in \code{fname}. Each of 
 #'   these is itself a list with the following fields:
 #'   - \code{head}: the name of the data (column in \code{fname})
@@ -955,13 +1048,13 @@ write.grp <- function(vals, fname) {
 #' 
 #' @examples 
 #' gmx_path <- system.file("extdata", "lm_probes.gmx", package="cmapR")
-#' gmx <- parse.gmx(gmx_path)
+#' gmx <- parse_gmx(gmx_path)
 #' str(gmx)
 #' 
 #' @family CMap parsing functions
-#' @seealso \link{http://clue.io/help} for details on the GMX file format
+#' @seealso Visit \url{http://clue.io/help} for details on the GMX file format
 #' @export
-parse.gmx <- function(fname) {
+parse_gmx <- function(fname) {
     tmp <- utils::read.table(fname, sep = "\t", 
                      header = TRUE, stringsAsFactors = FALSE)
     # preallocate a list for the gmx
@@ -987,7 +1080,7 @@ parse.gmx <- function(fname) {
 #' 
 #' @return a list of the contents of \code{fname}. See details.
 #' 
-#' @details \code{parse.gmt} returns a nested list object. The top
+#' @details \code{parse_gmt} returns a nested list object. The top
 #'   level contains one list per row in \code{fname}. Each of 
 #'   these is itself a list with the following fields:
 #'   - \code{head}: the name of the data (row in \code{fname})
@@ -997,13 +1090,13 @@ parse.gmx <- function(fname) {
 #' 
 #' @examples 
 #' gmt_path <- system.file("extdata", "query_up.gmt", package="cmapR")
-#' gmt <- parse.gmt(gmt_path)
+#' gmt <- parse_gmt(gmt_path)
 #' str(gmt)
 #' 
 #' @family CMap parsing functions
-#' @seealso \link{http://clue.io/help} for details on the GMT file format
+#' @seealso Visit \url{http://clue.io/help} for details on the GMT file format
 #' @export
-parse.gmt <- function(fname) {
+parse_gmt <- function(fname) {
     gmt.lines <- scan(fname, what = "", sep = "\n",
                      quote = NULL, quiet = TRUE)
     tmp <- lapply(gmt.lines, function(x) unlist(strsplit(x, "\t")))
@@ -1011,7 +1104,7 @@ parse.gmt <- function(fname) {
         L <- list()
         L[["head"]] <- x[1]
         L[["desc"]] <- x[2]
-        l.entry <- x[-c(1:2)]
+        l.entry <- x[-c(1, 2)]
         idx <- l.entry != ""
         L[["entry"]] <- l.entry[idx]
         L[["len"]] <- length(L[["entry"]])
@@ -1034,26 +1127,29 @@ parse.gmt <- function(fname) {
 #'   - \code{desc}: description of the corresponding data
 #'   - \code{len}: the number of data items
 #'   - \code{entry}: a vector of the data items
+#'   
+#' @return silently returns NULL
 #' 
 #' @examples 
 #' \dontrun{
-#' write.gmt(gene_set, "gene_set.gmt")
+#' write_gmt(gene_set, "gene_set.gmt")
 #' }
 #' 
 #' @family CMap parsing functions
-#' @seealso \link{http://clue.io/help} for details on the GMT file format
+#' @seealso Visit \url{http://clue.io/help} for details on the GMT file format
 #' @export
-write.gmt <- function(lst, fname) {
+write_gmt <- function(lst, fname) {
   # assumes that each element of the list will have the fields
   # head, desc, entry
   if (file.exists(fname)) {
     message(paste(fname, "exists, deleting..."))
     file.remove(fname)
   }
-  for (i in 1:length(lst)) {
+  for (i in seq_along(lst)) {
     el <- lst[[i]]
     ncolumns <- 2 + length(el$entry)
-    write(c(el$head, el$desc, el$entry), file=fname, sep="\t", append=T, ncolumns=ncolumns)
+    write(c(el$head, el$desc, el$entry), file=fname, sep="\t",
+          append=TRUE, ncolumns=ncolumns)
   }
 }
 
@@ -1067,6 +1163,8 @@ write.gmt <- function(lst, fname) {
 #' lxb_path <- system.file("extdata", "example.lxb", package="cmapR")
 #' lxb_data <- lxb2mat(lxb_path)
 #' str(lxb_data)
+#' 
+#' @return a matrix
 #' 
 #' @importFrom prada readFCS exprs
 #' 
@@ -1099,15 +1197,17 @@ lxb2mat <- function(lxb_path, columns=c("RID", "RP1"),
 #' @details This method simply calls \code{write.table} with some
 #'   preset arguments that generate a unquoated, tab-delimited file
 #'   without row names.
+#'   
+#' @return silently returns NULL
 #' 
 #' @examples 
 #' \dontrun{
-#' write.tbl(cdesc_char, "col_meta.txt")
+#' write_tbl(cdesc_char, "col_meta.txt")
 #' }
 #' 
 #' @seealso \code{\link{write.table}}
 #' @export
-write.tbl <- function(tbl, ofile, ...) {
-    utils::write.table(tbl, file = ofile, sep="\t", quote=F,
-      col.names=T, row.names=F, ...)
+write_tbl <- function(tbl, ofile, ...) {
+    utils::write.table(tbl, file = ofile, sep="\t", quote=FALSE,
+      col.names=TRUE, row.names=FALSE, ...)
 }

@@ -1,26 +1,26 @@
 context("Testing utility functions")
 
-test_that("melt.gct works properly", {
+test_that("melt_gct works properly", {
   # standard
-  ds <- cmapR::ds
-  mlt <- melt.gct(ds)
+  # ds <- cmapR::ds
+  mlt <- melt_gct(ds)
   expect_equal(nrow(mlt), nrow(ds@mat) * ncol(ds@mat))
   expect_equal(ncol(mlt), ncol(ds@rdesc) + ncol(ds@cdesc) + 1)
   # ignore row/col annots
-  mlt <- melt.gct(ds, keep_rdesc = FALSE, keep_cdesc = FALSE)
+  mlt <- melt_gct(ds, keep_rdesc = FALSE, keep_cdesc = FALSE)
   expect_equal(nrow(mlt), nrow(ds@mat) * ncol(ds@mat))
   expect_equal(ncol(mlt), 3)
   # handle case where rdesc and cdesc are empty
   ds@rdesc <- data.frame()
   ds@cdesc <- data.frame()
-  mlt <- melt.gct(ds)
+  mlt <- melt_gct(ds)
   expect_equal(nrow(mlt), nrow(ds@mat) * ncol(ds@mat))
   expect_equal(ncol(mlt), 3)
 })
 
-test_that("merge.gct works properly", {
+test_that("merge_gct works properly", {
   # set up some test data
-  ds1 <- parse.gctx("test_n5x10.gctx")
+  ds1 <- parse_gctx("test_n5x10.gctx")
   ds2 <- ds1
   
   # scramble the rows and columns of ds2
@@ -43,8 +43,11 @@ test_that("merge.gct works properly", {
   expect_false(identical(ds1@cid, ds2@cid))
   
   ## CHECK ROW MERGING ##
-  ds2@rid <- rownames(ds2@mat) <- ds2@rdesc$id <- paste("ds2", ds2@rid, sep=":")
-  mrg <- merge.gct(ds1, ds2, dimension="row")
+  ds2@rid <-
+    rownames(ds2@mat) <-
+    ds2@rdesc$id <-
+    paste("ds2", ds2@rid, sep=":")
+  mrg <- merge_gct(ds1, ds2, dim="row")
   
   # check the matrix
   # should have sum of 2 matrix rows
@@ -76,9 +79,15 @@ test_that("merge.gct works properly", {
   expect_identical(mrg@cdesc, ds1@cdesc)
   
   ## CHECK COLUMN MERGING ##
-  ds2@rid <- rownames(ds2@mat) <- ds2@rdesc$id <- gsub("ds2:", "", ds2@rid)
-  ds2@cid <- colnames(ds2@mat) <- ds2@cdesc$id <- paste("ds2", ds2@cid, sep=":")
-  mrg <- merge.gct(ds1, ds2, dimension="col")
+  ds2@rid <-
+    rownames(ds2@mat) <-
+    ds2@rdesc$id <-
+    gsub("ds2:", "", ds2@rid)
+  ds2@cid <-
+    colnames(ds2@mat) <-
+    ds2@cdesc$id <-
+    paste("ds2", ds2@cid, sep=":")
+  mrg <- merge_gct(ds1, ds2, dim="col")
   
   # check the matrix
   # should have sum of 2 matrix columns
@@ -137,19 +146,19 @@ test_that("merge.gct works properly", {
   
 })
 
-test_that("subset.gct works properly", {
-  ds <- cmapR::ds
-  a <- subset.gct(ds, rid=1:10, cid=1:10)
-  b <- subset.gct(ds, rid=ds@rid[1:10], cid=ds@cid[1:10])
+test_that("subset_gct works properly", {
+  # ds <- cmapR::ds
+  a <- subset_gct(ds, rid=1:10, cid=1:10)
+  b <- subset_gct(ds, rid=ds@rid[1:10], cid=ds@cid[1:10])
   expect_identical(a, b)
 })
 
-test_that("annotate.gct works properly", {
-  ds <- cmapR::ds
+test_that("annotate_gct works properly", {
+  # ds <- cmapR::ds
   newds <- ds
   col_meta <- ds@cdesc
   newds@cdesc <- data.frame(id=ds@cid)
-  newds <- annotate.gct(newds, col_meta, dim="column", keyfield="id")
+  newds <- annotate_gct(newds, col_meta, dim="column", keyfield="id")
   # rearrange column order to match
   newds@cdesc <- newds@cdesc[, names(ds@cdesc)]
   # ignore row names
@@ -158,8 +167,9 @@ test_that("annotate.gct works properly", {
   expect_identical(newds, ds)
 })
 
-test_that("transpose.gct works properly", {
-  dst <- transpose.gct(ds)
+test_that("transpose_gct works properly", {
+  # ds <- cmapR::ds
+  dst <- transpose_gct(ds)
   expect_identical(ds@mat, t(dst@mat))
   expect_identical(ds@cdesc, dst@rdesc)
   expect_identical(ds@rdesc, dst@cdesc)
@@ -167,16 +177,17 @@ test_that("transpose.gct works properly", {
   expect_identical(ds@rid, dst@cid)
 })
 
-test_that("rank.gct works properly", {
-  ranked_row <- rank.gct(ds, dim="row")
+test_that("rank_gct works properly", {
+  # ds <- cmapR::ds
+  ranked_row <- rank_gct(ds, dim="row")
   expect_identical(range(ranked_row@mat), c(1, ncol(ds@mat)))
-  ranked_col <- rank.gct(ds, dim="column")
+  ranked_col <- rank_gct(ds, dim="column")
   expect_identical(range(ranked_col@mat), c(1, nrow(ds@mat)))
   # ranked data should be completely anti-correlated with
   # scores if we use spearman. all correlations should be -1
   expect_equal(unname(diag(cor(ds@mat, ranked_col@mat, method="spearman"))),
                rep(-1, ncol(ds@mat)))
-  ranked_col_inc <- rank.gct(ds, dim="column", decreasing=F)
+  ranked_col_inc <- rank_gct(ds, dim="column", decreasing=FALSE)
   # ranked increasing data should be completely correlated with
   # scores if we use spearman. all correlations should be -1
   expect_equal(unname(diag(cor(ds@mat, ranked_col_inc@mat, method="spearman"))),
@@ -211,12 +222,12 @@ test_that("align_matrices works properly", {
   expect_identical(res, arr3d)
 })
 
-test_that("extract.gct works properly", {
+test_that("extract_gct works properly", {
   # read ground truth result
   truth_res <- readRDS("extract.gct.res.rds")
   # try to construct the same thing using
   # extract.gct
-  test_res <- extract.gct(cmapR::kd_gct, row_field="pr_gene_symbol",
+  test_res <- extract_gct(kd_gct, row_field="pr_gene_symbol",
                           col_field="pert_mfc_desc")
   expect_equal(truth_res, test_res)
 })

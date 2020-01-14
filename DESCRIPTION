@@ -1,17 +1,22 @@
 Package: cmapR
 Type: Package
 Title: CMap tools in R
-Version: 1.0.1
+Version: 0.99.0
 Date: 2018-01-30
-Author: CMap Group at The Broad Institute
-Maintainer: <clue@broadinstitute.org>
-Description: CMAP tools in R
-License: BSD
-LazyData: true
-Depends: R (>= 3.2.0)
+Author: Ted Natoli <tnatoli@broadinstitute.org>
+Maintainer: Ted Natoli <ted.e.natoli@gmail.com>
+Description: Parse, manipulate, and write common CMap data objects.
+License: file LICENSE
+Depends: R (>= 3.6.0)
 Imports:
   methods,
   rhdf5,
   data.table,
-  prada
-RoxygenNote: 6.1.1
+  prada,
+Suggests: knitr, testthat
+VignetteBuilder: knitr
+biocViews: DataImport, DataRepresentation
+URL: https://github.com/cmap/cmapR
+BugReports: https://github.com/cmap/cmapR/issues
+LazyData: true
+RoxygenNote: 7.0.2

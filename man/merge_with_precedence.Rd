@@ -5,7 +5,7 @@
 \title{Merge two \code{\link{data.frame}}s, but where there are common fields
 those in \code{x} are retained and those in \code{y} are dropped.}
 \usage{
-merge_with_precedence(x, y, by, allow.cartesian = T, as_data_frame = T)
+merge_with_precedence(x, y, by, allow.cartesian = TRUE, as_data_frame = TRUE)
 }
 \arguments{
 \item{x}{the \code{\link{data.frame}} whose columns take precedence}
@@ -19,9 +19,10 @@ for repeated values in either table to merge with each other
 over and over again.}
 
 \item{as_data_frame}{boolean indicating whether to ensure
-the returned object is a \code{\link{data.frame}} instead of a \code{\link{data.table}}.
+the returned object is a \code{\link{data.frame}} instead of a
+\code{\link{data.table}}.
 This ensures compatibility with GCT object conventions,
-that is, the \code{\link{rdesc}} and \code{\link{cdesc}} slots must be strictly
+that is, the \code{rdesc} and \code{cdesc} slots must be strictly
 \code{\link{data.frame}} objects.}
 }
 \value{
@@ -32,8 +33,9 @@ Merge two \code{\link{data.frame}}s, but where there are common fields
 those in \code{x} are retained and those in \code{y} are dropped.
 }
 \examples{
-(x <- data.table(foo=letters[1:10], bar=1:10))
-(y <- data.table(foo=letters[1:10], bar=11:20, baz=LETTERS[1:10]))
+(x <- data.table::data.table(foo=letters[1:10], bar=1:10))
+(y <- data.table::data.table(foo=letters[1:10], bar=11:20,
+  baz=LETTERS[1:10]))
 # the 'bar' column from y will be dropped on merge
 cmapR:::merge_with_precedence(x, y, by="foo")
 

@@ -12,9 +12,16 @@ check_dups(x, name = "")
 \item{name}{the name of the object to print
 in an error message if duplicates are found}
 }
+\value{
+silently returns NULL
+}
 \description{
 Check for duplicates in a vector
 }
 \examples{
-check_dups(c("a", "b", "c", "a", "d"))
+# this will throw an erorr, let's catch it
+tryCatch(
+  check_dups(c("a", "b", "c", "a", "d")),
+  error=function(e) print(e)
+  )
 }
