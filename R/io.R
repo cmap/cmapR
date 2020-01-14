@@ -487,9 +487,9 @@ methods::setMethod("initialize",
                 .Object@src <- src
                 # if the rid's or column id's are .grp files, read them in
                 if ( length(rid) == 1 && grepl(".grp$", rid) )
-                  rid <- parse.grp(rid)
+                  rid <- parse_grp(rid)
                 if ( length(cid) == 1 && grepl(".grp$", cid) )
-                  cid <- parse.grp(cid)
+                  cid <- parse_grp(cid)
                 # get all the row and column ids
                 all_rid <- read_gctx_ids(src, dim="row")
                 all_cid <- read_gctx_ids(src, dim="col")

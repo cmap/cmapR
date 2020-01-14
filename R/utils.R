@@ -412,10 +412,10 @@ merge_with_precedence <- function(x, y, by, allow.cartesian=TRUE,
 #' @examples 
 #' gct_path <- system.file("extdata", "modzs_n25x50.gctx", package="cmapR")
 #' # read the GCT file, getting the matrix only
-#' g <- parse.gctx(gct_path, matrix_only=TRUE)
+#' g <- parse_gctx(gct_path, matrix_only=TRUE)
 #' # separately, read the column annotations and then apply them using
 #' # annotate_gct
-#' cdesc <- read.gctx.meta(gct_path, dim="col")
+#' cdesc <- read_gctx_meta(gct_path, dim="col")
 #' g <- annotate_gct(g, cdesc, dim="col", keyfield="id")
 #' 
 #' 
