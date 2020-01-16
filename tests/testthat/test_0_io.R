@@ -158,3 +158,12 @@ test_that("GCT accessor methods work properly", {
   expect_equal(ds@cdesc, get_gct_meta(ds, dim="col"))
   expect_error(get_gct_meta(ds, dim="foo"))
 })
+
+test_that("conversion to SummarizedExperiment works", {
+  se <- as(ds, "SummarizedExperiment")
+  expect_identical(get_gct_matrix(ds), SummarizedExperiment::assays(se)[[1]])
+  col_meta <- get_gct_meta(ds, dim="col")
+  expect_identical(col_meta$id, SummarizedExperiment::colData(se)$id)
+  row_meta <- get_gct_meta(ds, dim="row")
+  expect_identical(row_meta$id, SummarizedExperiment::rowData(se)$id)
+})

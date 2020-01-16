@@ -18,9 +18,10 @@ Imports:
   rhdf5,
   data.table,
   prada,
+  SummarizedExperiment
 Suggests: knitr, testthat
 VignetteBuilder: knitr
-biocViews: DataImport, DataRepresentation
+biocViews: DataImport, DataRepresentation, GeneExpression
 URL: https://github.com/cmap/cmapR
 BugReports: https://github.com/cmap/cmapR/issues
 LazyData: true

@@ -988,6 +988,28 @@ methods::setMethod("get_gct_meta", "GCT", function(g, dim) {
   stop("dim must be either row or column")
 })
 
+###########################################
+###  cast GCT as SummarizedExperiment   ###
+###########################################
+
+#' as("GCT", "SummarizedExperiment")
+#' 
+#' Create SummarizedExperiment object from GCT object.
+#' 
+#' @examples
+#'
+#' se <- as(ds, "SummarizedExperiment")
+#' 
+#' @importFrom SummarizedExperiment SummarizedExperiment
+#' @importFrom methods validObject
+setAs("GCT", "SummarizedExperiment", function(from) {
+  stopifnot(methods::validObject(from))
+  SummarizedExperiment::SummarizedExperiment(
+    assays = list(exprs = get_gct_matrix(from)), 
+    colData = get_gct_meta(from, dim="col"),
+    rowData = get_gct_meta(from, dim="row"))
+})
+
 
 
 ###########################################
