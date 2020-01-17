@@ -1,6 +1,13 @@
 # cmapR (CMap R code)
 
-Parsing and utility functions for analyzing CMap data. For documentation, please visit [this project's ReadTheDocs page](https://clue.io/cmapR/index.html). There is also a tutorial available [here](https://github.com/cmap/cmapR/blob/master/cmapR_tutorial.ipynb). To learn more about the CMap project at the Broad Institute, please visit [clue.io](https://clue.io).
+## NOTICE - In submission to Bioconductor
+
+We're in the process of submitting to Bioconductor and have changed the some of the function naming conventions to comply with their standards. Function names that used to contain `.` have been replaced with `_`. Hence, `parse.gctx` is now `parse_gctx` and so on. Please try that and see if it works. There is additional info and examples in the vignettes/tutorial.Rmd.
+
+
+
+
+Parsing and utility functions for analyzing CMap data. To learn more about the CMap project at the Broad Institute, please visit [clue.io](https://clue.io).
 
 ### Install instructions
 
