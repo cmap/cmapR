@@ -848,15 +848,22 @@ update_gctx <- function(x, ofile, rid=NULL, cid=NULL) {
   # get the dimensions of the file in question
   info <- rhdf5::h5dump(ofile, load=FALSE)
   dims <-
-    as.numeric(unlist(strsplit(
-      info[["0"]][["DATA"]][["0"]][["matrix"]][["dim"]], " x ")))
+    as.integer(c(
+      info[["0"]][["META"]][["ROW"]][["id"]][["dim"]],
+      info[["0"]][["META"]][["COL"]][["id"]][["dim"]]
+    ))
+  # make sure we got the dimensions back successfully
+  stopifnot(all(is.integer(dims)) && all(dims > 0))
   # get the full space of row and column ids
   all_rid <- read_gctx_ids(ofile, dim="row")
   all_cid <- read_gctx_ids(ofile, dim="col")
   # helper functions to validate integer and character ids
   validate_integer_ids <- function(ids, maxdim, which_dim) {
     stopifnot(all(ids > 0))
-    out_of_range <- setdiff(ids, seq_len(maxdim))
+    stopifnot(is.integer(maxdim))
+    all_idx <- seq_len(maxdim)
+    # all_idx <- 1:maxdim
+    out_of_range <- setdiff(ids, all_idx)
     if (length(out_of_range) > 0) {
       stop(paste("the following", which_dim, "indices are out of range\n",
                  paste(out_of_range, collapse="\n")))
