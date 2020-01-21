@@ -12,7 +12,7 @@ Description: The Connectivity Map (CMap) is a massive resource of perturbational
   The cmapR package implements methods to parse, manipulate, and write common
   (CMap) data objects, such as annotated matrices and collections of gene sets.
 License: file LICENSE
-Depends: R (>= 3.6.0)
+Depends: R (>= 4.0)
 Imports:
   methods,
   rhdf5,
