@@ -2,7 +2,7 @@
 
 ## NOTICE - In submission to Bioconductor
 
-We're in the process of submitting to Bioconductor and have changed the some of the function naming conventions to comply with their standards. Function names that used to contain `.` have been replaced with `_`. Hence, `parse.gctx` is now `parse_gctx` and so on. Please try that and see if it works. There is additional info and examples in the vignettes/tutorial.Rmd.
+We're in the process of submitting to Bioconductor and have changed some of the function naming conventions to comply with their standards. Function names that used to contain `.` have been replaced with `_`. Hence, `parse.gctx` is now `parse_gctx` and so on. Please try that and see if it works. There is additional info and examples in the vignettes/tutorial.Rmd.
 
 
 
