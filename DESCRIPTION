@@ -1,7 +1,7 @@
 Package: cmapR
 Type: Package
 Title: CMap Tools in R
-Version: 0.99.11
+Version: 0.99.12
 Date: 2018-01-30
 Author: Ted Natoli <tnatoli@broadinstitute.org>
 Maintainer: Ted Natoli <ted.e.natoli@gmail.com>
@@ -12,7 +12,7 @@ Description: The Connectivity Map (CMap) is a massive resource of perturbational
   The cmapR package implements methods to parse, manipulate, and write common
   (CMap) data objects, such as annotated matrices and collections of gene sets.
 License: file LICENSE
-Depends: R (>= 3.6)
+Depends: R (>= 3.6.0)
 Imports:
   methods,
   rhdf5,
