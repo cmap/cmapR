@@ -27,7 +27,7 @@ Transform a GCT object to long form (aka 'melt').
 	  collisions between the names of the row and column descriptors
 	  
 	@return a \code{\link{data.table}} object with the row and column ids and the matrix
-	  values and (optinally) the row and column descriptors
+	  values and (optionally) the row and column descriptors
 	  
 	@examples 
 	# simple melt, keeping both row and column meta
