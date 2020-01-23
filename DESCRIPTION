@@ -1,7 +1,7 @@
 Package: cmapR
 Type: Package
 Title: CMap Tools in R
-Version: 0.99.0
+Version: 0.99.14
 Date: 2018-01-30
 Author: Ted Natoli <tnatoli@broadinstitute.org>
 Maintainer: Ted Natoli <ted.e.natoli@gmail.com>
