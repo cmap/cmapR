@@ -48,14 +48,13 @@ gct_file <- system.file("extdata", "modzs_n25x50.gctx", package="cmapR")
 }
 \seealso{
 Other GCTX parsing functions: 
-\code{\link{append_dim}()},
-\code{\link{fix_datatypes}()},
+\code{\link{append.dim}()},
+\code{\link{fix.datatypes}()},
 \code{\link{process_ids}()},
-\code{\link{read_gctx_ids}()},
-\code{\link{read_gctx_meta}()},
-\code{\link{write_gctx_meta}()},
-\code{\link{write_gctx}()},
-\code{\link{write_gct}()}
+\code{\link{read.gctx.ids}()},
+\code{\link{read.gctx.meta}()},
+\code{\link{write.gctx.meta}()},
+\code{\link{write.gctx}()},
+\code{\link{write.gct}()}
 }
 \concept{GCTX parsing functions}
-\keyword{internal}
