@@ -58,8 +58,8 @@ subset.gct <- function(...) {
   subset_gct(...)
 }
 
-#' @aliases update_gct
-#' @rdname update_gct
+#' @aliases update_gctx
+#' @rdname update_gctx
 #' @export
 update.gctx <- function(...) {
   warning("update.gctx has been deprecated. Please use update_gctx")
