@@ -4,7 +4,7 @@
 
 #' @aliases parse_gctx
 #' @rdname parse_gctx
-#' @keywords internal
+#' @export
 parse.gctx <- function(...) {
   warning("parse.gctx has been deprecated. Please use parse_gctx.")
   parse_gctx(...)
@@ -12,7 +12,7 @@ parse.gctx <- function(...) {
 
 #' @aliases parse_grp
 #' @rdname parse_grp
-#' @keywords internal
+#' @export
 parse.grp <- function(...) {
   warning("parse.grp has been deprecated. Please use parse_grp.")
   parse_grp(...)
@@ -20,15 +20,15 @@ parse.grp <- function(...) {
 
 #' @aliases parse_gmt
 #' @rdname parse_gmt
-#' @keywords internal
-parse.gctx <- function(...) {
+#' @export
+parse.gmt <- function(...) {
   warning("parse.gmt has been deprecated. Please use parse_gmt.")
   parse_gmt(...)
 }
 
 #' @aliases parse_gmx
 #' @rdname parse_gmx
-#' @keywords internal
+#' @export
 parse.gmx <- function(...) {
   warning("parse.gmx has been deprecated. Please use parse_gmx.")
   parse_gmx(...)
@@ -36,7 +36,7 @@ parse.gmx <- function(...) {
 
 #' @aliases melt_gct
 #' @rdname melt_gct
-#' @keywords internal
+#' @export
 melt.gct <- function(...) {
   warning("melt.gct has been deprecated. Please use melt_gct.")
   melt_gct(...)
@@ -44,7 +44,7 @@ melt.gct <- function(...) {
 
 #' @aliases annotate_gct
 #' @rdname annotate_gct
-#' @keywords internal
+#' @export
 annotate.gct <- function(...) {
   warning("annotate.gct has been deprecated. Please use annotate_gct")
   annotate_gct(...)
@@ -52,7 +52,7 @@ annotate.gct <- function(...) {
 
 #' @aliases subset_gct
 #' @rdname subset_gct
-#' @keywords internal
+#' @export
 subset.gct <- function(...) {
   warning("subset.gct has been deprecated. Please use subset_gct")
   subset_gct(...)
@@ -60,7 +60,7 @@ subset.gct <- function(...) {
 
 #' @aliases update_gct
 #' @rdname update_gct
-#' @keywords internal
+#' @export
 update.gctx <- function(...) {
   warning("update.gctx has been deprecated. Please use update_gctx")
   update_gctx(...)
@@ -68,7 +68,7 @@ update.gctx <- function(...) {
 
 #' @aliases transpose_gct
 #' @rdname transpose_gct
-#' @keywords internal
+#' @export
 transpose.gct <- function(...) {
   warning("transpose.gct has been deprecated. Please use transpose_gct")
   transpose_gct(...)
@@ -76,7 +76,7 @@ transpose.gct <- function(...) {
 
 #' @aliases rank_gct
 #' @rdname rank_gct
-#' @keywords internal
+#' @export
 rank.gct <- function(...) {
   warning("rank.gct has been deprecated. Please use rank_gct")
   rank_gct(...)
@@ -84,7 +84,7 @@ rank.gct <- function(...) {
 
 #' @aliases extract_gct
 #' @rdname extract_gct
-#' @keywords internal
+#' @export
 extract.gct <- function(...) {
   warning("extract.gct has been deprecated. Please use extract_gct")
   extract_gct(...)
@@ -92,7 +92,7 @@ extract.gct <- function(...) {
 
 #' @aliases merge_gct
 #' @rdname merge_gct
-#' @keywords internal
+#' @export
 merge.gct <- function(...) {
   warning("merge.gct has been deprecated. Please use merge_gct")
   merge_gct(...)
@@ -100,7 +100,7 @@ merge.gct <- function(...) {
 
 #' @aliases read_gctx_ids
 #' @rdname read_gctx_ids
-#' @keywords internal
+#' @export
 read.gctx.ids <- function(...) {
   warning("read.gctx.ids has been deprecated. Please use read_gctx_ids")
   read_gctx_ids(...)
@@ -108,7 +108,7 @@ read.gctx.ids <- function(...) {
 
 #' @aliases read_gctx_meta
 #' @rdname read_gctx_meta
-#' @keywords internal
+#' @export
 read.gctx.meta <- function(...) {
   warning("read.gctx.meta has been deprecated. Please use read_gctx_meta")
   read_gctx_meta(...)
@@ -116,7 +116,7 @@ read.gctx.meta <- function(...) {
 
 #' @aliases fix_datatypes
 #' @rdname fix_datatypes
-#' @keywords internal
+#' @export
 fix.datatypes <- function(...) {
   warning("fix.datatypes has been deprecated. Please use fix_datatypes")
   fix_datatypes(...)
@@ -124,7 +124,7 @@ fix.datatypes <- function(...) {
 
 #' @aliases write_gctx
 #' @rdname write_gctx
-#' @keywords internal
+#' @export
 write.gctx <- function(...) {
   warning("write.gctx has been deprecated. Please use write_gctx")
   write_gctx(...)
@@ -132,7 +132,7 @@ write.gctx <- function(...) {
 
 #' @aliases write_gct
 #' @rdname write_gct
-#' @keywords internal
+#' @export
 write.gct <- function(...) {
   warning("write.gct has been deprecated. Please use write_gct")
   write_gct(...)
@@ -140,7 +140,7 @@ write.gct <- function(...) {
 
 #' @aliases append_dim
 #' @rdname append_dim
-#' @keywords internal
+#' @export
 append.dim <- function(...) {
   warning("append.dim has been deprecated. Please use append_dim")
   append_dim(...)
@@ -148,7 +148,7 @@ append.dim <- function(...) {
 
 #' @aliases write_gctx_meta
 #' @rdname write_gctx_meta
-#' @keywords internal
+#' @export
 write.gctx.meta <- function(...) {
   warning("write.gctx.meta has been deprecated. Please use write_gctx_meta")
   write_gctx_meta(...)
@@ -156,7 +156,7 @@ write.gctx.meta <- function(...) {
 
 #' @aliases write_tbl
 #' @rdname write_tbl
-#' @keywords internal
+#' @export
 write.tbl <- function(...) {
   warning("write.tbl has been deprecated. Please use write_tbl")
   write_tbl(...)
