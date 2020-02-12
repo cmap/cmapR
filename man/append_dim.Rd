@@ -33,7 +33,7 @@ This is a helper function that most users
 \seealso{
 Other GCTX parsing functions: 
 \code{\link{fix_datatypes}()},
-\code{\link{parse_gctx}()},
+\code{\link{parse.gctx}()},
 \code{\link{process_ids}()},
 \code{\link{read_gctx_ids}()},
 \code{\link{read_gctx_meta}()},

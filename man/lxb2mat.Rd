@@ -27,9 +27,9 @@ str(lxb_data)
 }
 \seealso{
 Other CMap parsing functions: 
-\code{\link{parse_gmt}()},
+\code{\link{parse.gctx}()},
+\code{\link{parse.grp}()},
 \code{\link{parse_gmx}()},
-\code{\link{parse_grp}()},
 \code{\link{write_gmt}()},
 \code{\link{write_grp}()}
 }

@@ -42,7 +42,7 @@ write_gct(ds, "dataset", precision=2)
 Other GCTX parsing functions: 
 \code{\link{append_dim}()},
 \code{\link{fix_datatypes}()},
-\code{\link{parse_gctx}()},
+\code{\link{parse.gctx}()},
 \code{\link{process_ids}()},
 \code{\link{read_gctx_ids}()},
 \code{\link{read_gctx_meta}()},
