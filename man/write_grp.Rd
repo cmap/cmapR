@@ -28,9 +28,9 @@ Visit \url{http://clue.io/help} for details on the GRP file format
 
 Other CMap parsing functions: 
 \code{\link{lxb2mat}()},
-\code{\link{parse_gmt}()},
+\code{\link{parse.gctx}()},
+\code{\link{parse.grp}()},
 \code{\link{parse_gmx}()},
-\code{\link{parse_grp}()},
 \code{\link{write_gmt}()}
 }
 \concept{CMap parsing functions}

@@ -39,7 +39,7 @@ str(processed_ids)
 Other GCTX parsing functions: 
 \code{\link{append_dim}()},
 \code{\link{fix_datatypes}()},
-\code{\link{parse_gctx}()},
+\code{\link{parse.gctx}()},
 \code{\link{read_gctx_ids}()},
 \code{\link{read_gctx_meta}()},
 \code{\link{write_gctx_meta}()},
