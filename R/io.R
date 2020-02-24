@@ -668,7 +668,7 @@ write_gct <- function(ds, ofile, precision=4, appenddim=TRUE, ver=3) {
     # line 4 + ncdesc: sample desc
     filler = 'na'
     if (ncdesc > 0) {
-      for (ii in seq_along(ncdesc)) {
+      for (ii in seq_len(ncdesc)) {
         if (is.numeric(ds@cdesc[,ii])) {
           cat(paste(c(colkeys[ii],rep(filler,nrdesc),
                       round(ds@cdesc[,ii],precision)),
