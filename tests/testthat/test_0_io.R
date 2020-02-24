@@ -75,6 +75,27 @@ test_that(
 })
 
 test_that(
+  "Writing GCT works", {
+    ds <- parse_gctx("test_n5x10.gctx")
+    write_gct(ds, "foo.gct", appenddim = FALSE)
+    ds2 <- parse_gctx("foo.gct")
+    # arrange to ensure rows/cols are in same order
+    ridx <- match(ds@rid, ds2@rid)
+    cidx <- match(ds@cid, ds2@cid)
+    ds2 <- subset_gct(ds2, rid=ridx, cid=cidx)
+    # same for annots
+    ridx_annot <- match(names(ds@rdesc), names(ds2@rdesc))
+    ds2@rdesc <- ds2@rdesc[, ridx_annot]
+    cidx_annot <- match(names(ds@cdesc), names(ds2@cdesc))
+    ds2@cdesc <- ds2@cdesc[, cidx_annot]
+    # now check that they're equivalent
+    expect_equivalent(ds@cdesc, ds2@cdesc, tolerance=1e-3)
+    expect_equivalent(ds@rdesc, ds2@rdesc, tolerance=1e-3)
+    # remove the file
+    file.remove("foo.gct")
+  })
+
+test_that(
   "Writing GCT works when row or column descriptors have just one column", {
   ds <- parse_gctx("test_n5x10.gctx")
   # set rdesc and cdesc to single-column data.frames
