@@ -135,9 +135,9 @@ check_colnames <- function(test_names, df, throw_error=TRUE) {
   diffs <- setdiff(test_names, names(df))
   if (length(diffs) > 0) {
     if (throw_error) {
-      stop(paste("the following column names are not found in",
-                 deparse(substitute(df)), ":",
-                 paste(diffs, collapse=" "), "\n"))
+      stop("the following column names are not found in ",
+                 deparse(substitute(df)), ":\n",
+                 paste(diffs, collapse=" "))
     } else {
       return(FALSE)
     }
@@ -201,7 +201,7 @@ setMethod("subset_gct", signature("GCT"),
             } else if (all(is.wholenumber(ids))) {
               idx <- ids
             } else {
-              stop(paste(param, "must be character or integer"))
+              stop(param, " must be character or integer")
             }
             idx <- idx[!is.na(idx)]
             ids <- ref_ids[idx]
@@ -240,9 +240,9 @@ setMethod("subset_gct", signature("GCT"),
           newg@rid <- rid
           newg@cid <- cid
           if (any(dim(newg@mat) == 0)) {
-            warning("one or more returned dimension is length 0
-                    check that at least some of the provided rid and/or
-                    cid values have matches in the GCT object supplied")
+            warning("one or more returned dimension is length 0 ",
+                    "check that at least some of the provided rid and/or ",
+                    "cid values have matches in the GCT object supplied")
           }
           return(newg)
 })
@@ -437,7 +437,7 @@ setMethod("annotate_gct", signature("GCT"),
           # convert the keyfield column to id for merging
           # assumes the gct object has an id field in its existing annotations
           if (!(keyfield %in% names(annot))) {
-            stop(paste("column", keyfield, "not found in annotations"))
+            stop("column ", keyfield, " not found in annotations")
           } 
           # rename the column to id so we can do the merge
           annot$id <- annot[[keyfield]]
@@ -560,9 +560,8 @@ setMethod("rank_gct", signature("GCT"), function(g, dim, decreasing=TRUE) {
 #' @export
 check_dups <- function(x, name="") {
   if (anyDuplicated(x)) {
-    stop(paste(name, "has duplicated values:",
-               paste(x[duplicated(x)], collaps="\n"),
-               sep="\n"))
+    stop(name, " has duplicated values:",
+               paste(x[duplicated(x)], collaps="\n"))
   }
 }
 
@@ -667,7 +666,7 @@ align_matrices <- function(m1, m2, ..., L=NULL, na.pad=TRUE, as.3D=TRUE) {
   lapply(seq_len(n_matrices), function(i) {
     if (is.null(colnames(matrices[[i]])) ||
         is.null(rownames(matrices[[i]]))) {
-      stop(paste("matrix", i, "must have unique row and column names"))
+      stop("matrix ", i, " must have unique row and column names")
     }
     check_dups(rownames(matrices[[i]]), name=paste("matrix", i, "rownames"))
     check_dups(colnames(matrices[[i]]), name=paste("matrix", i, "colnames"))
