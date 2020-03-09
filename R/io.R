@@ -74,35 +74,6 @@ setMethod("show", methods::signature("GCT"), function(object) {
   utils::str(object)
 })
 
-# methods::setMethod("ncol", methods::signature("GCT"), function(x) {
-#   ncol(x@mat)
-# })
-# methods::setMethod("nrow", methods::signature("GCT"), function(x) {
-#   nrow(x@mat)
-# })
-# 
-# #' @rdname dim
-# #' @method dim GCT 
-# #' @S3method dim GCT
-# #' @export
-# dim.GCT <- function(x) dim(x@mat)
-# methods::setMethod("dim", methods::signature("GCT"), dim.GCT)
-# 
-# methods::setMethod("range", methods::signature("GCT"),
-#                    function(x, na.rm=FALSE, finite=FALSE) {
-#   range(x@mat, na.rm=na.rm, finite=finite)
-# })
-# methods::setMethod("max", methods::signature("GCT"), function(x, na.rm=F) {
-#   max(x@mat, na.rm=na.rm)
-# })
-# methods::setMethod("min", methods::signature("GCT"), function(x, na.rm=F) {
-#   min(x@mat, na.rm=na.rm)
-# })
-# methods::setMethod("diag", methods::signature("GCT"), function(x) {
-#   diag(x@mat)
-# })
-
-
 
 #### define some helper methods for parsing gctx files ###
 
