@@ -520,6 +520,7 @@ setMethod("transpose_gct", signature("GCT"), function(g) {
 #'   xlab="score", ylab="rank")
 #' 
 #' @family GCT utilities
+#' @importFrom matrixStats rowRanks colRanks
 #' @export
 setGeneric("rank_gct", function(g, dim="col", decreasing=TRUE) {
   standardGeneric("rank_gct")
@@ -537,9 +538,11 @@ setMethod("rank_gct", signature("GCT"), function(g, dim, decreasing=TRUE) {
     g@mat <- -1*g@mat
   }
   if (dim == 'row'){
-    g@mat <- t(apply(g@mat, 1, function(x) rank(x)))
+    g@mat <- matrixStats::rowRanks(g@mat, ties.method="average",
+                                   preserveShape=TRUE)
   } else {
-    g@mat <- (apply(g@mat, 2, function(x) rank(x)))
+    g@mat <- matrixStats::colRanks(g@mat, ties.method="average",
+                                   preserveShape=TRUE)
   }
   # done
   return(g)

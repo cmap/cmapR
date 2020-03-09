@@ -18,7 +18,8 @@ Imports:
   rhdf5,
   data.table,
   prada,
-  SummarizedExperiment
+  SummarizedExperiment,
+  matrixStats
 Suggests: knitr, testthat
 VignetteBuilder: knitr
 biocViews: DataImport, DataRepresentation, GeneExpression
