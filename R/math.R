@@ -104,13 +104,13 @@ distil <- function(m, dimension="col", method="spearman") {
   corr <- threshold(stats::cor(m, method=method), 0.01, 1)
   # set diagnoal to 0
   diag(corr) <- 0
-  row_sums <- apply(corr, 1, sum)
+  row_sums <- rowSums(corr)
   # normalize sums to get weights
   weights <- row_sums / sum(row_sums)
   # multiply input matrix by weights
   weighted_mat <- t(t(m) * weights)
   # and now take the sum
-  v <- apply(weighted_mat, 1, sum)
+  v <- rowSums(weighted_mat)
   return(list(
     values = v,
     correlations = corr[upper.tri(corr)],
