@@ -3,8 +3,8 @@ Type: Package
 Title: CMap Tools in R
 Version: 0.99.14
 Date: 2018-01-30
-Author: Ted Natoli <tnatoli@broadinstitute.org>
-Maintainer: Ted Natoli <ted.e.natoli@gmail.com>
+Authors@R: person("Ted", "Natoli", email="ted.e.natoli@gmail.com",
+  role=c("aut", "cre"), comment=c(ORCID="0000-0002-0953-0206"))
 Description: The Connectivity Map (CMap) is a massive resource of perturbational
   gene expression profiles built by researchers at the Broad Institute and 
   funded by the NIH Library of Integrated Network-Based Cellular Signatures
