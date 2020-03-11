@@ -189,7 +189,7 @@ test_that("rank_gct works properly", {
                rep(-1, ncol(ds@mat)))
   ranked_col_inc <- rank_gct(ds, dim="column", decreasing=FALSE)
   # ranked increasing data should be completely correlated with
-  # scores if we use spearman. all correlations should be -1
+  # scores if we use spearman. all correlations should be 1
   expect_equal(unname(diag(cor(ds@mat, ranked_col_inc@mat, method="spearman"))),
                rep(1, ncol(ds@mat)))
 })

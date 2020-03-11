@@ -74,35 +74,6 @@ setMethod("show", methods::signature("GCT"), function(object) {
   utils::str(object)
 })
 
-# methods::setMethod("ncol", methods::signature("GCT"), function(x) {
-#   ncol(x@mat)
-# })
-# methods::setMethod("nrow", methods::signature("GCT"), function(x) {
-#   nrow(x@mat)
-# })
-# 
-# #' @rdname dim
-# #' @method dim GCT 
-# #' @S3method dim GCT
-# #' @export
-# dim.GCT <- function(x) dim(x@mat)
-# methods::setMethod("dim", methods::signature("GCT"), dim.GCT)
-# 
-# methods::setMethod("range", methods::signature("GCT"),
-#                    function(x, na.rm=FALSE, finite=FALSE) {
-#   range(x@mat, na.rm=na.rm, finite=finite)
-# })
-# methods::setMethod("max", methods::signature("GCT"), function(x, na.rm=F) {
-#   max(x@mat, na.rm=na.rm)
-# })
-# methods::setMethod("min", methods::signature("GCT"), function(x, na.rm=F) {
-#   min(x@mat, na.rm=na.rm)
-# })
-# methods::setMethod("diag", methods::signature("GCT"), function(x) {
-#   diag(x@mat)
-# })
-
-
 
 #### define some helper methods for parsing gctx files ###
 
@@ -251,7 +222,7 @@ read_gctx_meta <- function(gctx_path, dim="row", ids=NULL) {
 #' @export
 read_gctx_ids <- function(gctx_path, dim="row") {
   if (!file.exists(gctx_path)) {
-    stop(paste(gctx_path, "does not exist"))
+    stop(gctx_path, " does not exist")
   }
   if (dim == "column") dim <- "col"
   if (!(dim %in% c("row", "col"))) {
@@ -300,27 +271,27 @@ process_ids <- function(ids, all_ids, type="rid") {
       is_invalid_idx <- (idx > length(all_ids)) | (idx <= 0)
       invalid_idx <- idx[is_invalid_idx]
       if (all(is_invalid_idx)) {
-        stop(paste("none of the requested", type,
-                   "indices were found in the dataset"))
+        stop("none of the requested", type,
+                   " indices were found in the dataset")
       }
       if (any(is_invalid_idx)) {
         # requested indices are outside of the possible range
-        warning(paste("the following ", type,
+        warning("the following ", type,
                       " were are outside possible range and will be ignored:\n",
-                      paste(invalid_idx, collapse="\n"), sep="")) 
+                      paste(invalid_idx, collapse="\n")) 
       }
       idx <- idx[!is_invalid_idx]
     } else {
       # assume its a character
       idx <- match(ids, all_ids)
       if (all(is.na(idx))) {
-        stop(paste("none of the requested", type, "were found in the dataset"))
+        stop("none of the requested ", type, " were found in the dataset")
       }
       if (any(is.na(idx))) {
         ids_not_found <- ids[is.na(idx)]
-        warning(paste("the following ", type, 
+        warning("the following ", type, 
                       " were not found and will be ignored:\n",
-                      paste(ids_not_found, collapse="\n"), sep=""))
+                      paste(ids_not_found, collapse="\n"))
       }
       idx <- idx[!is.na(idx)]
     }
@@ -369,9 +340,8 @@ methods::setMethod("initialize",
               if (grepl(".gct$", src)) {
                 if ( ! is.null(rid) || !is.null(cid) )
                   warning(
-                    paste(
-                      "rid and cid values may only be given for .gctx files\n",
-                                "ignoring"))
+                    "rid and cid values may only be given for .gctx files",
+                    "ignoring")
                 # parse the .gct
                 .Object@src <- src
                 # get the .gct version by reading first line
@@ -483,7 +453,7 @@ methods::setMethod("initialize",
               }
               else { 
                 # parse the .gctx
-                message(paste("reading", src))
+                message("reading ", src)
                 .Object@src <- src
                 # if the rid's or column id's are .grp files, read them in
                 if ( length(rid) == 1 && grepl(".grp$", rid) )
@@ -744,10 +714,10 @@ write_gctx <- function(ds, ofile, appenddim=TRUE, compression_level=0,
   if (appenddim) ofile <- append_dim(ofile, ds@mat, extension="gctx")
   # check if the file already exists
   if (file.exists(ofile)) {
-    message(paste(ofile, "exists, removing"))
+    message(ofile, " exists, removing")
     file.remove(ofile)
   }
-  message(paste("writing", ofile))
+  message("writing ", ofile)
   # start the file object
   rhdf5::h5createFile(ofile)
   # create all the necessary groups
@@ -835,8 +805,8 @@ update_gctx <- function(x, ofile, rid=NULL, cid=NULL) {
   } else {
     # x is a vector, so we must be updating in one dimension
     if(!is.null(rid) & !is.null(cid)) {
-      stop(paste("x is a vector so you can only update in one dimension",
-                 "(only one of rid or cid can be non-NULL)", sep="\n"))
+      stop("x is a vector so you can only update in one dimension\n",
+                 "(only one of rid or cid can be non-NULL)")
     }
     if (is.null(rid)) {
       stopifnot(length(cid) == length(x))
@@ -865,16 +835,16 @@ update_gctx <- function(x, ofile, rid=NULL, cid=NULL) {
     # all_idx <- 1:maxdim
     out_of_range <- setdiff(ids, all_idx)
     if (length(out_of_range) > 0) {
-      stop(paste("the following", which_dim, "indices are out of range\n",
-                 paste(out_of_range, collapse="\n")))
+      stop("the following ", which_dim, " indices are out of range\n",
+                 paste(out_of_range, collapse="\n"))
     }
   }
   validate_character_ids <- function(ids, all_ids, which_dim) {
     out_of_range <- setdiff(ids, all_ids)
     if (length(out_of_range) > 0) {
-      stop(paste("the following", which_dim,
-                 "ids do not exist in the dataset\n",
-                 paste(out_of_range, collapse="\n")))
+      stop("the following ", which_dim,
+                 " ids do not exist in the dataset\n",
+                 paste(out_of_range, collapse="\n"))
     }
   }
   # given integer ids
@@ -1201,7 +1171,7 @@ write_gmt <- function(lst, fname) {
 #' @export
 lxb2mat <- function(lxb_path, columns=c("RID", "RP1"),
                     newnames=c("barcode_id", "FI")) {
-  message(paste("reading", lxb_path))
+  message("reading ", lxb_path)
   # suppressing warning about signed integers since
   # lxb data will be unsigned
   lxb <- suppressWarnings(prada::readFCS(lxb_path))

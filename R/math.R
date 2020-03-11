@@ -82,6 +82,8 @@ threshold <- function(x, minval, maxval) {
 #' m <- matrix(rnorm(30), ncol=3)
 #' distil(m)
 #' 
+#' @importFrom matrixStats colAnyNAs
+#' 
 #' @export
 distil <- function(m, dimension="col", method="spearman") {
   if (!is.numeric(m)) {
@@ -95,7 +97,7 @@ distil <- function(m, dimension="col", method="spearman") {
     m <- t(m)
   }
   # ignore any columns containing NA values
-  na_idx <- apply(m, 2, function(x) any(is.na(x)))
+  na_idx <- matrixStats::colAnyNAs(m)
   # make sure to enforce that the resulting object is 
   # a matrix so that cor function will work
   m <- as.matrix(m[, !na_idx])
@@ -104,13 +106,13 @@ distil <- function(m, dimension="col", method="spearman") {
   corr <- threshold(stats::cor(m, method=method), 0.01, 1)
   # set diagnoal to 0
   diag(corr) <- 0
-  row_sums <- apply(corr, 1, sum)
+  row_sums <- rowSums(corr)
   # normalize sums to get weights
   weights <- row_sums / sum(row_sums)
   # multiply input matrix by weights
   weighted_mat <- t(t(m) * weights)
   # and now take the sum
-  v <- apply(weighted_mat, 1, sum)
+  v <- rowSums(weighted_mat)
   return(list(
     values = v,
     correlations = corr[upper.tri(corr)],
