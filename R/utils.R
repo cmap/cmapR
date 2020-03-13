@@ -53,18 +53,22 @@ setMethod("melt_gct", signature("GCT"),
           # and return only values corresponding to the upper triangle
           # check whether rdesc/cdesc are empty
           # if so, fill with id column
-          if (nrow(g@rdesc) == 0) g@rdesc <- data.frame(id=g@rid)
-          if (nrow(g@cdesc) == 0) g@cdesc <- data.frame(id=g@cid)
+          m <- mat(g)
+          rdesc <- meta(g)
+          cdesc <- meta(g, dim="col")
+          rid <- ids(g)
+          cid <- ids(g, dim="col")
+          if (nrow(rdesc) == 0) rdesc <- data.frame(id=rid)
+          if (nrow(cdesc) == 0) cdesc <- data.frame(id=cid)
           # first, check if matrix is symmetric
           # if it is, use only the upper triangle
           message("melting GCT object...")
-          mat <- g@mat
-          if (remove_symmetries & isSymmetric(mat)) {
-            mat[upper.tri(mat, diag=FALSE)] <- NA
+          if (remove_symmetries & isSymmetric(m)) {
+            m[upper.tri(m, diag=FALSE)] <- NA
           }
-          mat <- data.table::data.table(mat)
-          mat$rid <- g@rid
-          d <- data.table::melt(mat, id.vars="rid")
+          m <- data.table::data.table(m)
+          m$rid <- rid
+          d <- data.table::melt(m, id.vars="rid")
           data.table::setattr(d, "names", c("id.x", "id.y", "value"))
           d$id.x <- as.character(d$id.x)
           d$id.y <- as.character(d$id.y)
@@ -74,21 +78,21 @@ setMethod("melt_gct", signature("GCT"),
           if (keep_rdesc && keep_cdesc) {
             # merge back in both row and column descriptors
             data.table::setattr(d, "names", c("id", "id.y", "value"))
-            d <- merge(d, data.table::data.table(g@rdesc), by="id",
+            d <- merge(d, data.table::data.table(rdesc), by="id",
                        all.x=TRUE, ...)
             data.table::setnames(d, "id", "id.x")
             data.table::setnames(d, "id.y", "id")
-            d <- merge(d, data.table::data.table(g@cdesc), by="id",
+            d <- merge(d, data.table::data.table(cdesc), by="id",
                        all.x=TRUE, ...)
             data.table::setnames(d, "id", "id.y")
           } else if (keep_rdesc) {
             # keep only row descriptors
-            rdesc <- data.table::data.table(g@rdesc)
+            rdesc <- data.table::data.table(rdesc)
             data.table::setnames(rdesc, "id", "id.x")
             d <- merge(d, rdesc, by="id.x", all.x=TRUE, ...)
           } else if (keep_cdesc) {
             # keep only column descriptors
-            cdesc <- data.table::data.table(g@cdesc)
+            cdesc <- data.table::data.table(cdesc)
             data.table::setnames(cdesc, "id", "id.y")
             d <- merge(d, cdesc, by="id.y", all.x=TRUE, ...)
           }
@@ -189,8 +193,10 @@ setMethod("subset_gct", signature("GCT"),
           # ids can either be a vector of character strings corresponding
           # to row / column ids in the gct object, or integer vectors
           # corresponding to row / column indices
-          if (is.null(rid)) rid <- g@rid
-          if (is.null(cid)) cid <- g@cid
+          if (is.null(rid)) rid <- ids(g)
+          if (is.null(cid)) cid <- ids(g, dim="col")
+          ref_rid <- ids(g)
+          ref_cid <- ids(g, dim="col")
           # see whether we were given characters or integers
           # and handle accordingly
           process_ids <- function(ids, ref_ids, param) {
@@ -207,14 +213,14 @@ setMethod("subset_gct", signature("GCT"),
             ids <- ref_ids[idx]
             return(list(ids=ids, idx=idx))
           }
-          processed_rid <- process_ids(rid, g@rid, "rid")
-          processed_cid <- process_ids(cid, g@cid, "cid")
+          processed_rid <- process_ids(rid, ref_rid, "rid")
+          processed_cid <- process_ids(cid, ref_cid, "cid")
           rid <- processed_rid$ids
           ridx <- processed_rid$idx
           cid <- processed_cid$ids
           cidx <- processed_cid$idx
-          sdrow <- setdiff(rid, g@rid)
-          sdcol <- setdiff(cid, g@cid)
+          sdrow <- setdiff(rid, ref_rid)
+          sdcol <- setdiff(cid, ref_cid)
           if (length(sdrow) > 0) {
             warning("the following rids were not found:\n",
                     paste(sdrow, collapse="\n"))
@@ -223,23 +229,21 @@ setMethod("subset_gct", signature("GCT"),
             warning("the following cids were not found:\n",
                     paste(sdcol, collapse="\n"))
           }
-          newg <- g
           # make sure ordering is right
-          rid <- g@rid[ridx]
-          cid <- g@cid[cidx]
-          newg@mat <- matrix(g@mat[ridx, cidx], nrow=length(rid),
-                             ncol=length(cid))
-          colnames(newg@mat) <- cid
-          rownames(newg@mat) <- rid
-          # cdesc <- data.frame(g@cdesc)
-          # rdesc <- data.frame(g@rdesc)
+          rid <- ref_rid[ridx]
+          cid <- ref_cid[cidx]
+          m <- mat(g)
+          newm <- matrix(m[ridx, cidx], nrow=length(rid),
+                         ncol=length(cid))
           # make sure annotations row ordering matches
           # matrix, rid, and cid
-          newg@cdesc <- subset_to_ids(g@cdesc, cid)
-          newg@rdesc <- subset_to_ids(g@rdesc, rid)
-          newg@rid <- rid
-          newg@cid <- cid
-          if (any(dim(newg@mat) == 0)) {
+          rdesc <- meta(g)
+          cdesc <- meta(g, dim="col")
+          newrdesc <- subset_to_ids(rdesc, rid)
+          newcdesc <- subset_to_ids(cdesc, cid)
+          newg <- new("GCT", mat=newm, rid=rid, cid=cid,
+                      rdesc=newrdesc, cdesc=newcdesc)
+          if (any(dim(newm) == 0)) {
             warning("one or more returned dimension is length 0 ",
                     "check that at least some of the provided rid and/or ",
                     "cid values have matches in the GCT object supplied")
@@ -286,24 +290,24 @@ setMethod("merge_gct", signature("GCT", "GCT"),
             # need figure out the index for how to sort the columns of
             # g2@mat so that they are in sync with g1@mat
             # first na pad the matrices
-            col_universe <- union(g1@cid, g2@cid)
-            m1 <- na_pad_matrix(g1@mat, col_universe = col_universe)
-            m2 <- na_pad_matrix(g2@mat, col_universe = col_universe)
+            col_universe <- union(ids(g1, dim="col"), ids(g2, dim="col"))
+            m1 <- na_pad_matrix(mat(g1), col_universe = col_universe)
+            m2 <- na_pad_matrix(mat(g2), col_universe = col_universe)
             idx <- match(colnames(m1), colnames(m2))
-            mat <- rbind(m1, m2[, idx])
+            m <- rbind(m1, m2[, idx])
             if (!matrix_only) {
               # we're just appending rows so don't need to do anything
               # special with the rid or rdesc. just cat them
-              rdesc <- data.frame(rbind(data.table::data.table(g1@rdesc),
-                                        data.table::data.table(g2@rdesc),
+              rdesc <- data.frame(rbind(data.table::data.table(meta(g1)),
+                                        data.table::data.table(meta(g2)),
                                         fill=TRUE))
               # update cdesc to include any new records
-              cdesc <- add_new_records(g1@cdesc, g2@cdesc)
-              idx <- match(colnames(mat), cdesc$id)
+              cdesc <- add_new_records(meta(g1, dim="col"), meta(g2, dim="col"))
+              idx <- match(colnames(m), cdesc$id)
               cdesc <- cdesc[idx, ]
-              newg <- methods::new("GCT", mat=mat, rdesc=rdesc, cdesc=cdesc)
+              newg <- methods::new("GCT", mat=m, rdesc=rdesc, cdesc=cdesc)
             } else {
-              newg <- methods::new("GCT", mat=mat)
+              newg <- methods::new("GCT", mat=m)
             }
           }
           else if (dim == "col") {
@@ -311,24 +315,25 @@ setMethod("merge_gct", signature("GCT", "GCT"),
             # need figure out the index for how to sort the rows of
             # g2@mat so that they are in sync with g1@mat
             # first na pad the matrices
-            row_universe <- union(g1@rid, g2@rid)
-            m1 <- na_pad_matrix(g1@mat, row_universe = row_universe)
-            m2 <- na_pad_matrix(g2@mat, row_universe = row_universe)
+            row_universe <- union(ids(g1), ids(g2))
+            m1 <- na_pad_matrix(mat(g1), row_universe = row_universe)
+            m2 <- na_pad_matrix(mat(g2), row_universe = row_universe)
             idx <- match(rownames(m1), rownames(m2))
-            mat <- cbind(m1, m2[idx, ])
+            m <- cbind(m1, m2[idx, ])
             if (!matrix_only) {
               # we're just appending rows so don't need to do anything
               # special with the rid or rdesc. just cat them
-              cdesc <- data.frame(rbind(data.table::data.table(g1@cdesc),
-                                        data.table::data.table(g2@cdesc),
-                                        fill=TRUE))
+              cdesc <- data.frame(rbind(
+                data.table::data.table(meta(g1, dim="col")),
+                data.table::data.table(meta(g2, dim="col")),
+                fill=TRUE))
               # update rdesc to include any new records
-              rdesc <- add_new_records(g1@rdesc, g2@rdesc)
-              idx <- match(rownames(mat), rdesc$id)
+              rdesc <- add_new_records(meta(g1), meta(g2))
+              idx <- match(rownames(m), rdesc$id)
               rdesc <- rdesc[idx, ]
-              newg <- methods::new("GCT", mat=mat, rdesc=rdesc, cdesc=cdesc)
+              newg <- methods::new("GCT", mat=m, rdesc=rdesc, cdesc=cdesc)
             } else {
-              newg <- methods::new("GCT", mat=mat)
+              newg <- methods::new("GCT", mat=m)
             }
           } else {
             stop("dimension must be either row or col")
@@ -443,21 +448,24 @@ setMethod("annotate_gct", signature("GCT"),
           annot$id <- annot[[keyfield]]
           if (dim == "column") dim <- "col"
           if (dim == "row") {
-            orig_id <- g@rdesc$id
-            merged <- merge_with_precedence(g@rdesc, annot, by="id",
+            orig_id <- ids(g)
+            rdesc <- meta(g)
+            rdesc$id <- orig_id
+            merged <- merge_with_precedence(rdesc, annot, by="id",
                                             allow.cartesian=T,
                                             as_data_frame=T)
             idx <- match(orig_id, merged$id)
             merged <- merged[idx, ]
-            g@rdesc <- merged
+            meta(g) <- merged
           } else if (dim == "col") {
-            orig_id <- g@cdesc$id
-            merged <- merge_with_precedence(g@cdesc, annot, by="id",
+            orig_id <- ids(g, dim="col")
+            cdesc <- meta(g, dim="col")
+            merged <- merge_with_precedence(cdesc, annot, by="id",
                                             allow.cartesian=T,
                                             as_data_frame=T)
             idx <- match(orig_id, merged$id)
             merged <- merged[idx, ]
-            g@cdesc <- merged
+            meta(g, dim="col") <- merged
           } else {
             stop("dim must be either row or column")
           }
@@ -483,19 +491,8 @@ setGeneric("transpose_gct", function(g) {
 })
 #' @rdname transpose_gct
 setMethod("transpose_gct", signature("GCT"), function(g) {
-  # transpose matrix
-  g@mat <- t(g@mat)
-  # create new data
-  rid.new <- g@cid
-  cid.new <- g@rid
-  rdesc.new <- g@cdesc
-  cdesc.new <- g@rdesc
-  # overwrite g
-  g@rid <- rid.new
-  g@cid <- cid.new
-  g@rdesc <- rdesc.new
-  g@cdesc <- cdesc.new
-  return(g)
+  return(new("GCT", mat=t(mat(g)), rid=ids(g, dim="col"), cid=ids(g),
+              rdesc=meta(g, dim="col"), cdesc=meta(g)))
 })
 
 
@@ -513,10 +510,9 @@ setMethod("transpose_gct", signature("GCT"), function(g) {
 #' @examples 
 #' (ranked <- rank_gct(ds, dim="column"))
 #' # scatter rank vs. score for a few columns
-#' # use \code{get_gct_matrix} function to access matrix of GCT objects
-#' mat <- get_gct_matrix(ds)
-#' mat_ranked <- get_gct_matrix(ranked)
-#' plot(mat[, 1:3], mat_ranked[, 1:3],
+#' m <- mat(ds)
+#' m_ranked <- mat(ranked)
+#' plot(m[, 1:3], m_ranked[, 1:3],
 #'   xlab="score", ylab="rank")
 #' 
 #' @family GCT utilities
@@ -534,21 +530,20 @@ setMethod("rank_gct", signature("GCT"), function(g, dim, decreasing=TRUE) {
   }
   # rank along the specified axis. transpose if ranking rows so that the data 
   # comes back in the correct format
-  if (decreasing) {
-    g@mat <- -1*g@mat
-  }
+  m <- mat(g)
+  if (decreasing) m <- -1 * m
   if (dim == 'row'){
-    g@mat <- matrixStats::rowRanks(g@mat, ties.method="average",
+    m_ranked <- matrixStats::rowRanks(m, ties.method="average",
                                    preserveShape=TRUE)
   } else {
-    g@mat <- matrixStats::colRanks(g@mat, ties.method="average",
+    m_ranked <- matrixStats::colRanks(m, ties.method="average",
                                    preserveShape=TRUE)
   }
   # done
+  mat(g) <- m_ranked
   return(g)
 })
 
-# TODO: update to catch the error thrown in example
 #' Check for duplicates in a vector
 #' @param x the vector
 #' @param name the name of the object to print
@@ -759,27 +754,26 @@ extract_gct <- function(g, row_field, col_field,
   # annotate the gct object if external annotations have been provided
   if (!is.null(rdesc)) {
     g <- annotate_gct(g, rdesc, dim="row", keyfield=row_keyfield)
-    rdesc <- g@rdesc
   }
   if (!is.null(cdesc)) {
     g <- annotate_gct(g, cdesc, dim="col", keyfield=col_keyfield)
-    cdesc <- g@cdesc
   }
-  rdesc <- data.table::data.table(g@rdesc)
-  cdesc <- data.table::data.table(g@cdesc)
+  rdesc <- data.table::data.table(meta(g))
+  cdesc <- data.table::data.table(meta(g, dim="col"))
   # what are the common values
   common_vals <- intersect(rdesc[[row_field]], cdesc[[col_field]])
-  mask <- matrix(FALSE, nrow=nrow(g@mat), ncol=ncol(g@mat))
+  m <- mat(g)
+  mask <- matrix(FALSE, nrow=nrow(m), ncol=ncol(m))
   for (v in common_vals) {
     ridx <- which(rdesc[[row_field]] == v)
     cidx <- which(cdesc[[col_field]] == v)
     mask[ridx, cidx] <- TRUE
   }
   idx <- which(mask, arr.ind=TRUE)
-  vals <- g@mat[mask]
+  vals <- m[mask]
   # data.frame containing the extracted values
   # alongside their row and column annotations
-  df = cbind(
+  df <- cbind(
     {
       x <- rdesc[idx[, 1], ]
       data.table::setattr(x, "names", paste("row", names(x), sep="_"))

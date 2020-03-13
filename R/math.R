@@ -30,7 +30,7 @@ robust_zscore <- function(x, min_mad=1e-6, ...) {
   # data by using the max instead of median, or the
   # min_mad value supplied as an argument, whichever
   # is larger
-  if (mad==0) {
+  if (mad == 0) {
     mad <- max(max(abs_dev, ...), min_mad, ...)
   }
   return((x - med) / (mad*1.4826))

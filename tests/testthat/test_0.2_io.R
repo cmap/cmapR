@@ -170,21 +170,12 @@ test_that("update_gctx works correctly", {
   if (file.exists(fpath)) file.remove(fpath)
 })
 
-test_that("GCT accessor methods work properly", {
-  expect_equal(ds@mat, get_gct_matrix(ds))
-  expect_equal(ds@rid, get_gct_ids(ds))
-  expect_equal(ds@cid, get_gct_ids(ds, dim="col"))
-  expect_error(get_gct_ids(ds, dim="foo"))
-  expect_equal(ds@rdesc, get_gct_meta(ds))
-  expect_equal(ds@cdesc, get_gct_meta(ds, dim="col"))
-  expect_error(get_gct_meta(ds, dim="foo"))
-})
 
 test_that("conversion to SummarizedExperiment works", {
   se <- as(ds, "SummarizedExperiment")
-  expect_identical(get_gct_matrix(ds), SummarizedExperiment::assays(se)[[1]])
-  col_meta <- get_gct_meta(ds, dim="col")
+  expect_identical(mat(ds), SummarizedExperiment::assays(se)[[1]])
+  col_meta <- meta(ds, dim="col")
   expect_identical(col_meta$id, SummarizedExperiment::colData(se)$id)
-  row_meta <- get_gct_meta(ds, dim="row")
+  row_meta <- meta(ds)
   expect_identical(row_meta$id, SummarizedExperiment::rowData(se)$id)
 })

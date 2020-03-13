@@ -147,7 +147,6 @@ test_that("merge_gct works properly", {
 })
 
 test_that("subset_gct works properly", {
-  # ds <- cmapR::ds
   a <- subset_gct(ds, rid=1:10, cid=1:10)
   b <- subset_gct(ds, rid=ds@rid[1:10], cid=ds@cid[1:10])
   expect_identical(a, b)

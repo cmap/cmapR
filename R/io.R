@@ -39,25 +39,30 @@ methods::setValidity("GCT",
   function(object) {
     # check whether dimensions of various
     # slots are in sync
-    nrows <- nrow(object@mat)
-    ncols <- ncol(object@mat)
-    if (nrows != length(object@rid)) {
+    m <- mat(object)
+    rid <- ids(object)
+    cid <- ids(object, dim="column")
+    rdesc <- meta(object)
+    cdesc <- meta(object, dim="column")
+    nrows <- nrow(m)
+    ncols <- ncol(m)
+    if (nrows != length(rid)) {
       return("rid must be the same length as number of matrix rows")
     }
-    if (ncols != length(object@cid)) {
+    if (ncols != length(cid)) {
       return("cid must be the same length as number of matrix columns")
     }
-    if (length(object@cid) > length(unique(object@cid))) {
+    if (any(duplicated(cid))) {
       return("cid must be unique")
     }
-    if (length(object@rid) > length(unique(object@rid))) {
+    if (any(duplicated(rid))) {
       return("rid must be unique")
     }
-    if (nrow(object@cdesc) != ncols & nrow(object@cdesc) != 0) {
+    if (nrow(cdesc) != ncols & nrow(cdesc) != 0) {
       return(
         "cdesc must either have 0 rows or the same number of rows as matrix has columns")
     }
-    if (nrow(object@rdesc) != nrows & nrow(object@rdesc) != 0) {
+    if (nrow(rdesc) != nrows & nrow(rdesc) != 0) {
       return(
         "rdesc must either have 0 rows or the same number of rows as matrix has rows")
     }
@@ -610,72 +615,80 @@ write_gct <- function(ds, ofile, precision=4, appenddim=TRUE, ver=3) {
     stop("ds must be a GCT object")
   }
   # make sure it's valid
-  ok <- methods::validObject(ds)
-  # append the dimensions of the data set, if desired
-  if (appenddim) ofile <- append_dim(ofile, ds@mat, extension="gct")
+  methods::validObject(ds)
   
-  precision = floor(precision)
-  cat(sprintf('Saving file to %s\n',ofile))
-  nr <- nrow(ds@mat)
-  nc <- ncol(ds@mat)
-  cat(sprintf('Dimensions of matrix: [%dx%d]\n',nr,nc))
-  cat(sprintf('Setting precision to %d\n',precision))
+  # extract the components
+  m <- mat(ds)
+  rdesc <- meta(ds)
+  cdesc <- meta(ds, dim="column")
+  rid <- ids(ds)
+  cid <- ids(ds, dim="column")
+  
+  # append the dimensions of the data set, if desired
+  if (appenddim) ofile <- append_dim(ofile, m, extension="gct")
+  
+  precision <- floor(precision)
+  cat("Saving file to ", ofile, "\n")
+  nr <- nrow(m)
+  nc <- ncol(m)
+  cat(sprintf("Dimensions of matrix: [%dx%d]\n", nr, nc))
+  cat(sprintf("Setting precision to %d\n", precision))
   # open file and write   
   if (ver==3) {
     # remove the 'id' columns
-    ds@cdesc$id <- NULL
-    ds@rdesc$id <- NULL
+    cdesc$id <- NULL
+    rdesc$id <- NULL
     # get the counts of meta data fields
-    nrdesc = dim(ds@rdesc)[2]
-    ncdesc = dim(ds@cdesc)[2]
-    colkeys = colnames(ds@cdesc)
+    nrdesc <- ncol(rdesc)
+    ncdesc <- ncol(cdesc)
+    colkeys <- names(cdesc)
     # append header
-    cat(sprintf('#1.%d\n%d\t%d\t%d\t%d', ver, nr, nc, nrdesc, ncdesc),
+    cat(sprintf("#1.%d\n%d\t%d\t%d\t%d", ver, nr, nc, nrdesc, ncdesc),
         file=ofile,sep='\n')      
     # line 3: sample row desc keys and sample names
-    cat(paste(c('id',colnames(ds@rdesc),ds@cid),collapse='\t'),
-        file=ofile,sep='\n',append=TRUE)
+    cat(paste(c("id", names(rdesc), cid), collapse="\t"),
+        file=ofile, sep="\n", append=TRUE)
     # line 4 + ncdesc: sample desc
-    filler = 'na'
+    filler <- 'na'
     if (ncdesc > 0) {
       for (ii in seq_len(ncdesc)) {
-        if (is.numeric(ds@cdesc[,ii])) {
-          cat(paste(c(colkeys[ii],rep(filler,nrdesc),
-                      round(ds@cdesc[,ii],precision)),
-                    collapse='\t'),
-              file=ofile, sep='\n', append=TRUE)  
+        if (is.numeric(cdesc[, ii])) {
+          cat(paste(c(colkeys[ii], rep(filler, nrdesc),
+                      round(cdesc[, ii], precision)),
+                    collapse="\t"),
+              file=ofile, sep="\n", append=TRUE)  
         } else {
-          cat(paste(c(colkeys[ii],rep(filler, nrdesc),
-                      ds@cdesc[,ii]),
-                    collapse='\t'),
-              file=ofile, sep='\n', append=TRUE)
+          cat(paste(c(colkeys[ii], rep(filler, nrdesc),
+                      cdesc[, ii]),
+                    collapse="\t"),
+              file=ofile, sep="\n", append=TRUE)
         }
       }
     }
     for (ii in seq_len(nr)) {    
       # print rows
-      cat(paste(c(ds@rid[ii],
-                  ds@rdesc[ii,],
-                  round(ds@mat[ii,],precision)),collapse='\t'),
-          sep='\n',file=ofile,append=TRUE)
+      cat(paste(c(rid[ii],
+                  rdesc[ii, ],
+                  round(m[ii, ], precision)), collapse="\t"),
+          sep="\n", file=ofile, append=TRUE)
     }
   } else {
     # assume ver 1.2 and below, ignore descriptors
     # append header
-    cat(sprintf('#1.%d\n%d\t%d', ver, nr, nc),
-        file=ofile,sep='\n')      
+    cat(sprintf("#1.%d\n%d\t%", ver, nr, nc),
+        file=ofile, sep="\n")      
     # line 3: sample row desc keys and sample names
-    cat(paste(c('id','Description',ds@cid),collapse='\t'),
-        file=ofile,sep='\n',append=TRUE)
+    cat(paste(c("id", "Description", cid), collapse="\t"),
+        file=ofile, sep="\n", append=TRUE)
     for (ii in seq_len(nr)) {    
       # print rows
-      cat(paste(c(ds@rid[ii],
-                  ds@rdesc[ii, 2],
-                  round(ds@mat[ii,],precision)),collapse='\t'),
-          sep='\n',file=ofile,append=TRUE)
+      cat(paste(c(rid[ii],
+                  rdesc[ii, 2],
+                  round(m[ii, ], precision)), collapse="\t"),
+          sep="\n", file=ofile, append=TRUE)
     }
   }
-  cat(sprintf('Saved.\n'))  
+  cat("Saved.\n")  
 }
 
 
@@ -915,55 +928,115 @@ write_gctx_meta <- function(ofile, df, dimension="row") {
 ### accessor functions for GCT objects  ###
 ###########################################
 
-
-#' Extract the matrix from a GCT object
+#' Extract or set the matrix of GCT object
 #' @param g the GCT object
 #' @return a matrix
 #' @examples 
-#' m <- get_gct_matrix(ds)
+#' # get the matrix
+#' m <- mat(ds)
+#' # set the matrix
+#' mat(ds) <- matrix(0, nrow=nrow(m), ncol=ncol(m))
 #' @family GCT accessor methods
 #' @export
-methods::setGeneric("get_gct_matrix", function(g) {
-  standardGeneric("get_gct_matrix")
+methods::setGeneric("mat", function(g) {
+  standardGeneric("mat")
 })
-#' @rdname get_gct_matrix
-methods::setMethod("get_gct_matrix", "GCT", function(g) g@mat)
-
-#' Extract the ids from a GCT object
-#' @param g the GCT object
-#' @param dim which dimension to extract
-#' @return a vector of ids
-#' @examples 
-#' m <- get_gct_ids(ds)
-#' @family GCT accessor methods
-#' @export
-methods::setGeneric("get_gct_ids", function(g, dim="row")  {
-  standardGeneric("get_gct_ids")
+#' @rdname mat
+methods::setMethod("mat", "GCT", function(g) g@mat)
+methods::setGeneric("mat<-", function(g, value) {
+  standardGeneric("mat<-")
 })
-#' @rdname get_gct_ids
-methods::setMethod("get_gct_ids", "GCT", function(g, dim) {
-  if (dim == "row") return(g@rid)
-  if (dim %in% c("col", "column")) return(g@cid)
-  stop("dim must be either row or column")
+#' @rdname mat
+methods::setMethod("mat<-", "GCT", function(g, value) {
+  g@mat <- value
+  methods::validObject(g)
+  return(g)
 })
 
-#' Extract the metadata from a GCT object
+#' Extract the or set row or column ids of a GCT object
 #' @param g the GCT object
-#' @param dim which dimension to extract
-#' @return a data.frame of metadata
+#' @return a vector of row ids
 #' @examples 
-#' m <- get_gct_meta(ds)
+#' # extract rids
+#' rids <- ids(ds)
+#' # extract column ids
+#' cids <- ids(ds, "column")
+#' # set rids
+#' ids(ds) <- as.character(1:length(rid))
+#' # set cids
+#' ids(ds, "column") <- as.character(1:length(cid))
 #' @family GCT accessor methods
 #' @export
-methods::setGeneric("get_gct_meta", function(g, dim="row") {
-  standardGeneric("get_gct_meta")
+methods::setGeneric("ids", function(g, dimension="row")  {
+  standardGeneric("ids")
 })
-#' @rdname get_gct_meta
-methods::setMethod("get_gct_meta", "GCT", function(g, dim) {
-  if (dim == "row") return(g@rdesc)
-  if (dim %in% c("col", "column")) return(g@cdesc)
-  stop("dim must be either row or column")
+#' @rdname ids
+methods::setMethod("ids", "GCT", function(g, dimension="row") {
+  dimension <- tolower(dimension)
+  if (dimension == "col") dimension <- "column"
+  stopifnot(dimension %in% c("row", "column"))
+  switch(dimension, row=g@rid, column=g@cid)
 })
+methods::setGeneric("ids<-", function(g, dimension="row", value)  {
+  standardGeneric("ids<-")
+})
+#' @rdname ids
+methods::setMethod("ids<-", "GCT", function(g, dimension="row", value) {
+  dimension <- tolower(dimension)
+  if (dimension == "col") dimension <- "column"
+  stopifnot(dimension %in% c("row", "column"))
+  if (dimension == "row") {
+    g@rid <- value
+  } else {
+    g@cid <- value
+  }
+  methods::validObject(g)
+  return(g)
+})
+
+#' Extract the or set metadata of a GCT object
+#' @param g the GCT object
+#' @return a data.frame
+#' @examples 
+#' # extract rdesc
+#' rdesc <- meta(ds)
+#' # extract cdesc
+#' cdec <- meta(ds, dim="column")
+#' # set rdesc
+#' meta(ds) <- data.frame(x=sample(letters, nrow(rdesc), replace=TRUE))
+#' # set cdesc
+#' meta(ds, dim="column") <- data.frame(x=sample(letters, nrow(cdesc),
+#'   replace=TRUE))
+#' @family GCT accessor methods
+#' @export
+methods::setGeneric("meta", function(g, dimension="row")  {
+  standardGeneric("meta")
+})
+#' @rdname meta
+methods::setMethod("meta", "GCT", function(g, dimension="row") {
+  dimension <- tolower(dimension)
+  if (dimension == "col") dimension <- "column"
+  stopifnot(dimension %in% c("row", "column"))
+  switch(dimension, row=g@rdesc, column=g@cdesc)
+})
+methods::setGeneric("meta<-", function(g, dimension="row", value)  {
+  standardGeneric("meta<-")
+})
+#' @rdname meta
+methods::setMethod("meta<-", "GCT", function(g, dimension="row", value) {
+  dimension <- tolower(dimension)
+  if (dimension == "col") dimension <- "column"
+  stopifnot(dimension %in% c("row", "column"))
+  if (dimension == "row") {
+    g@rdesc <- value
+  } else {
+    g@cdesc <- value
+  }
+  methods::validObject(g)
+  return(g)
+})
+
+
 
 ###########################################
 ###  cast GCT as SummarizedExperiment   ###
@@ -982,9 +1055,9 @@ methods::setMethod("get_gct_meta", "GCT", function(g, dim) {
 setAs("GCT", "SummarizedExperiment", function(from) {
   stopifnot(methods::validObject(from))
   SummarizedExperiment::SummarizedExperiment(
-    assays = list(exprs = get_gct_matrix(from)), 
-    colData = get_gct_meta(from, dim="col"),
-    rowData = get_gct_meta(from, dim="row"))
+    assays = list(exprs = mat(from)), 
+    colData = meta(from, dim="column"),
+    rowData = meta(from))
 })
 
 
