@@ -20,7 +20,7 @@ Imports:
   prada,
   SummarizedExperiment,
   matrixStats
-Suggests: knitr, testthat
+Suggests: knitr, testthat, BiocStyle
 VignetteBuilder: knitr
 biocViews: DataImport, DataRepresentation, GeneExpression
 URL: https://github.com/cmap/cmapR
