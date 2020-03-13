@@ -1,4 +1,33 @@
-context("Testing GCT accessor methods")
+context("Testing GCT class and accessor methods")
+
+test_that("GCT constructor works properly", {
+  # initialize empty object
+  g <- GCT()
+  expect_true(is(g, "GCT"))
+  expect_equal(dim(g@mat), c(0, 0))
+  expect_equal(nrow(g@rdesc), 0)
+  expect_equal(nrow(g@cdesc), 0)
+  # try with matrix
+  g <- GCT(mat=matrix(rnorm(100), nrow=10),
+           rid=letters[1:10], cid=LETTERS[1:10])
+  expect_true(is(g, "GCT"))
+  expect_equal(dim(g@mat), c(10, 10))
+  expect_equal(nrow(g@rdesc), 0)
+  expect_equal(nrow(g@cdesc), 0)
+  # and with file path
+  g <- GCT(src="test_n5x10.gct")
+  expect_true(is(g, "GCT"))
+  expect_equal(dim(g@mat), c(10, 5))
+  # adding 1 to the number of columns to account for the 'id' column
+  # that gets added during parsing
+  expect_equal(dim(g@rdesc), c(10, 11))
+  expect_equal(dim(g@cdesc), c(5, 43))
+  # if mat and src are given should use mat
+  g <- GCT(mat=matrix(rnorm(100), nrow=10),
+           rid=letters[1:10], cid=LETTERS[1:10],
+           src="test_n5x10.gct")
+  expect_equal(dim(g@mat), c(10, 10))
+})
 
 test_that("GCT accessor methods work properly", {
   # get the matrix
