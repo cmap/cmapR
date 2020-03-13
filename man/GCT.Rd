@@ -2,7 +2,7 @@
 % Please edit documentation in R/GCT.R
 \name{GCT}
 \alias{GCT}
-\title{Initialize a GCT object}
+\title{Initialize an object of class \code{GCT}}
 \usage{
 GCT(
   mat = NULL,
@@ -30,19 +30,22 @@ GCT(
 \item{matrix_only}{logical indicating whether to read just the matrix
 data from \code{src}}
 }
+\value{
+a \code{GCT} object
+}
 \description{
-Initialize a GCT object
+Initialize an object of class \code{GCT}
 }
 \details{
 If \code{mat} is provided, \code{rid} and \code{cid} are treated as
-  the row and column identifiers for the matrix are assigned to the
-  \code{rid} and \code{cid} slots of the GCT object.
+  the row and column identifiers for the matrix and are assigned to the
+  \code{rid} and \code{cid} slots of the \code{GCT} object.
   
   If \code{mat} is not provided but \code{src} is provided,
   \code{rid} and \code{cid} are treated as filters. Data will be read from
   the file path provided to \code{src} and will then be restricted to the
   character ids or integer indices provided to \code{rid} and \code{cid}.
-  In a similar manner, \code{matrix_only}, which controls whether the
+  In a similar manner, \code{matrix_only} controls whether the
   row and column metadata are also read from the \code{src} file path.
 }
 \examples{
@@ -54,9 +57,16 @@ If \code{mat} is provided, \code{rid} and \code{cid} are treated as
 gct_file <- system.file("extdata", "modzs_n25x50.gctx", package="cmapR")
 (g <- GCT(src=gct_file))
 }
-\references{
-a \code{GCT} object
-}
 \seealso{
-parse_gctx
+Other GCTX parsing functions: 
+\code{\link{append.dim}()},
+\code{\link{fix.datatypes}()},
+\code{\link{parse.gctx}()},
+\code{\link{process_ids}()},
+\code{\link{read.gctx.ids}()},
+\code{\link{read.gctx.meta}()},
+\code{\link{write.gctx.meta}()},
+\code{\link{write.gctx}()},
+\code{\link{write.gct}()}
 }
+\concept{GCTX parsing functions}

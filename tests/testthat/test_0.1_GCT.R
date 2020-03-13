@@ -70,3 +70,4 @@ test_that("GCT accessor methods work properly", {
   meta(ds, dim="col") <- tmp
   expect_equal(tmp, ds@cdesc)
 })
+

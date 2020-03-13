@@ -48,6 +48,7 @@ write_gctx(ds, "dataset")
 }
 \seealso{
 Other GCTX parsing functions: 
+\code{\link{GCT}},
 \code{\link{append.dim}()},
 \code{\link{fix.datatypes}()},
 \code{\link{parse.gctx}()},

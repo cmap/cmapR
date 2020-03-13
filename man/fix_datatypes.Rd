@@ -37,6 +37,7 @@ str(fixed)
 }
 \seealso{
 Other GCTX parsing functions: 
+\code{\link{GCT}},
 \code{\link{append.dim}()},
 \code{\link{parse.gctx}()},
 \code{\link{process_ids}()},

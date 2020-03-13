@@ -1,14 +1,19 @@
 ---
 title: "cmapR Tutorial"
-author: "Ted Natoli"
+author:
+- name: "Ted Natoli"
+  email: ted.e.natoli@gmail.com
 date: "1/10/2020"
+package: cmapR
 output:
-  rmarkdown::html_vignette:
-    toc: true
+  BiocStyle::html_document
 vignette: >
   %\VignetteIndexEntry{cmapR Tutorial}
   %\VignetteEngine{knitr::rmarkdown}
-  \usepackage[utf8]{inputenc}    
+  %\VignetteEncoding{UTF-8} 
+abstract: >
+  A tutorial on using the cmapR package to parse and maniplate data in various formats used by the Connectivity Map, mainly annotated matrices stored as GCT or GCTX.
+  
 
 ---
 
@@ -48,6 +53,45 @@ ds
 * `rid` - a character vector of unique row identifiers
 * `cid` - a character vector of unique column identifiers
 * `src` - a character string indicating the source (usually a file path) of the data
+
+## Accessing GCT object components
+
+The components of a `GCT` object can be accessed or modified using a set of accessor functions.
+
+```{r}
+# access the data matrix
+m <- mat(ds)
+
+# access the row and column metadata
+rdesc <- meta(ds, dimension = "row")
+cdesc <- meta(ds, dimension = "column")
+
+# access the row and column ids
+rid <- ids(ds, dimension = "row")
+cid <- ids(ds, dimension = "column")
+```
+
+```{r}
+# update the matrix data to set some values to zero
+# note that the updated matrix must be the of the same dimensions as 
+# the current matrix
+m[1:10, 1:10] <- 0
+mat(ds) <- m
+
+# replace row and column metadata
+meta(ds, dimension = "row") <- data.frame(x=sample(letters, nrow(m),
+                                                   replace=TRUE))
+meta(ds, dimension = "column") <- data.frame(x=sample(letters, ncol(m),
+                                                   replace=TRUE))
+
+# replace row and column ids
+ids(ds, dimension = "row") <- as.character(seq_len(nrow(m)))
+ids(ds, dimension = "column") <- as.character(seq_len(ncol(m)))
+
+# and let's look at the modified object
+ds
+```
+
 
 
 ## Parsing GCTX files
@@ -110,10 +154,10 @@ It's also possible to create a `GCT` object from existing objects in your R work
 # note that you either must assign values to the rownames and colnames
 # of the matrix, or pass them,
 # as the 'rid' and 'cid' arguments to GCT"
-mat <- matrix(stats::rnorm(100), ncol=10)
-rownames(mat) <- letters[1:10]
-colnames(mat) <- LETTERS[1:10]
-(my_new_ds <- new("GCT", mat=mat))
+m <- matrix(stats::rnorm(100), ncol=10)
+rownames(m) <- letters[1:10]
+colnames(m) <- LETTERS[1:10]
+(my_new_ds <- new("GCT", mat=m))
 ```
 
 ```{r}
@@ -121,7 +165,7 @@ colnames(mat) <- LETTERS[1:10]
 # note these are just arbitrary annotations used to illustrate the function call
 rdesc <- data.frame(id=letters[1:10], type=rep(c(1, 2), each=5))
 cdesc <- data.frame(id=LETTERS[1:10], type=rep(c(3, 4), each=5))
-(my_new_ds <- new("GCT", mat=mat, rdesc=rdesc, cdesc=cdesc))
+(my_new_ds <- new("GCT", mat=m, rdesc=rdesc, cdesc=cdesc))
 ```
 
 
@@ -184,21 +228,21 @@ The `@mat` slot of a GCT object is a base R matrix object, so it's possible to p
 
 ```{r}
 # extract the data matrix from the my_ds object
-mat <- get_gct_matrix(my_ds)
+m <- mat(my_ds)
 ```
 
 Now let's perform a few simple math operations
 ```{r}
 # compute the row and column means
-row_means <- rowMeans(mat)
-col_means <- colMeans(mat)
+row_means <- rowMeans(m)
+col_means <- colMeans(m)
 message("means:")
 head(row_means)
 head(col_means)
 
 # using 'apply', compute the max of each row and column
-row_max <- apply(mat, 1, max)
-col_max <- apply(mat, 2, max)
+row_max <- apply(m, 1, max)
+col_max <- apply(m, 2, max)
 message("maxes:")
 head(row_max)
 head(col_max)
@@ -216,9 +260,9 @@ head(col_max)
 my_ds_rank_by_column <- rank_gct(my_ds, dim="col")
 
 # plot z-score vs rank for the first 25 genes (rows)
-ranked_mat <- get_gct_matrix(my_ds_rank_by_column)
-plot(ranked_mat[1:25, ],
-     mat[1:25, ],
+ranked_m <- mat(my_ds_rank_by_column)
+plot(ranked_m[1:25, ],
+     m[1:25, ],
      xlab="rank",
      ylab="differential expression score",
      main="score vs. rank")
