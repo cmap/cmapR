@@ -3,6 +3,7 @@
 S3method(merge,gct)
 S3method(subset,gct)
 S3method(update,gctx)
+export(GCT)
 export(align_matrices)
 export(annotate.gct)
 export(annotate_gct)
