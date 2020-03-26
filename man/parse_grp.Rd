@@ -10,6 +10,8 @@ parse.grp(...)
 parse_grp(fname)
 }
 \arguments{
+\item{...}{arguments passed on to \code{parse_grp}}
+
 \item{fname}{the file path to be parsed}
 }
 \value{

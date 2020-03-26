@@ -13,6 +13,8 @@ merge_gct(g1, g2, dim = "row", matrix_only = FALSE)
 \S4method{merge_gct}{GCT,GCT}(g1, g2, dim = "row", matrix_only = FALSE)
 }
 \arguments{
+\item{...}{arguments passed on to \code{merge_gct}}
+
 \item{g1}{the first GCT object}
 
 \item{g2}{the second GCT object}

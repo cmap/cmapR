@@ -17,6 +17,8 @@ write_gctx(
 )
 }
 \arguments{
+\item{...}{arguments passed on to \code{write_gctx}}
+
 \item{ds}{a GCT object}
 
 \item{ofile}{the desired file path for writing}

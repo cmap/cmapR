@@ -3,6 +3,7 @@
 # call the replacement function with the same input
 
 #' @aliases parse_gctx
+#' @param ... arguments passed on to \code{parse_gctx}
 #' @rdname parse_gctx
 #' @export
 parse.gctx <- function(...) {
@@ -11,6 +12,7 @@ parse.gctx <- function(...) {
 }
 
 #' @aliases parse_grp
+#' @param ... arguments passed on to \code{parse_grp}
 #' @rdname parse_grp
 #' @export
 parse.grp <- function(...) {
@@ -19,6 +21,7 @@ parse.grp <- function(...) {
 }
 
 #' @aliases parse_gmt
+#' @param ... arguments passed on to \code{parse_gmt}
 #' @rdname parse_gmt
 #' @export
 parse.gmt <- function(...) {
@@ -27,6 +30,7 @@ parse.gmt <- function(...) {
 }
 
 #' @aliases parse_gmx
+#' @param ... arguments passed on to \code{parse_gmx}
 #' @rdname parse_gmx
 #' @export
 parse.gmx <- function(...) {
@@ -35,6 +39,7 @@ parse.gmx <- function(...) {
 }
 
 #' @aliases melt_gct
+#' @param ... arguments passed on to \code{melt_gct}
 #' @rdname melt_gct
 #' @export
 melt.gct <- function(...) {
@@ -43,6 +48,7 @@ melt.gct <- function(...) {
 }
 
 #' @aliases annotate_gct
+#' @param ... arguments passed on to \code{annotate_gct}
 #' @rdname annotate_gct
 #' @export
 annotate.gct <- function(...) {
@@ -51,6 +57,7 @@ annotate.gct <- function(...) {
 }
 
 #' @aliases subset_gct
+#' @param ... arguments passed on to \code{subset_gct}
 #' @rdname subset_gct
 #' @export
 subset.gct <- function(...) {
@@ -59,6 +66,7 @@ subset.gct <- function(...) {
 }
 
 #' @aliases update_gctx
+#' @param ... arguments passed on to \code{update_gctx}
 #' @rdname update_gctx
 #' @export
 update.gctx <- function(...) {
@@ -67,6 +75,7 @@ update.gctx <- function(...) {
 }
 
 #' @aliases transpose_gct
+#' @param ... arguments passed on to \code{transpose_gct}
 #' @rdname transpose_gct
 #' @export
 transpose.gct <- function(...) {
@@ -75,6 +84,7 @@ transpose.gct <- function(...) {
 }
 
 #' @aliases rank_gct
+#' @param ... arguments passed on to \code{rank_gct}
 #' @rdname rank_gct
 #' @export
 rank.gct <- function(...) {
@@ -83,6 +93,7 @@ rank.gct <- function(...) {
 }
 
 #' @aliases extract_gct
+#' @param ... arguments passed on to \code{extract_gct}
 #' @rdname extract_gct
 #' @export
 extract.gct <- function(...) {
@@ -91,6 +102,7 @@ extract.gct <- function(...) {
 }
 
 #' @aliases merge_gct
+#' @param ... arguments passed on to \code{merge_gct}
 #' @rdname merge_gct
 #' @export
 merge.gct <- function(...) {
@@ -99,6 +111,7 @@ merge.gct <- function(...) {
 }
 
 #' @aliases read_gctx_ids
+#' @param ... arguments passed on to \code{read_gctx_ids}
 #' @rdname read_gctx_ids
 #' @export
 read.gctx.ids <- function(...) {
@@ -107,6 +120,7 @@ read.gctx.ids <- function(...) {
 }
 
 #' @aliases read_gctx_meta
+#' @param ... arguments passed on to \code{read_gctx_meta}
 #' @rdname read_gctx_meta
 #' @export
 read.gctx.meta <- function(...) {
@@ -115,6 +129,7 @@ read.gctx.meta <- function(...) {
 }
 
 #' @aliases fix_datatypes
+#' @param ... arguments passed on to \code{fix_datatypes}
 #' @rdname fix_datatypes
 #' @export
 fix.datatypes <- function(...) {
@@ -123,6 +138,7 @@ fix.datatypes <- function(...) {
 }
 
 #' @aliases write_gctx
+#' @param ... arguments passed on to \code{write_gctx}
 #' @rdname write_gctx
 #' @export
 write.gctx <- function(...) {
@@ -131,6 +147,7 @@ write.gctx <- function(...) {
 }
 
 #' @aliases write_gct
+#' @param ... arguments passed on to \code{write_gct}
 #' @rdname write_gct
 #' @export
 write.gct <- function(...) {
@@ -139,6 +156,7 @@ write.gct <- function(...) {
 }
 
 #' @aliases append_dim
+#' @param ... arguments passed on to \code{append_dim}
 #' @rdname append_dim
 #' @export
 append.dim <- function(...) {
@@ -147,6 +165,7 @@ append.dim <- function(...) {
 }
 
 #' @aliases write_gctx_meta
+#' @param ... arguments passed on to \code{write_gctx_meta}
 #' @rdname write_gctx_meta
 #' @export
 write.gctx.meta <- function(...) {
@@ -155,6 +174,7 @@ write.gctx.meta <- function(...) {
 }
 
 #' @aliases write_tbl
+#' @param ... arguments passed on to \code{write_tbl}
 #' @rdname write_tbl
 #' @export
 write.tbl <- function(...) {

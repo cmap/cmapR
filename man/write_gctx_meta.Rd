@@ -10,6 +10,8 @@ write.gctx.meta(...)
 write_gctx_meta(ofile, df, dimension = "row")
 }
 \arguments{
+\item{...}{arguments passed on to \code{write_gctx_meta}}
+
 \item{ofile}{the desired file path for writing}
 
 \item{df}{the \code{data.frame} of annotations}

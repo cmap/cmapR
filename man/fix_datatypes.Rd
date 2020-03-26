@@ -10,6 +10,8 @@ fix.datatypes(...)
 fix_datatypes(meta)
 }
 \arguments{
+\item{...}{arguments passed on to \code{fix_datatypes}}
+
 \item{meta}{a data.frame}
 }
 \value{

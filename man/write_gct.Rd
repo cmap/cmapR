@@ -10,6 +10,8 @@ write.gct(...)
 write_gct(ds, ofile, precision = 4, appenddim = TRUE, ver = 3)
 }
 \arguments{
+\item{...}{arguments passed on to \code{write_gct}}
+
 \item{ds}{the GCT object}
 
 \item{ofile}{the desired output filename}

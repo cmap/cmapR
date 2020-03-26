@@ -18,6 +18,8 @@ extract_gct(
 )
 }
 \arguments{
+\item{...}{arguments passed on to \code{extract_gct}}
+
 \item{g}{the GCT object}
 
 \item{row_field}{the column name in rdesc to search on}

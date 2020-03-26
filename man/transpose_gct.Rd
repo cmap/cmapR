@@ -13,6 +13,8 @@ transpose_gct(g)
 \S4method{transpose_gct}{GCT}(g)
 }
 \arguments{
+\item{...}{arguments passed on to \code{transpose_gct}}
+
 \item{g}{the \code{GCT} object}
 }
 \value{
