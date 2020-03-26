@@ -29,7 +29,7 @@ Extract the or set metadata of a GCT object
 # extract rdesc
 rdesc <- meta(ds)
 # extract cdesc
-cdec <- meta(ds, dim="column")
+cdesc <- meta(ds, dim="column")
 # set rdesc
 meta(ds) <- data.frame(x=sample(letters, nrow(rdesc), replace=TRUE))
 # set cdesc

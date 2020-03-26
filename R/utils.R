@@ -175,9 +175,9 @@ subset_to_ids <- function(df, ids) {
 #' (a <- subset_gct(ds, rid=1:10, cid=1:10))
 #' 
 #' # first 10 rows and columns using character ids
-#' # use \code{get_gct_ids} to extract the ids
-#' rid <- get_gct_ids(ds, dim="row")
-#' cid <- get_gct_ids(ds, dim="col")
+#' # use \code{ids} to extract the ids
+#' rid <- ids(ds)
+#' cid <- ids(ds, dimension="col")
 #' (b <- subset_gct(ds, rid=rid[1:10], cid=cid[1:10]))
 #' 
 #' identical(a, b) # TRUE
@@ -241,7 +241,7 @@ setMethod("subset_gct", signature("GCT"),
           cdesc <- meta(g, dim="col")
           newrdesc <- subset_to_ids(rdesc, rid)
           newcdesc <- subset_to_ids(cdesc, cid)
-          newg <- new("GCT", mat=newm, rid=rid, cid=cid,
+          newg <- GCT(mat=newm, rid=rid, cid=cid,
                       rdesc=newrdesc, cdesc=newcdesc)
           if (any(dim(newm) == 0)) {
             warning("one or more returned dimension is length 0 ",
@@ -290,7 +290,8 @@ setMethod("merge_gct", signature("GCT", "GCT"),
             # need figure out the index for how to sort the columns of
             # g2@mat so that they are in sync with g1@mat
             # first na pad the matrices
-            col_universe <- union(ids(g1, dim="col"), ids(g2, dim="col"))
+            col_universe <- union(ids(g1, dimension="col"),
+                                  ids(g2, dimension="col"))
             m1 <- na_pad_matrix(mat(g1), col_universe = col_universe)
             m2 <- na_pad_matrix(mat(g2), col_universe = col_universe)
             idx <- match(colnames(m1), colnames(m2))
@@ -302,7 +303,8 @@ setMethod("merge_gct", signature("GCT", "GCT"),
                                         data.table::data.table(meta(g2)),
                                         fill=TRUE))
               # update cdesc to include any new records
-              cdesc <- add_new_records(meta(g1, dim="col"), meta(g2, dim="col"))
+              cdesc <- add_new_records(meta(g1, dimension="col"),
+                                       meta(g2, dimension="col"))
               idx <- match(colnames(m), cdesc$id)
               cdesc <- cdesc[idx, ]
               newg <- methods::new("GCT", mat=m, rdesc=rdesc, cdesc=cdesc)
@@ -324,8 +326,8 @@ setMethod("merge_gct", signature("GCT", "GCT"),
               # we're just appending rows so don't need to do anything
               # special with the rid or rdesc. just cat them
               cdesc <- data.frame(rbind(
-                data.table::data.table(meta(g1, dim="col")),
-                data.table::data.table(meta(g2, dim="col")),
+                data.table::data.table(meta(g1, dimension="col")),
+                data.table::data.table(meta(g2, dimension="col")),
                 fill=TRUE))
               # update rdesc to include any new records
               rdesc <- add_new_records(meta(g1), meta(g2))

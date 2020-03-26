@@ -31,9 +31,9 @@ rids <- ids(ds)
 # extract column ids
 cids <- ids(ds, "column")
 # set rids
-ids(ds) <- as.character(1:length(rid))
+ids(ds) <- as.character(1:length(rids))
 # set cids
-ids(ds, "column") <- as.character(1:length(cid))
+ids(ds, "column") <- as.character(1:length(cids))
 }
 \seealso{
 Other GCT accessor methods: 

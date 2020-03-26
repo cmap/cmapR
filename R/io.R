@@ -181,7 +181,7 @@ read_gctx_ids <- function(gctx_path, dim="row") {
 #' @examples 
 #' gct_file <- system.file("extdata", "modzs_n25x50.gctx", package="cmapR")
 #' ids <- read_gctx_ids(gct_file)
-#' processed_ids <- process_ids(ids[1:10], ids)
+#' processed_ids <- cmapR:::process_ids(ids[1:10], ids)
 #' str(processed_ids)
 #' 
 #' @family GCTX parsing functions
@@ -282,7 +282,7 @@ parse_gctx <- function(fname, rid=NULL, cid=NULL, matrix_only=FALSE) {
 #'   will not use directly
 #' 
 #' @examples 
-#' (filename <- append_dim("my.gctx.filename",
+#' (filename <- cmapR:::append_dim("my.gctx.filename",
 #'   matrix(nrow=10, ncol=15)))
 #'   
 #'   

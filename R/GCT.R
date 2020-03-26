@@ -103,6 +103,8 @@ methods::setMethod("initialize",
                        if (!is.null(cdesc)) {
                          .Object@cdesc <- cdesc
                        }
+                       # make sure rid, cid and dimnames of mat in sync
+                       dimnames(.Object@mat) <- list(.Object@rid, .Object@cid)
                      } else if (!is.null(src)) {
                        # we were not given a matrix, were we given a src file?
                        # check to make sure it's either .gct or .gctx
@@ -380,9 +382,9 @@ methods::setMethod("mat<-", "GCT", function(g, value) {
 #' # extract column ids
 #' cids <- ids(ds, "column")
 #' # set rids
-#' ids(ds) <- as.character(1:length(rid))
+#' ids(ds) <- as.character(1:length(rids))
 #' # set cids
-#' ids(ds, "column") <- as.character(1:length(cid))
+#' ids(ds, "column") <- as.character(1:length(cids))
 #' @family GCT accessor methods
 #' @export
 methods::setGeneric("ids", function(g, dimension="row")  {
@@ -422,7 +424,7 @@ methods::setMethod("ids<-", "GCT", function(g, dimension="row", value) {
 #' # extract rdesc
 #' rdesc <- meta(ds)
 #' # extract cdesc
-#' cdec <- meta(ds, dim="column")
+#' cdesc <- meta(ds, dim="column")
 #' # set rdesc
 #' meta(ds) <- data.frame(x=sample(letters, nrow(rdesc), replace=TRUE))
 #' # set cdesc
