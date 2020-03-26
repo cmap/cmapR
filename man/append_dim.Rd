@@ -30,7 +30,7 @@ This is a helper function that most users
   will not use directly
 }
 \examples{
-(filename <- append_dim("my.gctx.filename",
+(filename <- cmapR:::append_dim("my.gctx.filename",
   matrix(nrow=10, ncol=15)))
   
   
