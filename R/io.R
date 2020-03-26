@@ -181,7 +181,7 @@ read_gctx_ids <- function(gctx_path, dim="row") {
 #' @examples 
 #' gct_file <- system.file("extdata", "modzs_n25x50.gctx", package="cmapR")
 #' ids <- read_gctx_ids(gct_file)
-#' processed_ids <- cmapR:::process_ids(ids[1:10], ids)
+#' processed_ids <- process_ids(ids[1:10], ids)
 #' str(processed_ids)
 #' 
 #' @family GCTX parsing functions
@@ -258,6 +258,7 @@ process_ids <- function(ids, all_ids, type="rid") {
 #' (ds <- parse_gctx(gct_file, rid=1:10, cid=1:10))
 #' 
 #' @family GCTX parsing functions
+#' @importFrom methods new
 #' @export
 parse_gctx <- function(fname, rid=NULL, cid=NULL, matrix_only=FALSE) {
     ds <- methods::new("GCT",
@@ -281,7 +282,7 @@ parse_gctx <- function(fname, rid=NULL, cid=NULL, matrix_only=FALSE) {
 #'   will not use directly
 #' 
 #' @examples 
-#' (filename <- cmapR:::append_dim("my.gctx.filename",
+#' (filename <- append_dim("my.gctx.filename",
 #'   matrix(nrow=10, ncol=15)))
 #'   
 #'   
@@ -337,9 +338,9 @@ write_gct <- function(ds, ofile, precision=4, appenddim=TRUE, ver=3) {
   # extract the components
   m <- mat(ds)
   rdesc <- meta(ds)
-  cdesc <- meta(ds, dim="column")
+  cdesc <- meta(ds, dimension="column")
   rid <- ids(ds)
-  cid <- ids(ds, dim="column")
+  cid <- ids(ds, dimension="column")
   
   # append the dimensions of the data set, if desired
   if (appenddim) ofile <- append_dim(ofile, m, extension="gct")
@@ -351,7 +352,7 @@ write_gct <- function(ds, ofile, precision=4, appenddim=TRUE, ver=3) {
   cat(sprintf("Dimensions of matrix: [%dx%d]\n", nr, nc))
   cat(sprintf("Setting precision to %d\n", precision))
   # open file and write   
-  if (ver==3) {
+  if (ver == 3) {
     # remove the 'id' columns
     cdesc$id <- NULL
     rdesc$id <- NULL

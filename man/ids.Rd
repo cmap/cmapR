@@ -14,6 +14,10 @@ ids(g, dimension = "row")
 }
 \arguments{
 \item{g}{the GCT object}
+
+\item{dimension}{the dimension to extract/update ['row' or 'column']}
+
+\item{value}{a character vector}
 }
 \value{
 a vector of row ids
