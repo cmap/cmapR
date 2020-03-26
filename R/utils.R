@@ -238,7 +238,7 @@ setMethod("subset_gct", signature("GCT"),
           # make sure annotations row ordering matches
           # matrix, rid, and cid
           rdesc <- meta(g)
-          cdesc <- meta(g, dim="col")
+          cdesc <- meta(g, dimension="col")
           newrdesc <- subset_to_ids(rdesc, rid)
           newcdesc <- subset_to_ids(cdesc, cid)
           newg <- GCT(mat=newm, rid=rid, cid=cid,
