@@ -10,6 +10,8 @@ read.gctx.meta(...)
 read_gctx_meta(gctx_path, dim = "row", ids = NULL)
 }
 \arguments{
+\item{...}{arguments passed on to \code{read_gctx_meta}}
+
 \item{gctx_path}{the path to the GCTX file}
 
 \item{dim}{which metadata to read (row or column)}

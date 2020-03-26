@@ -13,6 +13,8 @@ annotate_gct(g, annot, dim = "row", keyfield = "id")
 \S4method{annotate_gct}{GCT}(g, annot, dim = "row", keyfield = "id")
 }
 \arguments{
+\item{...}{arguments passed on to \code{annotate_gct}}
+
 \item{g}{a GCT object}
 
 \item{annot}{a \code{\link{data.frame}} or path to text table of annotations}

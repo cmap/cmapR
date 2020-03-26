@@ -14,6 +14,8 @@ mat(g)
 }
 \arguments{
 \item{g}{the GCT object}
+
+\item{value}{a numeric matrix}
 }
 \value{
 a matrix

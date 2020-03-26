@@ -10,6 +10,8 @@ read.gctx.ids(...)
 read_gctx_ids(gctx_path, dim = "row")
 }
 \arguments{
+\item{...}{arguments passed on to \code{read_gctx_ids}}
+
 \item{gctx_path}{path to the GCTX file}
 
 \item{dim}{which ids to read (row or column)}

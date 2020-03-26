@@ -14,6 +14,10 @@ meta(g, dimension = "row")
 }
 \arguments{
 \item{g}{the GCT object}
+
+\item{dimension}{the dimension to extract/update ['row' or 'column']}
+
+\item{value}{a data.frame}
 }
 \value{
 a data.frame

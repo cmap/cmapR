@@ -10,6 +10,8 @@ append.dim(...)
 append_dim(ofile, mat, extension = "gct")
 }
 \arguments{
+\item{...}{arguments passed on to \code{append_dim}}
+
 \item{ofile}{the file name}
 
 \item{mat}{the matrix}
@@ -28,7 +30,7 @@ This is a helper function that most users
   will not use directly
 }
 \examples{
-(filename <- cmapR:::append_dim("my.gctx.filename",
+(filename <- append_dim("my.gctx.filename",
   matrix(nrow=10, ncol=15)))
   
   

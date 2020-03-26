@@ -10,6 +10,8 @@
 update_gctx(x, ofile, rid = NULL, cid = NULL)
 }
 \arguments{
+\item{...}{arguments passed on to \code{update_gctx}}
+
 \item{x}{an array of data}
 
 \item{ofile}{the filename of the GCTX to update}

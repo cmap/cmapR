@@ -13,6 +13,8 @@ rank_gct(g, dim = "col", decreasing = TRUE)
 \S4method{rank_gct}{GCT}(g, dim = "col", decreasing = TRUE)
 }
 \arguments{
+\item{...}{arguments passed on to \code{rank_gct}}
+
 \item{g}{the \code{GCT} object to rank}
 
 \item{dim}{the dimension along which to rank

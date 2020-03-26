@@ -316,11 +316,14 @@ methods::setMethod("initialize",
 #' # an empty object
 #' (g <- GCT())
 #' # with a matrix
-#' (g <- GCT(mat=matrix(rnorm(100), nrow=10)))
+#' # note we must specify row and column ids
+#' (g <- GCT(mat=matrix(rnorm(100), nrow=10),
+#'           rid=letters[1:10], cid=letters[1:10]))
 #' # from file
 #' gct_file <- system.file("extdata", "modzs_n25x50.gctx", package="cmapR")
 #' (g <- GCT(src=gct_file))
 #' @family GCTX parsing functions
+#' @importFrom methods new
 #' @export
 GCT <- function(mat=NULL, rdesc=NULL, cdesc=NULL,
                 src=NULL, rid=NULL, cid=NULL,
@@ -341,6 +344,7 @@ setMethod("show", methods::signature("GCT"), function(object) {
 
 #' Extract or set the matrix of GCT object
 #' @param g the GCT object
+#' @param value a numeric matrix
 #' @return a matrix
 #' @examples 
 #' # get the matrix
@@ -367,6 +371,8 @@ methods::setMethod("mat<-", "GCT", function(g, value) {
 
 #' Extract the or set row or column ids of a GCT object
 #' @param g the GCT object
+#' @param dimension the dimension to extract/update ['row' or 'column']
+#' @param value a character vector
 #' @return a vector of row ids
 #' @examples 
 #' # extract rids
@@ -409,6 +415,8 @@ methods::setMethod("ids<-", "GCT", function(g, dimension="row", value) {
 
 #' Extract the or set metadata of a GCT object
 #' @param g the GCT object
+#' @param dimension the dimension to extract/update ['row' or 'column']
+#' @param value a data.frame
 #' @return a data.frame
 #' @examples 
 #' # extract rdesc
@@ -469,6 +477,6 @@ setAs("GCT", "SummarizedExperiment", function(from) {
   stopifnot(methods::validObject(from))
   SummarizedExperiment::SummarizedExperiment(
     assays = list(exprs = mat(from)), 
-    colData = meta(from, dim="column"),
+    colData = meta(from, dimension="column"),
     rowData = meta(from))
 })

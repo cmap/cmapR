@@ -10,6 +10,8 @@ parse.gmt(...)
 parse_gmt(fname)
 }
 \arguments{
+\item{...}{arguments passed on to \code{parse_gmt}}
+
 \item{fname}{the file path to be parsed}
 }
 \value{

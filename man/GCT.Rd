@@ -52,7 +52,9 @@ If \code{mat} is provided, \code{rid} and \code{cid} are treated as
 # an empty object
 (g <- GCT())
 # with a matrix
-(g <- GCT(mat=matrix(rnorm(100), nrow=10)))
+# note we must specify row and column ids
+(g <- GCT(mat=matrix(rnorm(100), nrow=10),
+          rid=letters[1:10], cid=letters[1:10]))
 # from file
 gct_file <- system.file("extdata", "modzs_n25x50.gctx", package="cmapR")
 (g <- GCT(src=gct_file))

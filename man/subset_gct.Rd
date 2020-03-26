@@ -13,6 +13,8 @@ subset_gct(g, rid = NULL, cid = NULL)
 \S4method{subset_gct}{GCT}(g, rid = NULL, cid = NULL)
 }
 \arguments{
+\item{...}{arguments passed on to \code{subset_gct}}
+
 \item{g}{a gct object}
 
 \item{rid}{a vector of character ids or integer indices for ROWS}

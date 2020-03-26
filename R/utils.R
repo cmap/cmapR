@@ -55,9 +55,9 @@ setMethod("melt_gct", signature("GCT"),
           # if so, fill with id column
           m <- mat(g)
           rdesc <- meta(g)
-          cdesc <- meta(g, dim="col")
+          cdesc <- meta(g, dimension="col")
           rid <- ids(g)
-          cid <- ids(g, dim="col")
+          cid <- ids(g, dimension="col")
           if (nrow(rdesc) == 0) rdesc <- data.frame(id=rid)
           if (nrow(cdesc) == 0) cdesc <- data.frame(id=cid)
           # first, check if matrix is symmetric
@@ -194,9 +194,9 @@ setMethod("subset_gct", signature("GCT"),
           # to row / column ids in the gct object, or integer vectors
           # corresponding to row / column indices
           if (is.null(rid)) rid <- ids(g)
-          if (is.null(cid)) cid <- ids(g, dim="col")
+          if (is.null(cid)) cid <- ids(g, dimension="col")
           ref_rid <- ids(g)
-          ref_cid <- ids(g, dim="col")
+          ref_cid <- ids(g, dimension="col")
           # see whether we were given characters or integers
           # and handle accordingly
           process_ids <- function(ids, ref_ids, param) {
@@ -458,14 +458,14 @@ setMethod("annotate_gct", signature("GCT"),
             merged <- merged[idx, ]
             meta(g) <- merged
           } else if (dim == "col") {
-            orig_id <- ids(g, dim="col")
-            cdesc <- meta(g, dim="col")
+            orig_id <- ids(g, dimension="col")
+            cdesc <- meta(g, dimension="col")
             merged <- merge_with_precedence(cdesc, annot, by="id",
                                             allow.cartesian=T,
                                             as_data_frame=T)
             idx <- match(orig_id, merged$id)
             merged <- merged[idx, ]
-            meta(g, dim="col") <- merged
+            meta(g, dimension="col") <- merged
           } else {
             stop("dim must be either row or column")
           }
@@ -491,8 +491,8 @@ setGeneric("transpose_gct", function(g) {
 })
 #' @rdname transpose_gct
 setMethod("transpose_gct", signature("GCT"), function(g) {
-  return(new("GCT", mat=t(mat(g)), rid=ids(g, dim="col"), cid=ids(g),
-              rdesc=meta(g, dim="col"), cdesc=meta(g)))
+  return(new("GCT", mat=t(mat(g)), rid=ids(g, dimension="col"), cid=ids(g),
+              rdesc=meta(g, dimension="col"), cdesc=meta(g)))
 })
 
 
@@ -759,7 +759,7 @@ extract_gct <- function(g, row_field, col_field,
     g <- annotate_gct(g, cdesc, dim="col", keyfield=col_keyfield)
   }
   rdesc <- data.table::data.table(meta(g))
-  cdesc <- data.table::data.table(meta(g, dim="col"))
+  cdesc <- data.table::data.table(meta(g, dimension="col"))
   # what are the common values
   common_vals <- intersect(rdesc[[row_field]], cdesc[[col_field]])
   m <- mat(g)

@@ -10,6 +10,8 @@ parse.gmx(...)
 parse_gmx(fname)
 }
 \arguments{
+\item{...}{arguments passed on to \code{parse_gmx}}
+
 \item{fname}{the file path to be parsed}
 }
 \value{

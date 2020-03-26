@@ -10,6 +10,8 @@ parse.gctx(...)
 parse_gctx(fname, rid = NULL, cid = NULL, matrix_only = FALSE)
 }
 \arguments{
+\item{...}{arguments passed on to \code{parse_gctx}}
+
 \item{fname}{path to the GCTX file on disk}
 
 \item{rid}{either a vector of character or integer
