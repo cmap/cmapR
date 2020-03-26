@@ -1,7 +1,7 @@
 Package: cmapR
 Type: Package
 Title: CMap Tools in R
-Version: 0.99.16
+Version: 0.99.17
 Date: 2018-01-30
 Authors@R: person("Ted", "Natoli", email="ted.e.natoli@gmail.com",
   role=c("aut", "cre"), comment=c(ORCID="0000-0002-0953-0206"))
