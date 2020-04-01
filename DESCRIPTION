@@ -10,7 +10,7 @@ Description: The Connectivity Map (CMap) is a massive resource of perturbational
   funded by the NIH Library of Integrated Network-Based Cellular Signatures
   (LINCS) program. Please visit https://clue.io for more information.
   The cmapR package implements methods to parse, manipulate, and write common
-  (CMap) data objects, such as annotated matrices and collections of gene sets.
+  CMap data objects, such as annotated matrices and collections of gene sets.
 License: file LICENSE
 Depends: R (>= 3.5)
 Imports:
