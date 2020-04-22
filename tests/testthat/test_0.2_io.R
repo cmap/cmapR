@@ -89,8 +89,25 @@ test_that(
     cidx_annot <- match(names(ds@cdesc), names(ds2@cdesc))
     ds2@cdesc <- ds2@cdesc[, cidx_annot]
     # now check that they're equivalent
+    expect_equivalent(ds@mat, ds2@mat, tolerance=1e-3)
     expect_equivalent(ds@cdesc, ds2@cdesc, tolerance=1e-3)
     expect_equivalent(ds@rdesc, ds2@rdesc, tolerance=1e-3)
+    # remove the file
+    file.remove("foo.gct")
+  })
+
+test_that(
+  "Writing GCT version 1.2 works", {
+    ds <- parse_gctx("test_n5x10.gctx")
+    write_gct(ds, "foo.gct", appenddim=FALSE, ver=2)
+    ds2 <- parse_gctx("foo.gct")
+    # arrange to ensure rows/cols are in same order
+    ridx <- match(ds@rid, ds2@rid)
+    cidx <- match(ds@cid, ds2@cid)
+    ds2 <- subset_gct(ds2, rid=ridx, cid=cidx)
+    # now check that they're equivalent
+    # only matrix needs to be checked since this is v2
+    expect_equivalent(ds@mat, ds2@mat, tolerance=1e-3)
     # remove the file
     file.remove("foo.gct")
   })

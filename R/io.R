@@ -393,7 +393,7 @@ write_gct <- function(ds, ofile, precision=4, appenddim=TRUE, ver=3) {
   } else {
     # assume ver 1.2 and below, ignore descriptors
     # append header
-    cat(sprintf("#1.%d\n%d\t%", ver, nr, nc),
+    cat(sprintf("#1.%d\n%d\t%d", ver, nr, nc),
         file=ofile, sep="\n")      
     # line 3: sample row desc keys and sample names
     cat(paste(c("id", "Description", cid), collapse="\t"),
