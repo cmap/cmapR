@@ -26,7 +26,10 @@ This notebook will walk through some of the basic functionality in the cmapR pac
 
 The cmapR package can be installed from Bioconductor by running the following commands in an R session.
 ```{r}
-# TODO: fill in once package has been accepted on bioconductor
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install("cmapR")
 ```
 cmapR source code can be also obtained from [github](https://github.com/cmap/cmapR). 
 
