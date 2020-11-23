@@ -1,7 +1,7 @@
 Package: cmapR
 Type: Package
 Title: CMap Tools in R
-Version: 0.99.19
+Version: 1.2.01
 Date: 2018-01-30
 Authors@R: person("Ted", "Natoli", email="ted.e.natoli@gmail.com",
   role=c("aut", "cre"), comment=c(ORCID="0000-0002-0953-0206"))
@@ -12,12 +12,12 @@ Description: The Connectivity Map (CMap) is a massive resource of perturbational
   The cmapR package implements methods to parse, manipulate, and write common
   CMap data objects, such as annotated matrices and collections of gene sets.
 License: file LICENSE
-Depends: R (>= 3.5)
+Depends: R (>= 4.0)
 Imports:
   methods,
   rhdf5,
   data.table,
-  prada,
+  flowCore,
   SummarizedExperiment,
   matrixStats
 Suggests: knitr, testthat, BiocStyle
@@ -26,4 +26,4 @@ biocViews: DataImport, DataRepresentation, GeneExpression
 URL: https://github.com/cmap/cmapR
 BugReports: https://github.com/cmap/cmapR/issues
 LazyData: true
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.1

@@ -818,7 +818,7 @@ write_gmt <- function(lst, fname) {
 #' 
 #' @return a matrix
 #' 
-#' @importFrom prada readFCS exprs
+#' @importFrom flowCore read.FCS exprs
 #' 
 #' @family CMap parsing functions
 #' @export
@@ -827,8 +827,8 @@ lxb2mat <- function(lxb_path, columns=c("RID", "RP1"),
   message("reading ", lxb_path)
   # suppressing warning about signed integers since
   # lxb data will be unsigned
-  lxb <- suppressWarnings(prada::readFCS(lxb_path))
-  m <- prada::exprs(lxb)[, columns]
+  lxb <- suppressWarnings(suppressMessages(flowCore::read.FCS(lxb_path)))
+  m <- flowCore::exprs(lxb)[, columns]
   keep_idx <- m[, 1] != 0
   m <- m[keep_idx, ]
   colnames(m) <- newnames
