@@ -5,7 +5,9 @@
 \alias{kd_gct}
 \title{An example GCT object of knockdown experiments
 targeting a subset of landmark genes.}
-\format{An object of class \code{GCT} of length 1.}
+\format{
+An object of class \code{GCT} of length 1.
+}
 \usage{
 kd_gct
 }

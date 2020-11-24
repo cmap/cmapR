@@ -6,7 +6,9 @@
 \title{An example of a GCT object with row and
 column metadata and gene expression values
 in the matrix.}
-\format{An object of class \code{GCT} of length 1.}
+\format{
+An object of class \code{GCT} of length 1.
+}
 \usage{
 ds
 }

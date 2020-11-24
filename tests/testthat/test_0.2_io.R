@@ -196,3 +196,10 @@ test_that("conversion to SummarizedExperiment works", {
   row_meta <- meta(ds)
   expect_identical(row_meta$id, SummarizedExperiment::rowData(se)$id)
 })
+
+test_that("LXB parsing works", {
+  lxb_path <- system.file("extdata", "example.lxb", package="cmapR")
+  foo <- lxb2mat(lxb_path)
+  expect_equal(class(foo), c("matrix", "array"))
+})
+
