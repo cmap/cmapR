@@ -1,15 +1,24 @@
 # cmapR (CMap R code)
 
-## NOTICE - In submission to Bioconductor
-
-We're in the process of submitting to Bioconductor and have changed some of the function naming conventions to comply with their standards. Function names that used to contain `.` have been replaced with `_`. Hence, `parse.gctx` is now `parse_gctx` and so on. Please try that and see if it works. There is additional info and examples in the vignettes/tutorial.Rmd.
-
-
-
-
 Parsing and utility functions for analyzing CMap data. To learn more about the CMap project at the Broad Institute, please visit [clue.io](https://clue.io).
 
+## NOTICE - Updates for Bioconductor
+
+cmapR has been accepted in [Bioconductor](https://www.bioconductor.org/packages/release/bioc/html/cmapR.html). In accordance with Bioconductor standards, we have changed some of the function naming conventions. Function names that used to contain `.` have been replaced with `_`. Hence, `parse.gctx` is now `parse_gctx` and so on. The older function names will still work with a warning. There is additional info and examples in the vignettes/tutorial.Rmd.
+
+
 ### Install instructions
+
+**Installing from Bioconductor**
+
+In R version 4.0 or newer:
+
+```
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install("cmapR")
+```
 
 Dependencies are listed in `DESCRIPTION`
 
@@ -17,9 +26,9 @@ Dependencies are listed in `DESCRIPTION`
 
 A docker container with cmapR can be obtained here: https://hub.docker.com/r/cmap/cmapr. This may be preferable for those who would like to use the package without installing on their system.
 
-**Installing from source**
+**Installing from Github source**
 
-Perhaps the simplest way is to install directly from github using `devtools::install_github("cmap/cmapR")`. Note that this requires having previously installed the `devtools` package.
+Perhaps the simplest way to install directly from github is using `devtools::install_github("cmap/cmapR")`. Note that this requires having previously installed the `devtools` package.
 
 The script `install_cmapR.R` takes care of installing all the dependencies and then running `devtools::install_github("cmap/cmapR")`, so you can simply source this script after cloning this repository.
 

@@ -6,7 +6,9 @@
 \title{An example table of metadata, as would be
 parsed from or parse.gctx. Initially all the
 columns are of type character.}
-\format{An object of class \code{data.frame} with 368 rows and 8 columns.}
+\format{
+An object of class \code{data.frame} with 368 rows and 8 columns.
+}
 \usage{
 cdesc_char
 }

@@ -5,7 +5,9 @@
 \alias{gene_set}
 \title{An example collection of gene sets
 as used in the Lamb 2006 CMap paper.}
-\format{An object of class \code{list} of length 8.}
+\format{
+An object of class \code{list} of length 8.
+}
 \source{
 Lamb et al 2006 doi:10.1126/science.1132939
 }
