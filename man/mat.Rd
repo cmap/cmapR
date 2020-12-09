@@ -3,12 +3,15 @@
 \name{mat}
 \alias{mat}
 \alias{mat,GCT-method}
+\alias{mat<-}
 \alias{mat<-,GCT-method}
 \title{Extract or set the matrix of GCT object}
 \usage{
 mat(g)
 
 \S4method{mat}{GCT}(g)
+
+mat(g) <- value
 
 \S4method{mat}{GCT}(g) <- value
 }

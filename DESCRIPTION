@@ -1,8 +1,8 @@
 Package: cmapR
 Type: Package
 Title: CMap Tools in R
-Version: 1.3.01
-Date: 2020-11-24
+Date: 2020-12-09
+Version: 1.3.02
 Authors@R: person("Ted", "Natoli", email="ted.e.natoli@gmail.com",
   role=c("aut", "cre"), comment=c(ORCID="0000-0002-0953-0206"))
 Description: The Connectivity Map (CMap) is a massive resource of perturbational

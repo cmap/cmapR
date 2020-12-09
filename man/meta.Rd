@@ -3,12 +3,15 @@
 \name{meta}
 \alias{meta}
 \alias{meta,GCT-method}
+\alias{meta<-}
 \alias{meta<-,GCT-method}
 \title{Extract the or set metadata of a GCT object}
 \usage{
 meta(g, dimension = "row")
 
 \S4method{meta}{GCT}(g, dimension = "row")
+
+meta(g, dimension = "row") <- value
 
 \S4method{meta}{GCT}(g, dimension = "row") <- value
 }

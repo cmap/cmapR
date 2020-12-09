@@ -3,12 +3,15 @@
 \name{ids}
 \alias{ids}
 \alias{ids,GCT-method}
+\alias{ids<-}
 \alias{ids<-,GCT-method}
 \title{Extract the or set row or column ids of a GCT object}
 \usage{
 ids(g, dimension = "row")
 
 \S4method{ids}{GCT}(g, dimension = "row")
+
+ids(g, dimension = "row") <- value
 
 \S4method{ids}{GCT}(g, dimension = "row") <- value
 }

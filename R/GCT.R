@@ -361,6 +361,7 @@ methods::setGeneric("mat", function(g) {
 #' @rdname mat
 methods::setMethod("mat", "GCT", function(g) g@mat)
 #' @export
+#' @rdname mat
 methods::setGeneric("mat<-", function(g, value) {
   standardGeneric("mat<-")
 })
@@ -398,6 +399,7 @@ methods::setMethod("ids", "GCT", function(g, dimension="row") {
   switch(dimension, row=g@rid, column=g@cid)
 })
 #' @export
+#' @rdname ids
 methods::setGeneric("ids<-", function(g, dimension="row", value)  {
   standardGeneric("ids<-")
 })
@@ -443,6 +445,7 @@ methods::setMethod("meta", "GCT", function(g, dimension="row") {
   switch(dimension, row=g@rdesc, column=g@cdesc)
 })
 #' @export
+#' @rdname meta
 methods::setGeneric("meta<-", function(g, dimension="row", value)  {
   standardGeneric("meta<-")
 })
