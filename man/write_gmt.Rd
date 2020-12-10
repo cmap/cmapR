@@ -35,7 +35,6 @@ write_gmt(gene_set, "gene_set.gmt")
 Visit \url{http://clue.io/help} for details on the GMT file format
 
 Other CMap parsing functions: 
-\code{\link{lxb2mat}()},
 \code{\link{parse.gmt}()},
 \code{\link{parse.gmx}()},
 \code{\link{parse.grp}()},

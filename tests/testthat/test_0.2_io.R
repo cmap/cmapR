@@ -188,18 +188,18 @@ test_that("update_gctx works correctly", {
 })
 
 
-test_that("conversion to SummarizedExperiment works", {
-  se <- as(ds, "SummarizedExperiment")
-  expect_identical(mat(ds), SummarizedExperiment::assays(se)[[1]])
-  col_meta <- meta(ds, dim="col")
-  expect_identical(col_meta$id, SummarizedExperiment::colData(se)$id)
-  row_meta <- meta(ds)
-  expect_identical(row_meta$id, SummarizedExperiment::rowData(se)$id)
-})
+# test_that("conversion to SummarizedExperiment works", {
+#   se <- as(ds, "SummarizedExperiment")
+#   expect_identical(mat(ds), SummarizedExperiment::assays(se)[[1]])
+#   col_meta <- meta(ds, dim="col")
+#   expect_identical(col_meta$id, SummarizedExperiment::colData(se)$id)
+#   row_meta <- meta(ds)
+#   expect_identical(row_meta$id, SummarizedExperiment::rowData(se)$id)
+# })
 
-test_that("LXB parsing works", {
-  lxb_path <- system.file("extdata", "example.lxb", package="cmapR")
-  foo <- lxb2mat(lxb_path)
-  expect_equal(class(foo), c("matrix", "array"))
-})
+# test_that("LXB parsing works", {
+#   lxb_path <- system.file("extdata", "example.lxb", package="cmapR")
+#   foo <- lxb2mat(lxb_path)
+#   expect_equal(class(foo), c("matrix", "array"))
+# })
 

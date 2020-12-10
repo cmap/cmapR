@@ -35,4 +35,5 @@ This is equivalent to the 'modz' procedure
 m <- matrix(rnorm(30), ncol=3)
 distil(m)
 
+
 }

@@ -82,7 +82,6 @@ threshold <- function(x, minval, maxval) {
 #' m <- matrix(rnorm(30), ncol=3)
 #' distil(m)
 #' 
-#' @importFrom matrixStats colAnyNAs
 #' 
 #' @export
 distil <- function(m, dimension="col", method="spearman") {
@@ -97,7 +96,8 @@ distil <- function(m, dimension="col", method="spearman") {
     m <- t(m)
   }
   # ignore any columns containing NA values
-  na_idx <- matrixStats::colAnyNAs(m)
+  # na_idx <- matrixStats::colAnyNAs(m)
+  na_idx <- apply(m, 2, function(x) any(is.na(x)))
   # make sure to enforce that the resulting object is 
   # a matrix so that cor function will work
   m <- as.matrix(m[, !na_idx])

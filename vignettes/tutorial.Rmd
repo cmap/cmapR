@@ -292,7 +292,7 @@ write_gctx(my_ds, "my_ds_compressed", compression_level = 9)
 The `GCT` class is quite similar in spirit to the `SummarizedExperiment` class from the `SummarizedExperiment` package (citation). Converting a `GCT` object to a `SummarizedExeriment` object is straightforward, as shown below.
 ```{r}
 # ds is an object of class GCT
-(se <- as(ds, "SummarizedExperiment"))
+# (se <- as(ds, "SummarizedExperiment"))
 ```
 
 

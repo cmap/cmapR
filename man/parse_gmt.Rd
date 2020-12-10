@@ -39,7 +39,6 @@ str(gmt)
 Visit \url{http://clue.io/help} for details on the GMT file format
 
 Other CMap parsing functions: 
-\code{\link{lxb2mat}()},
 \code{\link{parse.gmx}()},
 \code{\link{parse.grp}()},
 \code{\link{write_gmt}()},

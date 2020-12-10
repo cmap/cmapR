@@ -468,20 +468,20 @@ methods::setMethod("meta<-", "GCT", function(g, dimension="row", value) {
 ###  cast GCT as SummarizedExperiment   ###
 ###########################################
 
-#' as("GCT", "SummarizedExperiment")
-#' 
-#' Create SummarizedExperiment object from GCT object.
-#' 
-#' @examples
-#'
-#' se <- as(ds, "SummarizedExperiment")
-#' 
-#' @importFrom SummarizedExperiment SummarizedExperiment
-#' @importFrom methods validObject
-setAs("GCT", "SummarizedExperiment", function(from) {
-  stopifnot(methods::validObject(from))
-  SummarizedExperiment::SummarizedExperiment(
-    assays = list(exprs = mat(from)), 
-    colData = meta(from, dimension="column"),
-    rowData = meta(from))
-})
+# as("GCT", "SummarizedExperiment")
+# 
+# Create SummarizedExperiment object from GCT object.
+# 
+# @examples
+#
+# se <- as(ds, "SummarizedExperiment")
+# 
+# @importFrom SummarizedExperiment SummarizedExperiment
+# @importFrom methods validObject
+# setAs("GCT", "SummarizedExperiment", function(from) {
+#   stopifnot(methods::validObject(from))
+#   SummarizedExperiment::SummarizedExperiment(
+#     assays = list(exprs = mat(from)), 
+#     colData = meta(from, dimension="column"),
+#     rowData = meta(from))
+# })

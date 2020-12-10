@@ -27,7 +27,6 @@ write_grp(letters, "letter.grp")
 Visit \url{http://clue.io/help} for details on the GRP file format
 
 Other CMap parsing functions: 
-\code{\link{lxb2mat}()},
 \code{\link{parse.gmt}()},
 \code{\link{parse.gmx}()},
 \code{\link{parse.grp}()},
