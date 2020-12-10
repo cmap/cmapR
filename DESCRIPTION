@@ -12,15 +12,12 @@ Description: The Connectivity Map (CMap) is a massive resource of perturbational
   The cmapR package implements methods to parse, manipulate, and write common
   CMap data objects, such as annotated matrices and collections of gene sets.
 License: file LICENSE
-Depends: R (>= 4.0)
+Depends: R (>= 3.5)
 Imports:
   methods,
   rhdf5,
-  data.table,
-  flowCore,
-  SummarizedExperiment,
-  matrixStats
-Suggests: knitr, testthat, BiocStyle
+  data.table
+Suggests: knitr, testthat, BiocStyle, flowCore, SummarizedExperiment, matrixStats
 VignetteBuilder: knitr
 biocViews: DataImport, DataRepresentation, GeneExpression
 URL: https://github.com/cmap/cmapR
