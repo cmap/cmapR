@@ -24,7 +24,7 @@ Dependencies are listed in `DESCRIPTION`
 
 **Docker**
 
-A docker container with cmapR can be obtained here: https://hub.docker.com/r/cmap/cmapr. This may be preferable for those who would like to use the package without installing on their system.
+A docker container with a slightly earlier version of cmapR can be obtained here: https://hub.docker.com/r/cmap/cmapr. This may be preferable for those who would like to use the package without installing on their system.
 
 **Installing from Github source**
 
