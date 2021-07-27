@@ -1,7 +1,7 @@
 Package: cmapR
 Type: Package
 Title: CMap Tools in R
-Date: 2020-11-24
+Date: 2021-07-27
 Version: 1.2.1
 Authors@R: person("Ted", "Natoli", email="ted.e.natoli@gmail.com",
   role=c("aut", "cre"), comment=c(ORCID="0000-0002-0953-0206"))
@@ -20,7 +20,7 @@ Imports:
   flowCore,
   SummarizedExperiment,
   matrixStats
-Suggests: knitr, testthat, BiocStyle
+Suggests: knitr, testthat, BiocStyle, rmarkdown
 VignetteBuilder: knitr
 biocViews: DataImport, DataRepresentation, GeneExpression
 URL: https://github.com/cmap/cmapR
