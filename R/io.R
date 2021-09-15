@@ -474,10 +474,10 @@ write_gctx <- function(ds, ofile, appenddim=TRUE, compression_level=0,
   message(paste(c("chunk sizes:", chunking), collapse="\t"))
   rhdf5::h5createDataset(ofile, "0/DATA/0/matrix", dim(ds@mat), chunk=chunking,
                          level=compression_level)
-  rhdf5::h5write.default(ds@mat, ofile, "0/DATA/0/matrix")
+  rhdf5::h5write(ds@mat, ofile, "0/DATA/0/matrix")
   # write annotations
-  rhdf5::h5write.default(as.character(ds@rid), ofile, "0/META/ROW/id")
-  rhdf5::h5write.default(as.character(ds@cid), ofile, "0/META/COL/id")
+  rhdf5::h5write(as.character(ds@rid), ofile, "0/META/ROW/id")
+  rhdf5::h5write(as.character(ds@cid), ofile, "0/META/COL/id")
   if (!matrix_only) {
     write_gctx_meta(ofile, ds@cdesc, dimension="column")
     write_gctx_meta(ofile, ds@rdesc, dimension="row")
