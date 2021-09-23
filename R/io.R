@@ -490,7 +490,7 @@ write_gctx <- function(ds, ofile, appenddim=TRUE, compression_level=0,
   }
   # add the version annotation and close
   fid <- rhdf5::H5Fopen(ofile)
-  rhdf5::h5writeAttribute.character("GCTX1.0", fid, "version")
+  rhdf5::h5writeAttribute("GCTX1.0", fid, "version")
   rhdf5::H5Fclose(fid)
 }
 
@@ -597,7 +597,7 @@ update_gctx <- function(x, ofile, rid=NULL, cid=NULL) {
     cidx <- match(cid, all_cid)
   }
   # make the updates to the specified rows/columns
-  rhdf5::h5write.default(x, ofile, "0/DATA/0/matrix", index=list(ridx, cidx))
+  rhdf5::h5write(x, ofile, "0/DATA/0/matrix", index=list(ridx, cidx))
   # close any open handles
   if(utils::packageVersion('rhdf5') < "2.23.0") {
     rhdf5::H5close()
@@ -637,7 +637,7 @@ write_gctx_meta <- function(ofile, df, dimension="row") {
       if(is.factor(v) || methods::is(v, "AsIs")) {
         v <- as.character(v)
       }
-      rhdf5::h5write.default(v, ofile, paste(path, field, sep=""))
+      rhdf5::h5write(v, ofile, paste(path, field, sep=""))
     }
   }
 }

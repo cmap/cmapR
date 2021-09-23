@@ -279,7 +279,7 @@ plot(ranked_m[1:25, ],
 write_gct(my_ds, "my_ds")
 write_gctx(my_ds, "my_ds")
 
-# write.gctx can also compress the dataset upon write,
+# write_gctx can also compress the dataset upon write,
 # which can be controlled using the 'compression_level' option.
 # the higher the value, the greater the compression, but the
 # longer the read/write time
