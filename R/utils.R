@@ -795,3 +795,93 @@ extract_gct <- function(g, row_field, col_field,
   ))
 }
 
+#' Aggregate rows or columns of a GCT object that have the same value
+#' for a given annotation field
+#' 
+#' @param g the GCT object
+#' @param dimension which dimension to aggregate over (either "row" or "column")
+#' @param agg_field the name of the field to aggregate
+#' @param agg_fun the function to use for aggregating
+#' 
+#' @details If `dimension` is "row", `agg_field` should correspond to a field
+#' in the `rdesc` `data.frame` of `g`. If `dimension` is "column", it should
+#' correspond to a field in `cdesc`.
+#' `agg_fun` can be any function that accepts a numeric vector and returns a
+#' scalar value.
+#' The returned GCT object will contain an additional field called `n_agg` that
+#' indicates the number of rows or columns that were aggregated.
+#' 
+#' @return a GCT object
+#' 
+#' @examples 
+#' # construct a simple GCT object with duplicated values in one of the row
+#' # annotation fields
+#' tmp <- GCT(mat=matrix(rnorm(100), nrow=20), cid=letters[1:5],
+#'            rid=LETTERS[1:20],
+#'            rdesc=data.frame(id=LETTERS[1:20],
+#'                             field=sample(c("foo", "bar", "baz"), 20,
+#'                             replace=T)),
+#'            cdesc=data.frame(id=letters[1:5]))
+aggregate_gct <- function(g, agg_field, dimension="row",
+                          agg_fun=stats::median, overwrite_ids=TRUE) {
+  # check arguments and fail if any issues
+  stopifnot(class(g) == "GCT")
+  stopifnot(is.logical(overwrite_ids))
+  stopifnot(dimension %in% c("row", "column"))
+  # convert to shorthand
+  if (dimension == "column") dimension <- "col"
+  # assume we're operating on the rows
+  # if not, transpose the GCT object
+  if (dimension == "col") {
+    g <- transpose_gct(g)
+  }
+  # make sure the field to aggregate actually exists
+  stopifnot(agg_field %in% names(g@rdesc))
+  # figure out which rows have duplicate values and which don't
+  # compute a frequency table of each value in the supplied field
+  freq <- table(g@rdesc[[agg_field]])
+  dup_vals <- names(freq[freq > 1])
+  # create lists of the row indices corresponding to rows that do need to be 
+  # aggregated (because of duplicates)
+  g_dup <- subset_gct(g, rid=which(g@rdesc[[agg_field]] %in% dup_vals))
+  grps <- split(seq_len(nrow(g_dup@mat)), g_dup@rdesc[[agg_field]])
+  # pre-allocate a matrix to store the aggregated values
+  agg_mat <- matrix(nrow=length(grps), ncol=ncol(g_dup@mat))
+  # do the aggregation for each group
+  for (i in seq_along(grps)) {
+    idx <- grps[[i]]
+    agg_mat[i, ] <- apply(g_dup@mat[idx, ], 2, agg_fun)
+  }
+  rownames(agg_mat) <- names(grps)
+  colnames(agg_mat) <- g_dup@cid
+  # and a data.table to store the aggregated metadata
+  # cast as a data.table to take advantage of aggregation capability
+  agg_meta <- data.table::data.table(g_dup@rdesc)
+  agg_meta <- agg_meta[, lapply(.SD, paste, collapse="|"), by=agg_field]
+  # add a field to track the number of rows that were aggregated
+  agg_meta$n_agg <- lengths(grps)[match(agg_meta[[agg_field]], names(grps))]
+  # reassemble into a GCT object
+  g_agg <- GCT(agg_mat)
+  g_agg@rdesc <- data.frame(id=names(grps))
+  # apply annotations, overwriting the old id column
+  agg_meta$id <- agg_meta[[agg_field]]
+  g_agg <- annotate_gct(g_agg, agg_meta, dim="row", keyfield=agg_field)
+  # handle those rows that didn't need to be aggregated (if any)
+  nondup_vals <- names(freq[freq == 1])
+  if (length(nondup_vals) > 0) {
+    # slice out the rows that only have one value and don't need to be aggregated
+    g_nondup <- subset_gct(g, rid=which(g@rdesc[[agg_field]] %in% nondup_vals))
+    # merge together with the un-aggregated data and update the identifiers
+    # to be the unique values of agg_field
+    g_nondup@rdesc$n_agg <- 1
+    g_nondup@rid <- rownames(g_nondup@mat) <- g_nondup@rdesc$id <- 
+      g_nondup@rdesc[[agg_field]]
+    g_agg <- merge_gct(g_nondup, g_agg, dim="row")
+  }
+  # if we had originally transposed, transpose back
+  if (dimension == "col") {
+    g_agg <- transpose_gct(g_agg)
+  }
+  return(g_agg)
+}
+
